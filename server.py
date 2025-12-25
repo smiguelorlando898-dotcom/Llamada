@@ -26,6 +26,7 @@ class UserManager:
         self.users = {}  # {user_id: {ws, username, status, in_call_with, avatar_color, last_seen}}
         self.heartbeats = {}  # {user_id: last_heartbeat}
         self.pending_signals = {}  # {user_id: [signals]} para señales pendientes
+        self.active_calls = {}  # {call_id: {users: [user1, user2], start_time}}
     
     def generate_avatar_color(self, user_id):
         """Generar color consistente para el avatar basado en user_id"""
@@ -196,6 +197,13 @@ class UserManager:
         self.update_user_status(user_id, 'en_llamada', partner)
         self.update_user_status(partner, 'en_llamada', user_id)
         
+        # Registrar tiempo de inicio de llamada
+        call_id = f"{min(user_id, partner)}_{max(user_id, partner)}"
+        self.active_calls[call_id] = {
+            'users': [user_id, partner],
+            'start_time': datetime.now().isoformat()
+        }
+        
         logger.info(f"✅ Llamada aceptada entre {self.users[user_id]['username']} y {self.users[partner]['username']}")
         return partner
     
@@ -214,6 +222,11 @@ class UserManager:
         # Actualizar ambos estados
         self.update_user_status(user_id, 'disponible', None)
         self.update_user_status(partner, 'disponible', None)
+        
+        # Limpiar registro de llamada activa
+        call_id = f"{min(user_id, partner)}_{max(user_id, partner)}"
+        if call_id in self.active_calls:
+            del self.active_calls[call_id]
         
         logger.info(f"📞 Llamada terminada entre {self.users[user_id]['username']} y {self.users[partner]['username']}")
         return partner
@@ -342,13 +355,15 @@ async def websocket_handler(request):
                         if partner_id:
                             caller_ws = user_manager.users[partner_id]['ws']
                             
-                            # Notificar al que inició la llamada
-                            await caller_ws.send_json({
-                                'type': 'call_accepted',
-                                'calleeId': client_id,
-                                'calleeName': user_manager.users[client_id]['username'],
-                                'timestamp': datetime.now().isoformat()
-                            })
+                            # Notificar al que inició la llamada - ENVIAR DOS VECES PARA GARANTIZAR
+                            for _ in range(2):
+                                await caller_ws.send_json({
+                                    'type': 'call_accepted',
+                                    'calleeId': client_id,
+                                    'calleeName': user_manager.users[client_id]['username'],
+                                    'timestamp': datetime.now().isoformat()
+                                })
+                                await asyncio.sleep(0.1)
                             
                             # Actualizar lista para todos
                             await broadcast_user_list()
@@ -392,6 +407,18 @@ async def websocket_handler(request):
                             await broadcast_user_list()
                             
                             logger.info(f"📞 Llamada finalizada por {client_id}")
+                    
+                    elif msg_type == 'call_connected':
+                        # Notificar que la llamada se conectó exitosamente
+                        partner_id = data.get('partnerId')
+                        if partner_id and partner_id in user_manager.users:
+                            partner_ws = user_manager.users[partner_id]['ws']
+                            await partner_ws.send_json({
+                                'type': 'call_connected',
+                                'message': 'Conexión establecida',
+                                'timestamp': datetime.now().isoformat()
+                            })
+                            logger.info(f"🔗 Conexión confirmada entre {client_id} y {partner_id}")
                     
                     elif msg_type == 'webrtc_signal':
                         # Señal WebRTC
@@ -485,7 +512,7 @@ async def handle_status(request):
         'timestamp': datetime.now().isoformat(),
         'totalUsers': len(user_manager.users),
         'onlineUsers': len(user_manager.get_online_users()),
-        'activeCalls': len([u for u in user_manager.users.values() if u['status'] == 'en_llamada'])
+        'activeCalls': len(user_manager.active_calls)
     })
 
 async def start_server():
