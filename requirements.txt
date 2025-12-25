@@ -2,3 +2,4 @@ Flask
 websockets
 aiohttp
 asyncio
+bcrypt
