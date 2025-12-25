@@ -99,9 +99,15 @@
             padding: 12px 16px;
             border-bottom: 1px solid var(--border);
             cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .user-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
         .user-item.disabled { opacity: 0.6; cursor: default; }
+        .user-item.disabled:hover { background-color: transparent; }
 
         .user-avatar-small {
             width: 50px;
@@ -116,13 +122,31 @@
             margin-right: 16px;
             flex-shrink: 0;
             object-fit: cover;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-avatar-small img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         .user-info { flex: 1; }
-        .user-info h3 { font-size: 1.1rem; font-weight: 500; }
+        .user-info h3 { font-size: 1.1rem; font-weight: 500; margin-bottom: 4px; }
         .user-info p { font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
 
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+        .status-dot { 
+            width: 8px; 
+            height: 8px; 
+            border-radius: 50%; 
+            background: var(--success);
+            display: inline-block;
+        }
+
+        .status-dot.online { background: var(--success); box-shadow: 0 0 8px var(--success); }
+        .status-dot.offline { background: var(--text-secondary); }
 
         .call-action { color: var(--accent); font-size: 1.4rem; }
         .call-action.disabled { color: var(--text-secondary); }
@@ -147,6 +171,8 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
+            z-index: 2;
         }
 
         .call-avatar-large {
@@ -161,6 +187,15 @@
             font-weight: 700;
             color: white;
             object-fit: cover;
+            background: linear-gradient(135deg, var(--accent), #5ba8f5);
+            border: 4px solid var(--border);
+        }
+
+        .call-avatar-large img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         .call-name { font-size: 1.8rem; font-weight: 500; margin-bottom: 8px; }
@@ -173,6 +208,8 @@
             justify-content: center;
             gap: 50px;
             padding-bottom: 30px;
+            position: relative;
+            z-index: 2;
         }
 
         .call-btn {
@@ -187,6 +224,7 @@
             justify-content: center;
             font-size: 1.5rem;
             transition: transform 0.1s ease;
+            cursor: pointer;
         }
 
         .call-btn:active { transform: scale(0.95); }
@@ -199,97 +237,367 @@
             top: 0; left: 0; right: 0; bottom: 0;
             display: none;
             z-index: 1;
+            background: #000;
         }
 
         .video-container.active { display: block; }
 
-        .video-container video { width: 100%; height: 100%; object-fit: cover; }
+        .video-container video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            background: #000;
+        }
 
-        .video-preview {
-            position: absolute;
-            bottom: 120px;
+        /* ========== NUEVOS ESTILOS PARA CAMERA FLIP ========== */
+        .flip-camera-btn {
+            position: fixed;
+            top: 20px;
             right: 20px;
-            width: 120px;
-            height: 160px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .flip-camera-btn:hover {
+            background: var(--surface-light);
+            transform: rotate(90deg);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .flip-camera-btn:active {
+            transform: rotate(90deg) scale(0.95);
+        }
+
+        .flip-camera-btn.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ========== MEJORAS PARA VIDEO PREVIEW ========== */
+        .video-preview {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            width: 160px;
+            height: 120px;
             border-radius: 12px;
             overflow: hidden;
             border: 3px solid var(--accent);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            background: #000;
+            z-index: 1000;
             display: none;
+        }
+
+        .video-preview.active {
+            display: block;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .video-preview video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+
+        .toggle-camera-badge {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
             z-index: 10;
         }
 
-        .video-preview.active { display: block; }
-
-        .video-preview video { width: 100%; height: 100%; object-fit: cover; }
-
+        /* ========== NUEVOS ESTILOS PARA PERFIL MEJORADO ========== */
         .profile-modal {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--bg);
-            z-index: 1100;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--bg), #1a1f2e);
+            z-index: 2000;
             display: none;
             flex-direction: column;
+            overflow-y: auto;
             padding: 20px;
         }
 
-        .profile-modal.active { display: flex; }
+        .profile-modal.active {
+            display: flex;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
         .profile-header {
             display: flex;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            padding-top: 20px;
         }
 
         .back-btn {
             background: none;
             border: none;
             color: var(--accent);
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(51, 144, 236, 0.1);
         }
 
         .profile-title {
             flex: 1;
             text-align: center;
-            font-size: 1.4rem;
-            font-weight: 500;
-            margin-right: 40px;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .profile-avatar-section {
+            text-align: center;
+            margin-bottom: 40px;
         }
 
         .profile-avatar-container {
-            text-align: center;
-            margin-bottom: 30px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            position: relative;
+            border: 4px solid var(--accent);
+            box-shadow: 0 10px 30px rgba(51, 144, 236, 0.3);
+            overflow: hidden;
+            background: var(--surface);
         }
 
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
+        .profile-avatar-img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            background: var(--surface);
+            display: none;
+        }
+
+        .profile-avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--accent), #5ba8f5);
+            color: white;
+            font-size: 3.5rem;
+            font-weight: 700;
+        }
+
+        .change-photo-btn {
+            background: linear-gradient(135deg, var(--accent), #5ba8f5);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .change-photo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(51, 144, 236, 0.3);
+        }
+
+        .change-photo-btn:active {
+            transform: translateY(0);
+        }
+
+        .profile-form {
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group label i {
+            color: var(--accent);
+            font-size: 1rem;
         }
 
         .profile-input {
             width: 100%;
-            padding: 14px;
-            background: var(--surface);
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 12px;
             color: var(--text-primary);
             font-size: 1rem;
-            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
-        .btn-change-photo {
-            background: var(--accent);
+        .profile-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(51, 144, 236, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password-btn {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 1.1rem;
+            z-index: 2;
+        }
+
+        .toggle-password-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .form-note {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 6px;
+            display: block;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 40px;
+        }
+
+        .save-btn {
+            flex: 1;
+            padding: 18px;
+            background: linear-gradient(135deg, #4caf50, #45a049);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .save-btn:active {
+            transform: translateY(0);
+        }
+
+        .save-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .logout-btn {
+            padding: 18px 28px;
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(244, 67, 54, 0.3);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ========== NOTIFICACIONES ========== */
         .notification-toast {
             position: fixed;
             bottom: 30px;
@@ -303,11 +611,97 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: 1001;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
         }
 
         .notification-toast.show { opacity: 1; }
 
         .hidden { display: none !important; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .flip-camera-btn {
+                top: 15px;
+                right: 15px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .video-preview {
+                top: 80px;
+                right: 15px;
+                width: 140px;
+                height: 105px;
+            }
+            
+            .profile-avatar-container {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .profile-avatar-placeholder {
+                font-size: 3rem;
+            }
+            
+            .profile-actions {
+                flex-direction: column;
+            }
+            
+            .logout-btn {
+                padding: 18px;
+            }
+            
+            .call-btn {
+                width: 56px;
+                height: 56px;
+                font-size: 1.3rem;
+            }
+            
+            .call-bottom {
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .flip-camera-btn {
+                top: 10px;
+                right: 10px;
+                width: 46px;
+                height: 46px;
+            }
+            
+            .video-preview {
+                top: 70px;
+                right: 10px;
+                width: 120px;
+                height: 90px;
+            }
+            
+            .toggle-camera-badge {
+                font-size: 0.7rem;
+                padding: 4px 8px;
+            }
+            
+            .call-avatar-large {
+                width: 120px;
+                height: 120px;
+                font-size: 3rem;
+            }
+            
+            .call-name {
+                font-size: 1.5rem;
+            }
+            
+            .call-status-text {
+                font-size: 1rem;
+            }
+            
+            .timer {
+                font-size: 2.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -342,7 +736,16 @@
 
         <div class="video-preview" id="videoPreview">
             <video id="localVideoPreview" autoplay playsinline muted></video>
+            <div class="toggle-camera-badge" id="cameraBadge">
+                <i class="fas fa-camera"></i>
+                <span>Tu cámara</span>
+            </div>
         </div>
+
+        <!-- Botón para voltear cámara -->
+        <button class="flip-camera-btn" id="flipCamera" title="Voltear cámara">
+            <i class="fas fa-camera-rotate"></i>
+        </button>
 
         <div class="call-bottom" id="callControls">
             <button class="call-btn" id="toggleMic"><i class="fas fa-microphone"></i></button>
@@ -362,14 +765,67 @@
             <div class="profile-title">Mi Perfil</div>
         </div>
 
-        <div class="profile-avatar-container">
-            <img class="profile-avatar" id="profileAvatarImg" src="">
+        <div class="profile-avatar-section">
+            <div class="profile-avatar-container">
+                <img class="profile-avatar-img" id="profileAvatarImg" src="" alt="Avatar">
+                <div class="profile-avatar-placeholder" id="profileAvatarPlaceholder">U</div>
+            </div>
+            <button class="change-photo-btn" id="changePhotoBtn">
+                <i class="fas fa-camera"></i> Cambiar foto
+            </button>
             <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;">
-            <button class="btn-change-photo" id="changePhotoBtn">Cambiar foto</button>
         </div>
 
-        <input type="text" class="profile-input" id="profileNameInput" placeholder="Tu nombre">
-        <button class="btn-change-photo" id="saveProfileBtn" style="background:#4caf50;">Guardar cambios</button>
+        <div class="profile-form">
+            <div class="form-group">
+                <label for="profileNameInput"><i class="fas fa-user"></i> Nombre de usuario</label>
+                <input type="text" class="profile-input" id="profileNameInput" placeholder="Tu nombre">
+                <span class="form-note">Mínimo 3 caracteres</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="profileCurrentPassword"><i class="fas fa-lock"></i> Contraseña actual</label>
+                <div class="password-container">
+                    <input type="password" class="profile-input" id="profileCurrentPassword" 
+                           placeholder="Contraseña actual (para cambios)">
+                    <button type="button" class="toggle-password-btn" data-target="profileCurrentPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <span class="form-note">Solo si quieres cambiar la contraseña</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="profileNewPassword"><i class="fas fa-key"></i> Nueva contraseña</label>
+                <div class="password-container">
+                    <input type="password" class="profile-input" id="profileNewPassword" 
+                           placeholder="Nueva contraseña (opcional)">
+                    <button type="button" class="toggle-password-btn" data-target="profileNewPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="profileConfirmPassword"><i class="fas fa-check-circle"></i> Confirmar contraseña</label>
+                <div class="password-container">
+                    <input type="password" class="profile-input" id="profileConfirmPassword" 
+                           placeholder="Confirmar nueva contraseña">
+                    <button type="button" class="toggle-password-btn" data-target="profileConfirmPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <button class="save-btn" id="saveProfileBtn">
+                    <i class="fas fa-save"></i> Guardar cambios
+                </button>
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="notification-toast" id="notificationToast"></div>
@@ -378,6 +834,175 @@
     <audio id="remoteAudio" autoplay></audio>
 
     <script>
+        // ========== CLASE: IMAGE CACHE MANAGER ==========
+        class ImageCacheManager {
+            constructor() {
+                this.cache = new Map();
+                this.pendingRequests = new Map();
+                this.initCacheDB();
+            }
+            
+            async initCacheDB() {
+                if ('indexedDB' in window) {
+                    return new Promise((resolve, reject) => {
+                        const request = indexedDB.open('WebRTCAvatars', 1);
+                        
+                        request.onupgradeneeded = (event) => {
+                            const db = event.target.result;
+                            if (!db.objectStoreNames.contains('avatars')) {
+                                db.createObjectStore('avatars', { keyPath: 'url' });
+                            }
+                        };
+                        
+                        request.onsuccess = (event) => {
+                            this.db = event.target.result;
+                            console.log('✅ Cache de imágenes inicializado');
+                            resolve();
+                        };
+                        
+                        request.onerror = (event) => {
+                            console.error('❌ Error inicializando cache:', event.target.error);
+                            reject(event.target.error);
+                        };
+                    });
+                }
+                return Promise.resolve();
+            }
+            
+            async getAvatar(url) {
+                if (!url) return null;
+                
+                // 1. Revisar cache en memoria
+                if (this.cache.has(url)) {
+                    return this.cache.get(url);
+                }
+                
+                // 2. Si ya hay petición en curso, esperar
+                if (this.pendingRequests.has(url)) {
+                    return this.pendingRequests.get(url);
+                }
+                
+                // 3. Crear nueva promesa para esta URL
+                const promise = this.fetchAndCacheAvatar(url);
+                this.pendingRequests.set(url, promise);
+                
+                try {
+                    const result = await promise;
+                    return result;
+                } finally {
+                    this.pendingRequests.delete(url);
+                }
+            }
+            
+            async fetchAndCacheAvatar(url) {
+                try {
+                    // 4. Revisar IndexedDB primero
+                    let blob = await this.getFromIndexedDB(url);
+                    
+                    if (!blob) {
+                        // 5. Descargar de la red
+                        console.log('📥 Descargando avatar:', url);
+                        const response = await fetch(url);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        
+                        blob = await response.blob();
+                        
+                        // 6. Guardar en IndexedDB
+                        await this.saveToIndexedDB(url, blob);
+                    }
+                    
+                    // 7. Crear object URL y guardar en cache
+                    const objectUrl = URL.createObjectURL(blob);
+                    this.cache.set(url, objectUrl);
+                    
+                    // 8. Configurar limpieza automática
+                    setTimeout(() => {
+                        URL.revokeObjectURL(objectUrl);
+                        this.cache.delete(url);
+                    }, 5 * 60 * 1000); // 5 minutos
+                    
+                    return objectUrl;
+                    
+                } catch (error) {
+                    console.error('❌ Error obteniendo avatar:', error);
+                    return null;
+                }
+            }
+            
+            async getFromIndexedDB(url) {
+                if (!this.db) return null;
+                
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['avatars'], 'readonly');
+                    const store = transaction.objectStore('avatars');
+                    const request = store.get(url);
+                    
+                    request.onsuccess = (event) => {
+                        const result = event.target.result;
+                        resolve(result ? result.blob : null);
+                    };
+                    
+                    request.onerror = (event) => {
+                        console.error('Error en IndexedDB:', event.target.error);
+                        resolve(null);
+                    };
+                });
+            }
+            
+            async saveToIndexedDB(url, blob) {
+                if (!this.db) return;
+                
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['avatars'], 'readwrite');
+                    const store = transaction.objectStore('avatars');
+                    const request = store.put({ url, blob });
+                    
+                    request.onsuccess = () => resolve();
+                    request.onerror = (event) => {
+                        console.error('Error guardando en IndexedDB:', event.target.error);
+                        resolve();
+                    };
+                });
+            }
+            
+            async preloadAvatars(urls) {
+                const validUrls = urls.filter(url => url && !this.cache.has(url));
+                const promises = validUrls.map(url => this.getAvatar(url));
+                await Promise.allSettled(promises);
+            }
+            
+            clearCache() {
+                // Revocar todas las object URLs
+                this.cache.forEach(url => URL.revokeObjectURL(url));
+                this.cache.clear();
+                
+                // Limpiar IndexedDB
+                if (this.db) {
+                    const transaction = this.db.transaction(['avatars'], 'readwrite');
+                    const store = transaction.objectStore('avatars');
+                    store.clear();
+                }
+            }
+            
+            removeAvatar(url) {
+                if (this.cache.has(url)) {
+                    URL.revokeObjectURL(this.cache.get(url));
+                    this.cache.delete(url);
+                }
+                
+                // Remover de IndexedDB
+                if (this.db) {
+                    const transaction = this.db.transaction(['avatars'], 'readwrite');
+                    const store = transaction.objectStore('avatars');
+                    store.delete(url);
+                }
+            }
+        }
+
+        // Inicializar cache global
+        const imageCache = new ImageCacheManager();
+
+        // ========== CONFIGURACIÓN ==========
         const WS_URL = window.location.protocol === 'https:' 
             ? `wss://${window.location.host}/ws`
             : `ws://${window.location.host}/ws`;
@@ -396,6 +1021,7 @@
             iceCandidatePoolSize: 10
         };
 
+        // ========== ESTADO DE LA APLICACIÓN ==========
         const AppState = {
             ws: null,
             peer: null,
@@ -406,13 +1032,29 @@
             avatarColor: '#3390ec',
             profilePhoto: null,
             users: [],
-            currentCall: { peerId: '', peerName: '', peerAvatar: '', isActive: false, isInitiator: false },
-            settings: { micEnabled: true, cameraEnabled: false },
+            currentCall: { 
+                peerId: '', 
+                peerName: '', 
+                peerAvatar: '', 
+                isActive: false, 
+                isInitiator: false,
+                startTime: null 
+            },
+            settings: { 
+                micEnabled: true, 
+                cameraEnabled: false,
+                cameraFacing: 'user',
+                isVideoCall: false 
+            },
             timerInterval: null,
             callTimeout: null,
-            connected: false
+            connected: false,
+            sessionToken: null,
+            newProfilePhoto: null,
+            imageCache: new Map()
         };
 
+        // ========== FUNCIONES GLOBALES ==========
         function loadProfile() {
             const savedName = localStorage.getItem('webrtc_username');
             const savedPhoto = localStorage.getItem('webrtc_profile_photo');
@@ -421,22 +1063,59 @@
             updateMyAvatar();
         }
 
-        function updateMyAvatar() {
+        async function updateMyAvatar() {
             const avatar = document.getElementById('myAvatar');
-            const img = document.getElementById('profileAvatarImg');
+            const profileImg = document.getElementById('profileAvatarImg');
+            const profilePlaceholder = document.getElementById('profileAvatarPlaceholder');
+            
             if (AppState.profilePhoto) {
-                avatar.style.background = 'none';
-                avatar.innerHTML = `<img src="${AppState.profilePhoto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-                img.src = AppState.profilePhoto;
+                // Si es una URL, usar cache
+                if (AppState.profilePhoto.startsWith('http')) {
+                    const cachedUrl = await imageCache.getAvatar(AppState.profilePhoto);
+                    if (cachedUrl) {
+                        // Actualizar avatar en header
+                        avatar.style.background = 'none';
+                        avatar.innerHTML = `<img src="${cachedUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt="${AppState.username}">`;
+                        
+                        // Actualizar avatar en perfil
+                        profileImg.src = cachedUrl;
+                        profileImg.style.display = 'block';
+                        profilePlaceholder.style.display = 'none';
+                    } else {
+                        // Fallback a iniciales
+                        setFallbackAvatar(avatar, profileImg, profilePlaceholder);
+                    }
+                } 
+                // Si es data URL o blob
+                else if (AppState.profilePhoto.startsWith('data:') || AppState.profilePhoto.startsWith('blob:')) {
+                    avatar.style.background = 'none';
+                    avatar.innerHTML = `<img src="${AppState.profilePhoto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt="${AppState.username}">`;
+                    
+                    profileImg.src = AppState.profilePhoto;
+                    profileImg.style.display = 'block';
+                    profilePlaceholder.style.display = 'none';
+                } else {
+                    setFallbackAvatar(avatar, profileImg, profilePlaceholder);
+                }
             } else {
-                avatar.style.background = `linear-gradient(135deg, ${AppState.avatarColor}, #5ba8f5)`;
-                avatar.textContent = AppState.username.charAt(0).toUpperCase() || 'U';
-                img.src = '';
+                setFallbackAvatar(avatar, profileImg, profilePlaceholder);
             }
+            
+            // Actualizar otros elementos
             document.getElementById('profileNameInput').value = AppState.username;
             document.getElementById('myStatusIndicator').classList.toggle('offline', !AppState.connected);
         }
 
+        function setFallbackAvatar(avatar, profileImg, profilePlaceholder) {
+            avatar.style.background = `linear-gradient(135deg, ${AppState.avatarColor}, #5ba8f5)`;
+            avatar.textContent = AppState.username.charAt(0).toUpperCase() || 'U';
+            
+            profileImg.style.display = 'none';
+            profilePlaceholder.style.display = 'flex';
+            profilePlaceholder.textContent = AppState.username.charAt(0).toUpperCase() || 'U';
+        }
+
+        // ========== UI MANAGER ==========
         const UIManager = {
             isUserAvailable(userId) {
                 const user = AppState.users.find(u => u.id === userId);
@@ -445,7 +1124,7 @@
                     return false;
                 }
                 
-                if (user.status === 'disponible') {
+                if (user.is_connected && user.status === 'disponible') {
                     if (userId === AppState.userId) {
                         console.log('❌ No se puede llamar a sí mismo');
                         return false;
@@ -454,40 +1133,115 @@
                     return true;
                 }
                 
-                console.log('❌ Usuario no disponible. Estado:', user.status);
+                console.log('❌ Usuario no disponible. Estado:', user.status, 'Conectado:', user.is_connected);
                 return false;
             },
 
-            updateUserList(users) {
+            async updateUserList(users) {
                 const list = document.getElementById('usersList');
-                list.innerHTML = users.map(user => {
-                    const available = user.status === 'disponible';
-                    const initials = user.username.charAt(0).toUpperCase();
-                    return `
-                        <div class="user-item ${!available ? 'disabled' : ''}" data-id="${user.id}">
-                            <div class="user-avatar-small" style="background: linear-gradient(135deg, ${user.avatarColor}, #5ba8f5);">
-                                ${initials}
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-state';
+                emptyState.innerHTML = '<p>No hay usuarios disponibles</p>';
+                
+                if (!list) return;
+                
+                if (!users || users.length === 0) {
+                    list.innerHTML = '';
+                    list.appendChild(emptyState);
+                    return;
+                }
+                
+                // Separar online/offline
+                const onlineUsers = users.filter(user => user.is_connected);
+                const offlineUsers = users.filter(user => !user.is_connected);
+                
+                // Pre-cargar avatares
+                const avatarUrls = users
+                    .map(user => user.avatar_url)
+                    .filter(url => url && typeof url === 'string');
+                
+                if (avatarUrls.length > 0) {
+                    imageCache.preloadAvatars(avatarUrls).catch(console.error);
+                }
+                
+                // Generar HTML para cada usuario
+                const userItemsHTML = await Promise.all(
+                    users.map(async (user) => {
+                        const isAvailable = user.is_connected && user.status === 'disponible';
+                        const initials = user.username.charAt(0).toUpperCase();
+                        
+                        // Determinar color de fondo para avatar
+                        const avatarColor = user.avatar_color || '#3390ec';
+                        
+                        // Obtener avatar del cache si existe
+                        let avatarHTML = '';
+                        if (user.avatar_url) {
+                            try {
+                                const cachedUrl = await imageCache.getAvatar(user.avatar_url);
+                                if (cachedUrl) {
+                                    avatarHTML = `
+                                        <div class="user-avatar-small">
+                                            <img src="${cachedUrl}" alt="${user.username}" 
+                                                 style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                                        </div>
+                                    `;
+                                }
+                            } catch (error) {
+                                console.error('Error obteniendo avatar:', error);
+                            }
+                        }
+                        
+                        // Fallback a iniciales si no hay avatar
+                        if (!avatarHTML) {
+                            avatarHTML = `
+                                <div class="user-avatar-small" style="background: linear-gradient(135deg, ${avatarColor}, #5ba8f5);">
+                                    ${initials}
+                                </div>
+                            `;
+                        }
+                        
+                        const statusText = user.is_connected ? this.getStatusText(user.status) : 'Desconectado';
+                        
+                        return `
+                            <div class="user-item ${!isAvailable ? 'disabled' : ''}" 
+                                 data-id="${user.id}" 
+                                 data-username="${user.username}"
+                                 data-status="${user.status}">
+                                ${avatarHTML}
+                                <div class="user-info">
+                                    <h3>${user.username}</h3>
+                                    <p>
+                                        <span class="status-dot ${user.is_connected ? 'online' : 'offline'}"></span>
+                                        ${statusText}
+                                    </p>
+                                </div>
+                                <div class="call-action ${!isAvailable ? 'disabled' : ''}">
+                                    <i class="fas fa-phone${!isAvailable ? '-slash' : ''}"></i>
+                                </div>
                             </div>
-                            <div class="user-info">
-                                <h3>${user.username}</h3>
-                                <p><span class="status-dot"></span>${this.getStatusText(user.status)}</p>
-                            </div>
-                            <div class="call-action ${!available ? 'disabled' : ''}">
-                                <i class="fas fa-phone${!available ? '-slash' : ''}"></i>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
+                        `;
+                    })
+                );
+                
+                list.innerHTML = userItemsHTML.join('');
+                
+                // Agregar event listeners
+                this.addUserItemListeners();
+            },
 
+            addUserItemListeners() {
+                const list = document.getElementById('usersList');
+                if (!list) return;
+                
                 list.querySelectorAll('.user-item:not(.disabled)').forEach(item => {
                     item.addEventListener('click', () => {
                         const targetId = item.dataset.id;
-                        const peerName = item.querySelector('h3').textContent;
-                        const peerAvatar = item.querySelector('.user-avatar-small').style.background;
+                        const peerName = item.dataset.username;
+                        const avatarElement = item.querySelector('.user-avatar-small');
+                        const peerAvatar = avatarElement.style.background || 
+                                          `linear-gradient(135deg, #3390ec, #5ba8f5)`;
                         
                         console.log('👆 Usuario clickeado:', peerName, 'ID:', targetId);
-                        console.log('📊 Estado actual:', AppState);
-                        
                         this.initiateCall(targetId, peerName, peerAvatar);
                     });
                 });
@@ -537,13 +1291,31 @@
                     peerName: peerName,
                     peerAvatar: peerAvatar,
                     isActive: false,
-                    isInitiator: true
+                    isInitiator: true,
+                    startTime: null
                 };
                 
                 // 5. Mostrar pantalla de llamada
                 this.showCallScreen(false);
-                document.getElementById('callAvatarLarge').style.background = peerAvatar;
-                document.getElementById('callAvatarLarge').textContent = peerName.charAt(0).toUpperCase();
+                
+                // Configurar avatar de llamada
+                const callAvatarLarge = document.getElementById('callAvatarLarge');
+                if (peerAvatar.includes('linear-gradient')) {
+                    callAvatarLarge.style.background = peerAvatar;
+                    callAvatarLarge.textContent = peerName.charAt(0).toUpperCase();
+                    callAvatarLarge.innerHTML = ''; // Limpiar cualquier imagen
+                } else {
+                    // Si es una URL de imagen
+                    callAvatarLarge.style.background = '';
+                    const cachedUrl = await imageCache.getAvatar(peerAvatar);
+                    if (cachedUrl) {
+                        callAvatarLarge.innerHTML = `<img src="${cachedUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+                    } else {
+                        callAvatarLarge.style.background = `linear-gradient(135deg, #3390ec, #5ba8f5)`;
+                        callAvatarLarge.textContent = peerName.charAt(0).toUpperCase();
+                    }
+                }
+                
                 document.getElementById('callPeerName').textContent = peerName;
                 document.getElementById('callStatusText').textContent = 'Llamando...';
                 
@@ -561,12 +1333,16 @@
                     peerName: callerName,
                     peerAvatar: callerAvatar,
                     isActive: false,
-                    isInitiator: false
+                    isInitiator: false,
+                    startTime: null
                 };
 
                 this.showCallScreen(true);
-                document.getElementById('callAvatarLarge').style.background = callerAvatar;
-                document.getElementById('callAvatarLarge').textContent = callerName.charAt(0).toUpperCase();
+                
+                // Configurar avatar
+                const callAvatarLarge = document.getElementById('callAvatarLarge');
+                callAvatarLarge.style.background = callerAvatar;
+                callAvatarLarge.textContent = callerName.charAt(0).toUpperCase();
                 document.getElementById('callPeerName').textContent = callerName;
                 document.getElementById('callStatusText').textContent = 'Llamada entrante';
             },
@@ -581,6 +1357,9 @@
                 document.getElementById('videoPreview').classList.remove('active');
                 document.getElementById('callAvatarLarge').style.display = 'flex';
                 document.getElementById('timer').classList.remove('active');
+                
+                // Ocultar botón de voltear cámara inicialmente
+                document.getElementById('flipCamera').style.display = 'none';
             },
 
             updateCallStatus(text) {
@@ -614,25 +1393,41 @@
 
             stopTimer() {
                 console.log('⏱️ Deteniendo timer');
-                clearInterval(AppState.timerInterval);
+                if (AppState.timerInterval) {
+                    clearInterval(AppState.timerInterval);
+                    AppState.timerInterval = null;
+                }
                 document.getElementById('timer').classList.remove('active');
             },
 
             endCall() {
                 console.log('📞 Finalizando llamada');
                 this.clearCallTimeout();
+                this.stopTimer();
+                
                 if (AppState.currentCall.peerId) {
                     WebSocketManager.send('call_end');
                 }
+                
                 WebRTCManager.cleanup();
                 document.getElementById('callOverlay').classList.remove('active');
-                this.stopTimer();
-                AppState.currentCall = { peerId: '', peerName: '', peerAvatar: '', isActive: false, isInitiator: false };
+                
+                // Resetear estado de llamada
+                AppState.currentCall = { 
+                    peerId: '', 
+                    peerName: '', 
+                    peerAvatar: '', 
+                    isActive: false, 
+                    isInitiator: false,
+                    startTime: null 
+                };
             },
 
             showNotification(message, duration = 3000) {
                 console.log('📢 Notificación:', message);
                 const toast = document.getElementById('notificationToast');
+                if (!toast) return;
+                
                 toast.textContent = message;
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), duration);
@@ -641,7 +1436,13 @@
             async requestPermissions() {
                 console.log('🔒 Solicitando permisos...');
                 try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            autoGainControl: true
+                        }
+                    });
                     stream.getTracks().forEach(track => track.stop());
                     console.log('✅ Permisos concedidos');
                     return true;
@@ -683,64 +1484,482 @@
             },
 
             async toggleCamera() {
-                if (AppState.settings.cameraEnabled) {
-                    // Desactivar cámara
-                    console.log('📷 Desactivando cámara');
+                console.log('📷 Toggle camera llamado');
+                
+                try {
+                    if (!AppState.settings.cameraEnabled) {
+                        // ACTIVAR CÁMARA
+                        console.log('🔴 Activando cámara...');
+                        
+                        const constraints = {
+                            video: {
+                                width: { ideal: 1280 },
+                                height: { ideal: 720 },
+                                facingMode: AppState.settings.cameraFacing || 'user'
+                            },
+                            audio: false
+                        };
+                        
+                        const videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                        console.log('✅ Cámara obtenida');
+                        
+                        AppState.videoStream = videoStream;
+                        AppState.settings.cameraEnabled = true;
+                        AppState.settings.isVideoCall = true;
+                        
+                        // Mostrar vista previa local
+                        const previewVideo = document.getElementById('localVideoPreview');
+                        previewVideo.srcObject = videoStream;
+                        document.getElementById('videoPreview').classList.add('active');
+                        
+                        // Mostrar botón de voltear cámara
+                        document.getElementById('flipCamera').style.display = 'flex';
+                        
+                        // Agregar video track al stream local
+                        if (AppState.localStream) {
+                            videoStream.getVideoTracks().forEach(track => {
+                                AppState.localStream.addTrack(track);
+                            });
+                            console.log('✅ Video track agregado al stream local');
+                        }
+                        
+                        // Si hay peer conectado, renegociar
+                        if (AppState.peer && AppState.peer.connected) {
+                            console.log('🔄 Renegociando con peer...');
+                            const videoTrack = AppState.localStream.getVideoTracks()[0];
+                            AppState.peer.replaceTrack(
+                                videoTrack,
+                                AppState.localStream,
+                                AppState.peer
+                            );
+                        }
+                        
+                        this.updateCallControls();
+                        this.showNotification('Cámara activada');
+                        
+                    } else {
+                        // DESACTIVAR CÁMARA
+                        console.log('🔴 Desactivando cámara...');
+                        
+                        if (AppState.videoStream) {
+                            AppState.videoStream.getTracks().forEach(track => {
+                                track.stop();
+                                console.log('⏹️ Track de video detenido');
+                                
+                                if (AppState.localStream) {
+                                    const tracks = AppState.localStream.getVideoTracks();
+                                    tracks.forEach(t => {
+                                        AppState.localStream.removeTrack(t);
+                                        console.log('🗑️ Track removido del stream local');
+                                    });
+                                }
+                            });
+                            AppState.videoStream = null;
+                        }
+                        
+                        AppState.settings.cameraEnabled = false;
+                        AppState.settings.isVideoCall = false;
+                        
+                        // Ocultar vista previa
+                        const previewVideo = document.getElementById('localVideoPreview');
+                        previewVideo.srcObject = null;
+                        document.getElementById('videoPreview').classList.remove('active');
+                        
+                        // Ocultar botón de voltear cámara
+                        document.getElementById('flipCamera').style.display = 'none';
+                        
+                        this.updateCallControls();
+                        this.showNotification('Cámara desactivada');
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Error en toggleCamera:', error);
+                    
+                    if (error.name === 'NotAllowedError') {
+                        this.showNotification('Permiso de cámara denegado');
+                    } else if (error.name === 'NotFoundError') {
+                        this.showNotification('No se encontró ninguna cámara');
+                    } else if (error.name === 'NotReadableError') {
+                        this.showNotification('La cámara está en uso por otra aplicación');
+                    } else {
+                        this.showNotification('Error al acceder a la cámara');
+                    }
+                    
+                    // Forzar estado desactivado
+                    AppState.settings.cameraEnabled = false;
+                    this.updateCallControls();
+                }
+            },
+
+            async flipCamera() {
+                if (!AppState.settings.cameraEnabled) {
+                    this.showNotification('Primero activa la cámara');
+                    return;
+                }
+                
+                console.log('🔄 Volteando cámara...');
+                
+                try {
+                    // Detener cámara actual
                     if (AppState.videoStream) {
                         AppState.videoStream.getTracks().forEach(track => track.stop());
                     }
+                    
+                    // Cambiar modo de cámara
+                    const newFacingMode = AppState.settings.cameraFacing === 'user' ? 'environment' : 'user';
+                    AppState.settings.cameraFacing = newFacingMode;
+                    
+                    console.log(`🎯 Nueva cámara: ${newFacingMode}`);
+                    
+                    // Obtener nueva cámara
+                    const constraints = {
+                        video: {
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 },
+                            facingMode: newFacingMode
+                        },
+                        audio: false
+                    };
+                    
+                    const videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                    AppState.videoStream = videoStream;
+                    
+                    // Actualizar vista previa
+                    const previewVideo = document.getElementById('localVideoPreview');
+                    previewVideo.srcObject = videoStream;
+                    
+                    // Reemplazar track en stream local
                     if (AppState.localStream) {
-                        AppState.localStream.getVideoTracks().forEach(track => AppState.localStream.removeTrack(track));
+                        // Remover tracks viejos
+                        const oldVideoTracks = AppState.localStream.getVideoTracks();
+                        oldVideoTracks.forEach(track => {
+                            AppState.localStream.removeTrack(track);
+                            track.stop();
+                        });
+                        
+                        // Agregar nuevo track
+                        videoStream.getVideoTracks().forEach(track => {
+                            AppState.localStream.addTrack(track);
+                        });
+                        
+                        console.log('✅ Track de video reemplazado');
                     }
-                    document.getElementById('videoPreview').classList.remove('active');
-                    AppState.settings.cameraEnabled = false;
-                    document.getElementById('toggleCamera').querySelector('i').className = 'fas fa-video-slash';
-                    this.showNotification('Cámara desactivada');
-                } else {
-                    // Activar cámara
-                    console.log('📷 Activando cámara');
-                    try {
-                        const videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
-                        AppState.videoStream = videoStream;
-                        AppState.settings.cameraEnabled = true;
-
-                        if (AppState.localStream) {
-                            videoStream.getVideoTracks().forEach(track => AppState.localStream.addTrack(track));
+                    
+                    // Si hay peer conectado, renegociar
+                    if (AppState.peer && AppState.peer.connected) {
+                        const videoTrack = AppState.localStream.getVideoTracks()[0];
+                        if (videoTrack) {
+                            AppState.peer.replaceTrack(
+                                videoTrack,
+                                AppState.localStream,
+                                AppState.peer
+                            );
+                            console.log('🔄 Señal renegociada con peer');
                         }
-
-                        document.getElementById('localVideoPreview').srcObject = videoStream;
-                        document.getElementById('videoPreview').classList.add('active');
-                        document.getElementById('toggleCamera').querySelector('i').className = 'fas fa-video';
-                        this.showNotification('Cámara activada');
-                    } catch (err) {
-                        console.error('❌ Error al acceder a la cámara:', err);
-                        this.showNotification('Error al acceder a la cámara');
+                    }
+                    
+                    const cameraType = newFacingMode === 'user' ? 'frontal' : 'trasera';
+                    this.showNotification(`Cámara ${cameraType} activada`);
+                    
+                } catch (error) {
+                    console.error('❌ Error volteando cámara:', error);
+                    
+                    // Revertir al modo anterior
+                    AppState.settings.cameraFacing = AppState.settings.cameraFacing === 'user' ? 'environment' : 'user';
+                    
+                    if (error.name === 'NotFoundError') {
+                        this.showNotification('No se encontró la cámara seleccionada');
+                    } else if (error.name === 'NotAllowedError') {
+                        this.showNotification('Permiso de cámara denegado');
+                    } else {
+                        this.showNotification('Error al voltear cámara');
                     }
                 }
             },
 
+            updateCallControls() {
+                const micButton = document.getElementById('toggleMic');
+                const cameraButton = document.getElementById('toggleCamera');
+                const flipButton = document.getElementById('flipCamera');
+                
+                if (!micButton || !cameraButton || !flipButton) return;
+                
+                // Actualizar ícono de micrófono
+                if (AppState.settings.micEnabled) {
+                    micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                    micButton.title = 'Silenciar micrófono';
+                } else {
+                    micButton.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                    micButton.title = 'Activar micrófono';
+                }
+                
+                // Actualizar ícono de cámara
+                if (AppState.settings.cameraEnabled) {
+                    cameraButton.innerHTML = '<i class="fas fa-video"></i>';
+                    cameraButton.title = 'Desactivar cámara';
+                    flipButton.style.display = 'flex';
+                } else {
+                    cameraButton.innerHTML = '<i class="fas fa-video-slash"></i>';
+                    cameraButton.title = 'Activar cámara';
+                    flipButton.style.display = 'none';
+                }
+                
+                console.log('🔄 Controles actualizados');
+            },
+
+            createRipple(event) {
+                const button = event.currentTarget;
+                if (!button) return;
+                
+                const circle = document.createElement('span');
+                const diameter = Math.max(button.clientWidth, button.clientHeight);
+                const radius = diameter / 2;
+                
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+                circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+                circle.classList.add('ripple');
+                
+                const ripple = button.getElementsByClassName('ripple')[0];
+                if (ripple) ripple.remove();
+                
+                button.appendChild(circle);
+            },
+
+            // ========== FUNCIONES NUEVAS PARA PERFIL ==========
+
             showProfileModal() {
-                console.log('👤 Mostrando perfil');
-                document.getElementById('profileModal').classList.add('active');
+                console.log('👤 Mostrando modal de perfil');
+                
+                const modal = document.getElementById('profileModal');
+                if (!modal) return;
+                
+                // Cargar datos actuales
+                document.getElementById('profileNameInput').value = AppState.username;
+                document.getElementById('profileCurrentPassword').value = '';
+                document.getElementById('profileNewPassword').value = '';
+                document.getElementById('profileConfirmPassword').value = '';
+                
+                // Actualizar avatar
+                this.updateProfileAvatar();
+                
+                modal.classList.add('active');
+            },
+
+            updateProfileAvatar() {
+                const profileImg = document.getElementById('profileAvatarImg');
+                const profilePlaceholder = document.getElementById('profileAvatarPlaceholder');
+                
+                if (!profileImg || !profilePlaceholder) return;
+                
+                // Si hay nueva foto seleccionada (pero no guardada)
+                if (AppState.newProfilePhoto) {
+                    profileImg.src = AppState.newProfilePhoto;
+                    profileImg.style.display = 'block';
+                    profilePlaceholder.style.display = 'none';
+                } 
+                // Si hay foto de perfil existente
+                else if (AppState.profilePhoto && (AppState.profilePhoto.startsWith('blob:') || AppState.profilePhoto.startsWith('data:'))) {
+                    profileImg.src = AppState.profilePhoto;
+                    profileImg.style.display = 'block';
+                    profilePlaceholder.style.display = 'none';
+                }
+                // Si es una URL
+                else if (AppState.profilePhoto && AppState.profilePhoto.startsWith('http')) {
+                    // Intentar obtener del cache
+                    imageCache.getAvatar(AppState.profilePhoto).then(cachedUrl => {
+                        if (cachedUrl) {
+                            profileImg.src = cachedUrl;
+                            profileImg.style.display = 'block';
+                            profilePlaceholder.style.display = 'none';
+                        } else {
+                            // Fallback a placeholder
+                            this.showProfilePlaceholder(profileImg, profilePlaceholder);
+                        }
+                    }).catch(() => {
+                        this.showProfilePlaceholder(profileImg, profilePlaceholder);
+                    });
+                } else {
+                    this.showProfilePlaceholder(profileImg, profilePlaceholder);
+                }
+            },
+
+            showProfilePlaceholder(profileImg, profilePlaceholder) {
+                profileImg.style.display = 'none';
+                profilePlaceholder.style.display = 'flex';
+                profilePlaceholder.textContent = AppState.username.charAt(0).toUpperCase() || 'U';
             },
 
             hideProfileModal() {
                 console.log('👤 Ocultando perfil');
-                document.getElementById('profileModal').classList.remove('active');
+                const modal = document.getElementById('profileModal');
+                if (modal) modal.classList.remove('active');
+                
+                // Limpiar nueva foto si no se guardó
+                AppState.newProfilePhoto = null;
+            },
+
+            async updateProfile() {
+                console.log('💾 Actualizando perfil...');
+                
+                const newName = document.getElementById('profileNameInput').value.trim();
+                const currentPassword = document.getElementById('profileCurrentPassword').value;
+                const newPassword = document.getElementById('profileNewPassword').value;
+                const confirmPassword = document.getElementById('profileConfirmPassword').value;
+                
+                // Validaciones
+                if (!newName) {
+                    this.showNotification('El nombre no puede estar vacío');
+                    return;
+                }
+                
+                if (newName.length < 3) {
+                    this.showNotification('El nombre debe tener al menos 3 caracteres');
+                    return;
+                }
+                
+                if (newPassword && newPassword !== confirmPassword) {
+                    this.showNotification('Las contraseñas no coinciden');
+                    return;
+                }
+                
+                if (newPassword && !currentPassword) {
+                    this.showNotification('Debes ingresar tu contraseña actual para cambiarla');
+                    return;
+                }
+                
+                if (newPassword && newPassword.length < 6) {
+                    this.showNotification('La nueva contraseña debe tener al menos 6 caracteres');
+                    return;
+                }
+                
+                // Mostrar loading
+                const saveBtn = document.getElementById('saveProfileBtn');
+                if (!saveBtn) return;
+                
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                saveBtn.disabled = true;
+                
+                try {
+                    // Preparar datos para enviar
+                    const updateData = {
+                        token: localStorage.getItem('webrtc_session_token'),
+                        username: newName !== AppState.username ? newName : null,
+                        password: newPassword || null
+                    };
+                    
+                    // Si hay nueva foto de perfil
+                    if (AppState.newProfilePhoto) {
+                        updateData.avatar = AppState.newProfilePhoto;
+                    }
+                    
+                    console.log('📤 Enviando datos de perfil:', { ...updateData, avatar: updateData.avatar ? '[BASE64_IMAGE]' : null });
+                    
+                    const response = await fetch('/api/update_profile', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updateData)
+                    });
+                    
+                    const data = await response.json();
+                    console.log('📥 Respuesta del servidor:', data);
+                    
+                    if (data.success) {
+                        // Actualizar estado local
+                        AppState.username = data.user.username;
+                        
+                        // Actualizar avatar si hubo cambios
+                        if (data.user.avatar_url) {
+                            // Invalidar cache viejo si existe
+                            if (AppState.profilePhoto && AppState.profilePhoto.startsWith('http')) {
+                                imageCache.removeAvatar(AppState.profilePhoto);
+                            }
+                            
+                            // Actualizar con nueva URL
+                            AppState.profilePhoto = data.user.avatar_url;
+                            AppState.newProfilePhoto = null;
+                            
+                            // Precargar nuevo avatar
+                            const cachedUrl = await imageCache.getAvatar(data.user.avatar_url);
+                            if (cachedUrl) {
+                                AppState.profilePhoto = cachedUrl;
+                            }
+                        }
+                        
+                        // Guardar en localStorage
+                        localStorage.setItem('webrtc_username', data.user.username);
+                        localStorage.setItem('webrtc_user', JSON.stringify(data.user));
+                        
+                        // Actualizar UI
+                        await updateMyAvatar();
+                        this.showNotification('✅ Perfil actualizado correctamente');
+                        this.hideProfileModal();
+                        
+                        // Notificar a otros usuarios
+                        WebSocketManager.send('profile_updated');
+                        
+                    } else {
+                        this.showNotification(data.error || '❌ Error actualizando perfil');
+                    }
+                    
+                } catch (error) {
+                    console.error('💥 Error actualizando perfil:', error);
+                    this.showNotification('❌ Error de conexión al servidor');
+                } finally {
+                    // Restaurar botón
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                }
+            },
+
+            logout() {
+                console.log('🚪 Cerrando sesión...');
+                
+                // Finalizar llamada si está activa
+                if (AppState.currentCall.isActive) {
+                    this.endCall();
+                }
+                
+                // Cerrar WebSocket
+                if (AppState.ws) {
+                    AppState.ws.close();
+                }
+                
+                // Limpiar localStorage
+                localStorage.removeItem('webrtc_session_token');
+                localStorage.removeItem('webrtc_user');
+                localStorage.removeItem('webrtc_username');
+                localStorage.removeItem('webrtc_profile_photo');
+                
+                // Limpiar cache de imágenes
+                imageCache.clearCache();
+                
+                // Redirigir a login
+                window.location.href = '/';
             }
         };
 
+        // ========== WEBSOCKET MANAGER ==========
         const WebSocketManager = {
             connect() {
-                console.log('🔗 Conectando a WebSocket:', WS_URL);
-                AppState.ws = new WebSocket(WS_URL);
+                const sessionToken = localStorage.getItem('webrtc_session_token');
+                if (!sessionToken) {
+                    console.error('❌ No hay token de sesión');
+                    window.location.href = '/';
+                    return;
+                }
+                
+                // Incluir token en la URL de WebSocket
+                const wsUrl = `${WS_URL}?token=${encodeURIComponent(sessionToken)}`;
+                
+                console.log('🔗 Conectando a WebSocket:', wsUrl);
+                AppState.ws = new WebSocket(wsUrl);
 
                 AppState.ws.onopen = () => {
                     console.log('✅ WebSocket conectado');
                     AppState.connected = true;
                     updateMyAvatar();
-                    const username = localStorage.getItem('webrtc_username') || 'Usuario';
-                    this.send('register', { username });
                     this.startHeartbeat();
                 };
 
@@ -759,7 +1978,11 @@
                     AppState.connected = false;
                     updateMyAvatar();
                     this.stopHeartbeat();
-                    setTimeout(() => this.connect(), 3000);
+                    
+                    // Solo reconectar si no estamos en proceso de logout
+                    if (!window.location.href.includes('/')) {
+                        setTimeout(() => this.connect(), 3000);
+                    }
                 };
 
                 AppState.ws.onerror = (error) => {
@@ -787,12 +2010,23 @@
                         AppState.userId = data.userId;
                         AppState.username = data.username;
                         AppState.avatarColor = data.avatarColor;
-                        AppState.users = data.onlineUsers || [];
+                        AppState.users = data.users || [];
+                        AppState.sessionToken = data.token;
+                        
                         localStorage.setItem('webrtc_username', data.username);
+                        localStorage.setItem('webrtc_user', JSON.stringify({
+                            id: data.userId,
+                            username: data.username,
+                            avatar_url: data.avatar_url
+                        }));
+                        
+                        if (data.token) {
+                            localStorage.setItem('webrtc_session_token', data.token);
+                        }
+                        
                         updateMyAvatar();
-                        UIManager.updateUserList(data.onlineUsers || []);
+                        UIManager.updateUserList(data.users || []);
                         document.getElementById('loadingOverlay').style.display = 'none';
-                        this.send('get_users');
                         break;
 
                     case 'user_list':
@@ -850,6 +2084,11 @@
                             AppState.peer.signal(data.signal);
                         }
                         break;
+
+                    case 'search_results':
+                        console.log('🔍 Resultados de búsqueda:', data.users?.length || 0);
+                        UIManager.updateUserList(data.users || []);
+                        break;
                 }
             },
 
@@ -863,39 +2102,78 @@
                 if (AppState.heartbeatInterval) {
                     console.log('💓 Deteniendo heartbeat');
                     clearInterval(AppState.heartbeatInterval);
+                    AppState.heartbeatInterval = null;
                 }
             }
         };
 
+        // ========== WEBRTC MANAGER ==========
         const WebRTCManager = {
             async start(isInitiator) {
-                console.log('🎤 Iniciando WebRTC, initiator:', isInitiator);
+                console.log(`🎤 ${isInitiator ? 'Iniciador' : 'Receptor'} obteniendo stream...`);
+                
                 try {
+                    // Configurar constraints basado en estado de cámara
                     const constraints = {
-                        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-                        video: AppState.settings.cameraEnabled ? { facingMode: 'user' } : false
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            autoGainControl: true,
+                            channelCount: 1
+                        },
+                        video: AppState.settings.cameraEnabled ? {
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 },
+                            facingMode: AppState.settings.cameraFacing || 'user'
+                        } : false
                     };
-
+                    
+                    console.log('🎯 Constraints:', constraints);
+                    
+                    // Obtener stream
                     AppState.localStream = await navigator.mediaDevices.getUserMedia(constraints);
                     console.log('✅ Stream obtenido:', AppState.settings.cameraEnabled ? 'audio+video' : 'audio');
-
-                    document.getElementById('localAudio').srcObject = AppState.localStream;
-
-                    if (AppState.settings.cameraEnabled) {
-                        document.getElementById('localVideoPreview').srcObject = AppState.localStream;
+                    
+                    // Si la cámara está activa, configurar vista previa
+                    if (AppState.settings.cameraEnabled && AppState.localStream.getVideoTracks().length > 0) {
+                        AppState.videoStream = AppState.localStream;
+                        const previewVideo = document.getElementById('localVideoPreview');
+                        previewVideo.srcObject = AppState.localStream;
                         document.getElementById('videoPreview').classList.add('active');
+                        document.getElementById('flipCamera').style.display = 'flex';
                     }
-
+                    
+                    // Asignar stream local a audio
+                    const localAudio = document.getElementById('localAudio');
+                    localAudio.srcObject = AppState.localStream;
+                    localAudio.muted = true;
+                    
+                    // Crear peer
                     this.createPeer(isInitiator);
+                    
+                    return true;
+                    
                 } catch (error) {
-                    console.error('❌ Error obteniendo stream:', error);
-                    UIManager.showNotification('Error al acceder al micrófono/cámara');
+                    console.error('❌ Error en WebRTC.start:', error);
+                    
+                    if (error.name === 'NotAllowedError') {
+                        UIManager.showNotification('Acceso al micrófono/cámara denegado');
+                    } else if (error.name === 'NotFoundError') {
+                        UIManager.showNotification('No se encontró ningún dispositivo');
+                    } else if (error.name === 'NotReadableError') {
+                        UIManager.showNotification('Error al acceder al dispositivo');
+                    } else {
+                        UIManager.showNotification('Error al conectar la llamada');
+                    }
+                    
                     UIManager.endCall();
+                    return false;
                 }
             },
 
             createPeer(isInitiator) {
-                console.log('🎯 Creando peer, initiator:', isInitiator);
+                console.log(`🎯 Creando peer (initiator: ${isInitiator})`);
+                
                 AppState.peer = new SimplePeer({
                     initiator: isInitiator,
                     stream: AppState.localStream,
@@ -903,35 +2181,57 @@
                     trickle: true
                 });
 
-                AppState.peer.on('signal', signal => {
+                AppState.peer.on('signal', (signal) => {
                     console.log('📡 Señal generada:', signal.type);
-                    WebSocketManager.send('webrtc_signal', { targetId: AppState.currentCall.peerId, signal });
+                    WebSocketManager.send('webrtc_signal', { 
+                        targetId: AppState.currentCall.peerId, 
+                        signal: signal 
+                    });
                 });
 
-                AppState.peer.on('stream', remoteStream => {
-                    console.log('🔊 Stream remoto recibido');
-                    document.getElementById('remoteAudio').srcObject = remoteStream;
-                    document.getElementById('remoteVideo').srcObject = remoteStream;
+                AppState.peer.on('stream', (remoteStream) => {
+                    console.log('🔊 Stream remoto recibido!');
+                    
+                    // Audio
+                    const remoteAudio = document.getElementById('remoteAudio');
+                    remoteAudio.srcObject = remoteStream;
+                    
+                    // Reproducir audio
+                    remoteAudio.play().catch(e => {
+                        console.log('⚠️ Error reproduciendo audio:', e);
+                    });
+                    
+                    // Video
+                    const remoteVideo = document.getElementById('remoteVideo');
+                    remoteVideo.srcObject = remoteStream;
+                    
                     const hasVideo = remoteStream.getVideoTracks().length > 0;
                     UIManager.updateVideoDisplay(hasVideo);
+                    
+                    // Actualizar UI
                     AppState.currentCall.isActive = true;
+                    AppState.currentCall.startTime = Date.now();
                     UIManager.updateCallStatus('En llamada');
                     UIManager.startTimer();
                 });
 
                 AppState.peer.on('connect', () => {
-                    console.log('✅ Peer conectado');
-                    WebSocketManager.send('call_connected', { partnerId: AppState.currentCall.peerId });
+                    console.log('✅ Conexión WebRTC establecida');
+                    WebSocketManager.send('call_connected', { 
+                        partnerId: AppState.currentCall.peerId 
+                    });
                 });
 
-                AppState.peer.on('error', (err) => {
-                    console.error('💥 Error WebRTC:', err);
+                AppState.peer.on('error', (error) => {
+                    console.error('💥 Error WebRTC:', error);
+                    UIManager.showNotification('Error en la conexión');
                     UIManager.endCall();
                 });
 
                 AppState.peer.on('close', () => {
-                    console.log('🔒 Peer cerrado');
+                    console.log('🔒 Conexión WebRTC cerrada');
                     if (AppState.currentCall.isActive) {
+                        UIManager.showNotification('Conexión perdida');
                         UIManager.endCall();
                     }
                 });
@@ -939,63 +2239,165 @@
 
             cleanup() {
                 console.log('🧹 Limpiando WebRTC');
+                
+                // Detener y limpiar peer
                 if (AppState.peer) {
                     AppState.peer.destroy();
                     AppState.peer = null;
                 }
+                
+                // Detener streams locales
                 if (AppState.localStream) {
-                    AppState.localStream.getTracks().forEach(t => t.stop());
+                    AppState.localStream.getTracks().forEach(track => {
+                        track.stop();
+                        track.enabled = false;
+                    });
                     AppState.localStream = null;
                 }
+                
                 if (AppState.videoStream) {
-                    AppState.videoStream.getTracks().forEach(t => t.stop());
+                    AppState.videoStream.getTracks().forEach(track => {
+                        track.stop();
+                    });
                     AppState.videoStream = null;
                 }
-                ['localAudio', 'remoteAudio', 'remoteVideo', 'localVideoPreview'].forEach(id => {
+                
+                // Limpiar elementos de video/audio
+                const elements = ['localAudio', 'remoteAudio', 'remoteVideo', 'localVideoPreview'];
+                elements.forEach(id => {
                     const el = document.getElementById(id);
-                    if (el) el.srcObject = null;
+                    if (el) {
+                        el.srcObject = null;
+                        if (el.pause) el.pause();
+                    }
                 });
+                
+                // Ocultar controles de cámara
                 document.getElementById('videoPreview').classList.remove('active');
+                document.getElementById('flipCamera').style.display = 'none';
+                
+                // Resetear estado de cámara
+                AppState.settings.cameraEnabled = false;
+                AppState.settings.isVideoCall = false;
+                AppState.settings.cameraFacing = 'user';
+                
+                console.log('✅ WebRTC limpiado');
             }
         };
 
+        // ========== INICIALIZACIÓN ==========
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 Aplicación iniciada');
+            
+            // Cargar sesión
+            const sessionToken = localStorage.getItem('webrtc_session_token');
+            const savedUser = localStorage.getItem('webrtc_user');
+            
+            if (!sessionToken || !savedUser) {
+                window.location.href = '/';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(savedUser);
+                AppState.userId = userData.id;
+                AppState.username = userData.username;
+                AppState.profilePhoto = userData.avatar_url;
+                AppState.sessionToken = sessionToken;
+            } catch (error) {
+                console.error('Error cargando sesión:', error);
+                window.location.href = '/';
+                return;
+            }
+            
+            // Cargar perfil y conectar
             loadProfile();
+            
+            // Inicializar cache de imágenes
+            imageCache.initCacheDB().then(() => {
+                console.log('✅ Cache de imágenes listo');
+            }).catch(console.error);
+            
             WebSocketManager.connect();
-
-            document.getElementById('myAvatarContainer').addEventListener('click', UIManager.showProfileModal);
-            document.getElementById('profileBackBtn').addEventListener('click', UIManager.hideProfileModal);
-
-            document.getElementById('changePhotoBtn').addEventListener('click', () => document.getElementById('profilePhotoInput').click());
-
-            document.getElementById('profilePhotoInput').addEventListener('change', e => {
+            
+            // ========== EVENT LISTENERS ==========
+            
+            // Botón voltear cámara
+            document.getElementById('flipCamera').addEventListener('click', (e) => {
+                UIManager.createRipple(e);
+                UIManager.flipCamera();
+            });
+            
+            // Toggle visibilidad de contraseñas en perfil
+            document.querySelectorAll('.toggle-password-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const targetId = e.target.closest('button').dataset.target;
+                    const input = document.getElementById(targetId);
+                    const icon = e.target.closest('button').querySelector('i');
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.className = 'fas fa-eye-slash';
+                    } else {
+                        input.type = 'password';
+                        icon.className = 'fas fa-eye';
+                    }
+                });
+            });
+            
+            // Cambiar foto de perfil
+            document.getElementById('changePhotoBtn').addEventListener('click', () => {
+                document.getElementById('profilePhotoInput').click();
+            });
+            
+            document.getElementById('profilePhotoInput').addEventListener('change', async (e) => {
                 const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = ev => {
-                        AppState.profilePhoto = ev.target.result;
-                        localStorage.setItem('webrtc_profile_photo', AppState.profilePhoto);
-                        updateMyAvatar();
-                    };
-                    reader.readAsDataURL(file);
+                if (!file) return;
+                
+                // Validar archivo
+                if (!file.type.startsWith('image/')) {
+                    UIManager.showNotification('Por favor, selecciona una imagen válida');
+                    return;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) { // 5MB
+                    UIManager.showNotification('La imagen es demasiado grande (máximo 5MB)');
+                    return;
+                }
+                
+                // Convertir a base64
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    AppState.newProfilePhoto = event.target.result;
+                    UIManager.updateProfileAvatar();
+                    UIManager.showNotification('Foto seleccionada. Haz click en Guardar cambios para aplicarla.');
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Guardar cambios de perfil
+            document.getElementById('saveProfileBtn').addEventListener('click', (e) => {
+                UIManager.createRipple(e);
+                UIManager.updateProfile();
+            });
+            
+            // Cerrar sesión
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                UIManager.createRipple(e);
+                if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                    UIManager.logout();
                 }
             });
-
-            document.getElementById('saveProfileBtn').addEventListener('click', () => {
-                const newName = document.getElementById('profileNameInput').value.trim();
-                if (newName && newName !== AppState.username) {
-                    AppState.username = newName;
-                    localStorage.setItem('webrtc_username', newName);
-                    updateMyAvatar();
-                    UIManager.showNotification('Perfil actualizado');
-                }
-                UIManager.hideProfileModal();
+            
+            // Event listeners existentes
+            document.getElementById('myAvatarContainer').addEventListener('click', () => UIManager.showProfileModal());
+            document.getElementById('profileBackBtn').addEventListener('click', () => UIManager.hideProfileModal());
+            document.getElementById('endCall').addEventListener('click', () => UIManager.endCall());
+            document.getElementById('toggleMic').addEventListener('click', () => UIManager.toggleMic());
+            document.getElementById('toggleCamera').addEventListener('click', (e) => {
+                UIManager.createRipple(e);
+                UIManager.toggleCamera();
             });
-
-            document.getElementById('endCall').addEventListener('click', UIManager.endCall);
-            document.getElementById('toggleMic').addEventListener('click', UIManager.toggleMic);
-            document.getElementById('toggleCamera').addEventListener('click', UIManager.toggleCamera);
             document.getElementById('rejectCall').addEventListener('click', () => {
                 WebSocketManager.send('call_decline');
                 UIManager.endCall();
@@ -1006,13 +2408,27 @@
                 UIManager.updateCallStatus('Conectando...');
                 WebSocketManager.send('call_accept');
             });
-
+            
             // Actualizar lista periódicamente
             setInterval(() => {
                 if (AppState.ws && AppState.ws.readyState === WebSocket.OPEN) {
                     WebSocketManager.send('get_users');
                 }
             }, 10000);
+            
+            // Limpiar al salir
+            window.addEventListener('beforeunload', () => {
+                if (AppState.currentCall.isActive) {
+                    WebSocketManager.send('call_end');
+                }
+                
+                if (AppState.ws) {
+                    AppState.ws.close();
+                }
+                
+                WebRTCManager.cleanup();
+                WebSocketManager.stopHeartbeat();
+            });
         });
     </script>
 </body>
