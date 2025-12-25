@@ -91,7 +91,10 @@
 
         .status-indicator.offline { background: var(--danger); }
 
-        .users-list { background: var(--bg); }
+        .users-list { 
+            background: var(--bg); 
+            min-height: calc(100vh - 73px);
+        }
 
         .user-item {
             display: flex;
@@ -106,8 +109,14 @@
             background-color: rgba(255, 255, 255, 0.05);
         }
 
-        .user-item.disabled { opacity: 0.6; cursor: default; }
-        .user-item.disabled:hover { background-color: transparent; }
+        .user-item.disabled { 
+            opacity: 0.6; 
+            cursor: default; 
+        }
+        
+        .user-item.disabled:hover { 
+            background-color: transparent; 
+        }
 
         .user-avatar-small {
             width: 50px;
@@ -134,22 +143,45 @@
         }
 
         .user-info { flex: 1; }
-        .user-info h3 { font-size: 1.1rem; font-weight: 500; margin-bottom: 4px; }
-        .user-info p { font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+        .user-info h3 { 
+            font-size: 1.1rem; 
+            font-weight: 500; 
+            margin-bottom: 4px; 
+            color: var(--text-primary);
+        }
+        
+        .user-info p { 
+            font-size: 0.9rem; 
+            color: var(--text-secondary); 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+        }
 
         .status-dot { 
             width: 8px; 
             height: 8px; 
             border-radius: 50%; 
-            background: var(--success);
             display: inline-block;
         }
 
-        .status-dot.online { background: var(--success); box-shadow: 0 0 8px var(--success); }
-        .status-dot.offline { background: var(--text-secondary); }
+        .status-dot.online { 
+            background: var(--success); 
+            box-shadow: 0 0 8px var(--success); 
+        }
+        
+        .status-dot.offline { 
+            background: var(--text-secondary); 
+        }
 
-        .call-action { color: var(--accent); font-size: 1.4rem; }
-        .call-action.disabled { color: var(--text-secondary); }
+        .call-action { 
+            color: var(--accent); 
+            font-size: 1.4rem; 
+        }
+        
+        .call-action.disabled { 
+            color: var(--text-secondary); 
+        }
 
         .call-overlay {
             position: fixed;
@@ -163,7 +195,9 @@
             transition: opacity 0.3s ease;
         }
 
-        .call-overlay.active { display: flex; }
+        .call-overlay.active { 
+            display: flex; 
+        }
 
         .call-top {
             text-align: center;
@@ -198,10 +232,29 @@
             object-fit: cover;
         }
 
-        .call-name { font-size: 1.8rem; font-weight: 500; margin-bottom: 8px; }
-        .call-status-text { font-size: 1.2rem; color: var(--text-secondary); }
-        .timer { font-size: 3rem; font-weight: 500; margin: 20px 0; display: none; }
-        .timer.active { display: block; }
+        .call-name { 
+            font-size: 1.8rem; 
+            font-weight: 500; 
+            margin-bottom: 8px; 
+            color: var(--text-primary);
+        }
+        
+        .call-status-text { 
+            font-size: 1.2rem; 
+            color: var(--text-secondary); 
+        }
+        
+        .timer { 
+            font-size: 3rem; 
+            font-weight: 500; 
+            margin: 20px 0; 
+            display: none; 
+            color: var(--success);
+        }
+        
+        .timer.active { 
+            display: block; 
+        }
 
         .call-bottom {
             display: flex;
@@ -227,10 +280,17 @@
             cursor: pointer;
         }
 
-        .call-btn:active { transform: scale(0.95); }
+        .call-btn:active { 
+            transform: scale(0.95); 
+        }
 
-        .call-btn.end { background: var(--danger); }
-        .call-btn.accept { background: var(--success); }
+        .call-btn.end { 
+            background: var(--danger); 
+        }
+        
+        .call-btn.accept { 
+            background: var(--success); 
+        }
 
         .video-container {
             position: absolute;
@@ -240,7 +300,9 @@
             background: #000;
         }
 
-        .video-container.active { display: block; }
+        .video-container.active { 
+            display: block; 
+        }
 
         .video-container video { 
             width: 100%; 
@@ -271,7 +333,7 @@
         }
 
         .flip-camera-btn:hover {
-            background: var(--surface-light);
+            background: var(--surface);
             transform: rotate(90deg);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
         }
@@ -494,7 +556,6 @@
             color: var(--text-primary);
             font-size: 1rem;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
         }
 
         .profile-input:focus {
@@ -615,9 +676,30 @@
             border: 1px solid var(--border);
         }
 
-        .notification-toast.show { opacity: 1; }
+        .notification-toast.show { 
+            opacity: 1; 
+        }
 
-        .hidden { display: none !important; }
+        .hidden { 
+            display: none !important; 
+        }
+
+        /* ========== ESTADO VACÍO ========== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
 
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
@@ -662,6 +744,20 @@
             .call-bottom {
                 gap: 30px;
             }
+            
+            .call-avatar-large {
+                width: 140px;
+                height: 140px;
+                font-size: 3.5rem;
+            }
+            
+            .call-name {
+                font-size: 1.6rem;
+            }
+            
+            .call-status-text {
+                font-size: 1.1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -701,13 +797,48 @@
             .timer {
                 font-size: 2.5rem;
             }
+            
+            .call-bottom {
+                gap: 20px;
+            }
+            
+            .call-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
-        <p>Conectando...</p>
+        <p id="loadingText">Conectando...</p>
+        <div id="retryButtonContainer" style="display: none; margin-top: 20px;">
+            <button id="retryConnection" style="
+                background: var(--accent);
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 0.9rem;
+            ">
+                <i class="fas fa-redo"></i> Reintentar conexión
+            </button>
+            <button id="goToLogin" style="
+                background: transparent;
+                color: var(--accent);
+                border: 1px solid var(--accent);
+                padding: 10px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                margin-left: 10px;
+            ">
+                <i class="fas fa-sign-in-alt"></i> Volver a login
+            </button>
+        </div>
     </div>
 
     <header class="app-header">
@@ -719,7 +850,12 @@
     </header>
 
     <main class="main-content">
-        <div class="users-list" id="usersList"></div>
+        <div class="users-list" id="usersList">
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <p>Cargando usuarios...</p>
+            </div>
+        </div>
     </main>
 
     <div class="call-overlay" id="callOverlay">
@@ -844,7 +980,7 @@
             
             async initCacheDB() {
                 if ('indexedDB' in window) {
-                    return new Promise((resolve, reject) => {
+                    try {
                         const request = indexedDB.open('WebRTCAvatars', 1);
                         
                         request.onupgradeneeded = (event) => {
@@ -857,20 +993,19 @@
                         request.onsuccess = (event) => {
                             this.db = event.target.result;
                             console.log('✅ Cache de imágenes inicializado');
-                            resolve();
                         };
                         
                         request.onerror = (event) => {
                             console.error('❌ Error inicializando cache:', event.target.error);
-                            reject(event.target.error);
                         };
-                    });
+                    } catch (error) {
+                        console.error('Error con IndexedDB:', error);
+                    }
                 }
-                return Promise.resolve();
             }
             
             async getAvatar(url) {
-                if (!url) return null;
+                if (!url || typeof url !== 'string') return null;
                 
                 // 1. Revisar cache en memoria
                 if (this.cache.has(url)) {
@@ -919,7 +1054,7 @@
                     setTimeout(() => {
                         URL.revokeObjectURL(objectUrl);
                         this.cache.delete(url);
-                    }, 5 * 60 * 1000); // 5 minutos
+                    }, 5 * 60 * 1000);
                     
                     return objectUrl;
                     
@@ -966,17 +1101,15 @@
             }
             
             async preloadAvatars(urls) {
-                const validUrls = urls.filter(url => url && !this.cache.has(url));
+                const validUrls = urls.filter(url => url && typeof url === 'string' && !this.cache.has(url));
                 const promises = validUrls.map(url => this.getAvatar(url));
                 await Promise.allSettled(promises);
             }
             
             clearCache() {
-                // Revocar todas las object URLs
                 this.cache.forEach(url => URL.revokeObjectURL(url));
                 this.cache.clear();
                 
-                // Limpiar IndexedDB
                 if (this.db) {
                     const transaction = this.db.transaction(['avatars'], 'readwrite');
                     const store = transaction.objectStore('avatars');
@@ -990,7 +1123,6 @@
                     this.cache.delete(url);
                 }
                 
-                // Remover de IndexedDB
                 if (this.db) {
                     const transaction = this.db.transaction(['avatars'], 'readwrite');
                     const store = transaction.objectStore('avatars');
@@ -1051,16 +1183,47 @@
             connected: false,
             sessionToken: null,
             newProfilePhoto: null,
-            imageCache: new Map()
+            imageCache: new Map(),
+            reconnectAttempts: 0,
+            maxReconnectAttempts: 5
         };
 
         // ========== FUNCIONES GLOBALES ==========
         function loadProfile() {
-            const savedName = localStorage.getItem('webrtc_username');
-            const savedPhoto = localStorage.getItem('webrtc_profile_photo');
-            if (savedName) AppState.username = savedName;
-            if (savedPhoto) AppState.profilePhoto = savedPhoto;
-            updateMyAvatar();
+            console.log('🔍 Cargando perfil...');
+            
+            const sessionToken = localStorage.getItem('webrtc_session_token');
+            const savedUser = localStorage.getItem('webrtc_user');
+            
+            if (!sessionToken || !savedUser) {
+                console.error('❌ No hay sesión activa');
+                showConnectionError('No hay sesión activa. Redirigiendo...');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(savedUser);
+                AppState.userId = userData.id;
+                AppState.username = userData.username;
+                AppState.profilePhoto = userData.avatar_url;
+                AppState.sessionToken = sessionToken;
+                
+                console.log('✅ Perfil cargado:', AppState.username);
+                
+                // Actualizar texto de loading
+                document.getElementById('loadingText').textContent = `Conectando como ${AppState.username}...`;
+                
+            } catch (error) {
+                console.error('❌ Error cargando sesión:', error);
+                localStorage.clear();
+                showConnectionError('Error cargando sesión. Redirigiendo...');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+            }
         }
 
         async function updateMyAvatar() {
@@ -1068,7 +1231,7 @@
             const profileImg = document.getElementById('profileAvatarImg');
             const profilePlaceholder = document.getElementById('profileAvatarPlaceholder');
             
-            if (AppState.profilePhoto) {
+            if (AppState.profilePhoto && typeof AppState.profilePhoto === 'string') {
                 // Si es una URL, usar cache
                 if (AppState.profilePhoto.startsWith('http')) {
                     const cachedUrl = await imageCache.getAvatar(AppState.profilePhoto);
@@ -1115,17 +1278,39 @@
             profilePlaceholder.textContent = AppState.username.charAt(0).toUpperCase() || 'U';
         }
 
+        function showConnectionError(message) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const loadingText = document.getElementById('loadingText');
+            const retryContainer = document.getElementById('retryButtonContainer');
+            const spinner = loadingOverlay.querySelector('.spinner');
+            
+            loadingText.textContent = message;
+            spinner.style.borderTopColor = 'var(--danger)';
+            retryContainer.style.display = 'block';
+        }
+
+        function hideConnectionError() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const loadingText = document.getElementById('loadingText');
+            const retryContainer = document.getElementById('retryButtonContainer');
+            const spinner = loadingOverlay.querySelector('.spinner');
+            
+            loadingText.textContent = 'Conectando...';
+            spinner.style.borderTopColor = 'var(--accent)';
+            retryContainer.style.display = 'none';
+        }
+
         // ========== UI MANAGER ==========
         const UIManager = {
             isUserAvailable(userId) {
-                const user = AppState.users.find(u => u.id === userId);
+                const user = AppState.users.find(u => u.id == userId);
                 if (!user) {
                     console.log('❌ Usuario no encontrado:', userId);
                     return false;
                 }
                 
                 if (user.is_connected && user.status === 'disponible') {
-                    if (userId === AppState.userId) {
+                    if (userId == AppState.userId) {
                         console.log('❌ No se puede llamar a sí mismo');
                         return false;
                     }
@@ -1139,15 +1324,14 @@
 
             async updateUserList(users) {
                 const list = document.getElementById('usersList');
-                const emptyState = document.createElement('div');
-                emptyState.className = 'empty-state';
-                emptyState.innerHTML = '<p>No hay usuarios disponibles</p>';
-                
-                if (!list) return;
                 
                 if (!users || users.length === 0) {
-                    list.innerHTML = '';
-                    list.appendChild(emptyState);
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <p>No hay usuarios disponibles</p>
+                        </div>
+                    `;
                     return;
                 }
                 
@@ -1175,7 +1359,7 @@
                         
                         // Obtener avatar del cache si existe
                         let avatarHTML = '';
-                        if (user.avatar_url) {
+                        if (user.avatar_url && typeof user.avatar_url === 'string') {
                             try {
                                 const cachedUrl = await imageCache.getAvatar(user.avatar_url);
                                 if (cachedUrl) {
@@ -1303,9 +1487,8 @@
                 if (peerAvatar.includes('linear-gradient')) {
                     callAvatarLarge.style.background = peerAvatar;
                     callAvatarLarge.textContent = peerName.charAt(0).toUpperCase();
-                    callAvatarLarge.innerHTML = ''; // Limpiar cualquier imagen
+                    callAvatarLarge.innerHTML = '';
                 } else {
-                    // Si es una URL de imagen
                     callAvatarLarge.style.background = '';
                     const cachedUrl = await imageCache.getAvatar(peerAvatar);
                     if (cachedUrl) {
@@ -1321,8 +1504,8 @@
                 
                 // 6. Enviar solicitud de llamada
                 console.log('📤 Enviando call_request a:', targetId);
-                WebSocketManager.send('call_request', { targetId });
-                this.setCallTimeout(45000);
+                WebSocketManager.send('call_request', { targetId: targetId });
+                this.setCallTimeout(30000);
             },
 
             showIncomingCall(callerId, callerName, callerAvatar) {
@@ -1943,50 +2126,86 @@
         // ========== WEBSOCKET MANAGER ==========
         const WebSocketManager = {
             connect() {
-                const sessionToken = localStorage.getItem('webrtc_session_token');
-                if (!sessionToken) {
-                    console.error('❌ No hay token de sesión');
-                    window.location.href = '/';
+                if (!AppState.sessionToken) {
+                    console.error('❌ No hay token de sesión en AppState');
+                    showConnectionError('Error de sesión. Redirigiendo...');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
                     return;
                 }
                 
                 // Incluir token en la URL de WebSocket
-                const wsUrl = `${WS_URL}?token=${encodeURIComponent(sessionToken)}`;
+                const wsUrl = `${WS_URL}?token=${encodeURIComponent(AppState.sessionToken)}`;
                 
                 console.log('🔗 Conectando a WebSocket:', wsUrl);
+                
+                // Resetear intentos de reconexión
+                AppState.reconnectAttempts = 0;
+                
+                // Ocultar errores previos
+                hideConnectionError();
+                
+                // Actualizar texto de loading
+                document.getElementById('loadingText').textContent = 'Conectando al servidor...';
+                
                 AppState.ws = new WebSocket(wsUrl);
 
                 AppState.ws.onopen = () => {
                     console.log('✅ WebSocket conectado');
                     AppState.connected = true;
+                    AppState.reconnectAttempts = 0;
                     updateMyAvatar();
+                    
+                    // Ocultar loading
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    
+                    // Enviar heartbeat
                     this.startHeartbeat();
+                    
+                    // Solicitar lista de usuarios
+                    this.send('get_users');
                 };
 
                 AppState.ws.onmessage = event => {
                     try {
                         const data = JSON.parse(event.data);
-                        console.log('📩 Mensaje recibido:', data.type, data);
+                        console.log('📩 Mensaje recibido:', data.type);
                         this.handleMessage(data);
                     } catch (err) {
                         console.error('❌ Error parseando mensaje:', err);
                     }
                 };
 
-                AppState.ws.onclose = () => {
-                    console.log('❌ WebSocket cerrado');
+                AppState.ws.onclose = (event) => {
+                    console.log('❌ WebSocket cerrado. Código:', event.code, 'Razón:', event.reason);
                     AppState.connected = false;
                     updateMyAvatar();
                     this.stopHeartbeat();
                     
                     // Solo reconectar si no estamos en proceso de logout
-                    if (!window.location.href.includes('/')) {
-                        setTimeout(() => this.connect(), 3000);
+                    if (AppState.sessionToken) {
+                        AppState.reconnectAttempts++;
+                        
+                        if (AppState.reconnectAttempts <= AppState.maxReconnectAttempts) {
+                            const delay = Math.min(1000 * Math.pow(2, AppState.reconnectAttempts), 10000);
+                            console.log(`🔄 Reconectando en ${delay}ms (intento ${AppState.reconnectAttempts}/${AppState.maxReconnectAttempts})`);
+                            
+                            // Mostrar mensaje de reconexión
+                            document.getElementById('loadingOverlay').style.display = 'flex';
+                            document.getElementById('loadingText').textContent = `Reconectando... (${AppState.reconnectAttempts}/${AppState.maxReconnectAttempts})`;
+                            
+                            setTimeout(() => this.connect(), delay);
+                        } else {
+                            console.log('❌ Máximo de intentos de reconexión alcanzado');
+                            showConnectionError('No se pudo conectar al servidor');
+                        }
                     }
                 };
 
                 AppState.ws.onerror = (error) => {
                     console.error('💥 Error WebSocket:', error);
+                    UIManager.showNotification('Error de conexión al servidor');
                 };
             },
 
@@ -1995,9 +2214,11 @@
                     const message = JSON.stringify({ type, ...payload });
                     console.log('📤 Enviando mensaje:', type, payload);
                     AppState.ws.send(message);
+                    return true;
                 } else {
                     console.error('❌ WebSocket no está conectado');
                     UIManager.showNotification('Error de conexión');
+                    return false;
                 }
             },
 
@@ -2005,14 +2226,19 @@
                 switch (data.type) {
                     case 'registered':
                         console.log('✅ Registrado con ID:', data.userId);
-                        console.log('👥 Usuarios en línea:', data.onlineUsers?.length || 0);
                         
+                        // Actualizar AppState
                         AppState.userId = data.userId;
                         AppState.username = data.username;
                         AppState.avatarColor = data.avatarColor;
-                        AppState.users = data.users || [];
-                        AppState.sessionToken = data.token;
+                        AppState.users = data.onlineUsers || [];
                         
+                        if (data.token) {
+                            AppState.sessionToken = data.token;
+                            localStorage.setItem('webrtc_session_token', data.token);
+                        }
+                        
+                        // Guardar usuario en localStorage
                         localStorage.setItem('webrtc_username', data.username);
                         localStorage.setItem('webrtc_user', JSON.stringify({
                             id: data.userId,
@@ -2020,13 +2246,13 @@
                             avatar_url: data.avatar_url
                         }));
                         
-                        if (data.token) {
-                            localStorage.setItem('webrtc_session_token', data.token);
-                        }
-                        
+                        // Actualizar UI
                         updateMyAvatar();
-                        UIManager.updateUserList(data.users || []);
+                        UIManager.updateUserList(data.onlineUsers || []);
+                        
+                        // Ocultar loading definitivamente
                         document.getElementById('loadingOverlay').style.display = 'none';
+                        
                         break;
 
                     case 'user_list':
@@ -2085,9 +2311,13 @@
                         }
                         break;
 
-                    case 'search_results':
-                        console.log('🔍 Resultados de búsqueda:', data.users?.length || 0);
-                        UIManager.updateUserList(data.users || []);
+                    case 'heartbeat_ack':
+                        console.log('💓 Heartbeat confirmado');
+                        break;
+
+                    case 'error':
+                        console.error('❌ Error del servidor:', data.message);
+                        UIManager.showNotification(data.message || 'Error del servidor');
                         break;
                 }
             },
@@ -2095,7 +2325,11 @@
             startHeartbeat() {
                 console.log('💓 Iniciando heartbeat');
                 this.stopHeartbeat();
-                AppState.heartbeatInterval = setInterval(() => this.send('heartbeat'), 10000);
+                AppState.heartbeatInterval = setInterval(() => {
+                    if (AppState.ws && AppState.ws.readyState === WebSocket.OPEN) {
+                        this.send('heartbeat');
+                    }
+                }, 10000);
             },
 
             stopHeartbeat() {
@@ -2289,36 +2523,57 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 Aplicación iniciada');
             
-            // Cargar sesión
-            const sessionToken = localStorage.getItem('webrtc_session_token');
-            const savedUser = localStorage.getItem('webrtc_user');
-            
-            if (!sessionToken || !savedUser) {
-                window.location.href = '/';
-                return;
-            }
-            
-            try {
-                const userData = JSON.parse(savedUser);
-                AppState.userId = userData.id;
-                AppState.username = userData.username;
-                AppState.profilePhoto = userData.avatar_url;
-                AppState.sessionToken = sessionToken;
-            } catch (error) {
-                console.error('Error cargando sesión:', error);
-                window.location.href = '/';
-                return;
-            }
-            
-            // Cargar perfil y conectar
-            loadProfile();
-            
             // Inicializar cache de imágenes
             imageCache.initCacheDB().then(() => {
                 console.log('✅ Cache de imágenes listo');
             }).catch(console.error);
             
-            WebSocketManager.connect();
+            // Verificar sesión inmediatamente
+            const sessionToken = localStorage.getItem('webrtc_session_token');
+            const savedUser = localStorage.getItem('webrtc_user');
+            
+            if (!sessionToken || !savedUser) {
+                console.log('❌ No hay sesión, redirigiendo a login...');
+                showConnectionError('No hay sesión activa. Redirigiendo...');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(savedUser);
+                console.log('✅ Usuario autenticado:', userData.username);
+                
+                // Cargar datos en AppState
+                AppState.userId = userData.id;
+                AppState.username = userData.username;
+                AppState.profilePhoto = userData.avatar_url;
+                AppState.sessionToken = sessionToken;
+                
+                // Actualizar avatar
+                updateMyAvatar();
+                
+                // Conectar WebSocket
+                WebSocketManager.connect();
+                
+                // Configurar timeout para conexión
+                setTimeout(() => {
+                    if (!AppState.connected && document.getElementById('loadingOverlay').style.display === 'flex') {
+                        console.log('⏰ Timeout de conexión alcanzado');
+                        showConnectionError('Tiempo de conexión agotado');
+                    }
+                }, 15000); // 15 segundos
+                
+            } catch (error) {
+                console.error('❌ Error cargando sesión:', error);
+                localStorage.clear();
+                showConnectionError('Error cargando sesión. Redirigiendo...');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+                return;
+            }
             
             // ========== EVENT LISTENERS ==========
             
@@ -2360,7 +2615,7 @@
                     return;
                 }
                 
-                if (file.size > 5 * 1024 * 1024) { // 5MB
+                if (file.size > 5 * 1024 * 1024) {
                     UIManager.showNotification('La imagen es demasiado grande (máximo 5MB)');
                     return;
                 }
@@ -2387,6 +2642,21 @@
                 if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
                     UIManager.logout();
                 }
+            });
+            
+            // Botones de reconexión
+            document.getElementById('retryConnection').addEventListener('click', () => {
+                hideConnectionError();
+                if (AppState.sessionToken) {
+                    WebSocketManager.connect();
+                } else {
+                    window.location.href = '/';
+                }
+            });
+            
+            document.getElementById('goToLogin').addEventListener('click', () => {
+                localStorage.clear();
+                window.location.href = '/';
             });
             
             // Event listeners existentes
