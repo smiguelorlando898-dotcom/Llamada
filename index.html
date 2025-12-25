@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Llamada de Voz WebRTC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/simple-peer@9.11.1/simplepeer.min.js"></script>
+    <style>
+        :root {
+            --primary: #0088cc;
+            --success: #00a884;
+            --danger: #ff3b30;
+            --background: #0f1b2d;
+            --surface: #1a273d;
+            --text-primary: #ffffff;
+            --text-secondary: #8a9bb2;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--surface);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--primary), #0077b5);
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* CONTENIDO */
+        .content {
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        /* AVATAR */
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #0077b5);
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid rgba(255,255,255,0.1);
+        }
+        
+        .avatar i {
+            font-size: 3rem;
+            color: white;
+        }
+        
+        /* NOMBRE */
+        .contact-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            min-height: 2.5rem;
+        }
+        
+        /* ESTADO */
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+        }
+        
+        .status-dot.connected {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* TEMPORIZADOR */
+        .timer {
+            font-size: 3rem;
+            font-family: 'Inter', monospace;
+            font-weight: 600;
+            color: var(--success);
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .timer.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* CONTROLES */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn i {
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        .btn-call {
+            background: var(--success);
+        }
+        
+        .btn-call:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .btn-call.loading {
+            position: relative;
+            color: transparent;
+        }
+        
+        .btn-call.loading::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .btn-end {
+            background: var(--danger);
+        }
+        
+        /* NOTIFICACIÓN */
+        .notification-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 27, 45, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .notification-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .notification {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            width: 90%;
+            max-width: 320px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .notification h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .notification p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+        
+        .notification-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .btn-accept, .btn-reject {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn-accept {
+            background: var(--success);
+        }
+        
+        .btn-reject {
+            background: var(--danger);
+        }
+        
+        .btn-accept:active, .btn-reject:active {
+            transform: scale(0.95);
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+                align-items: stretch;
+            }
+            
+            .app-container {
+                max-width: 100%;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+            
+            .avatar {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .contact-name {
+                font-size: 1.5rem;
+            }
+            
+            .timer {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- APLICACIÓN -->
+    <div class="app-container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1><i class="fas fa-phone-alt"></i> Llamada de Voz</h1>
+            <p>Conexión P2P segura • Render</p>
+        </div>
+        
+        <!-- CONTENIDO -->
+        <div class="content">
+            <!-- AVATAR -->
+            <div class="avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            
+            <!-- NOMBRE -->
+            <div class="contact-name" id="contactName">
+                Conectando al servidor...
+            </div>
+            
+            <!-- ESTADO -->
+            <div class="status">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">Conectando...</span>
+            </div>
+            
+            <!-- TEMPORIZADOR -->
+            <div class="timer" id="timer">00:00</div>
+            
+            <!-- CONTROLES -->
+            <div class="controls">
+                <button class="btn btn-call" id="callBtn">
+                    <i class="fas fa-phone"></i>
+                </button>
+                <button class="btn btn-end" id="endBtn" style="display: none;">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- NOTIFICACIÓN DE LLAMADA ENTRANTE -->
+    <div class="notification-overlay" id="notificationOverlay">
+        <div class="notification">
+            <h3 id="callerName">Usuario</h3>
+            <p>Llamada entrante</p>
+            <div class="notification-buttons">
+                <button class="btn-accept" id="acceptBtn">
+                    <i class="fas fa-phone"></i>
+                </button>
+                <button class="btn-reject" id="rejectBtn">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- AUDIO -->
+    <audio id="localAudio" autoplay muted></audio>
+    <audio id="remoteAudio" autoplay></audio>
+    
+    <!-- SCRIPT -->
+    <script>
+        // ============================================
+        // CONFIGURACIÓN DINÁMICA PARA RENDER
+        // ============================================
+        // IMPORTANTE: Para Render, usamos el mismo host para WebSocket
+        const WS_URL = window.location.protocol === 'https:' 
+            ? `wss://${window.location.host}/ws`
+            : `ws://${window.location.host}/ws`;
+        
+        console.log('🔧 Configuración WebSocket:', WS_URL);
+        console.log('🌐 Host actual:', window.location.host);
+        
+        const CONFIG = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' },
+                { urls: 'stun:stun2.l.google.com:19302' },
+                { urls: 'stun:stun3.l.google.com:19302' },
+                { urls: 'stun:stun4.l.google.com:19302' }
+            ]
+        };
+        
+        // ============================================
+        // ESTADO
+        // ============================================
+        const state = {
+            ws: null,
+            peer: null,
+            localStream: null,
+            userId: '',
+            username: '',
+            peerId: '',
+            peerName: '',
+            isPaired: false,
+            isCallActive: false,
+            callDuration: 0,
+            timerInterval: null
+        };
+        
+        // ============================================
+        // UI
+        // ============================================
+        const UI = {
+            updateContactName(name) {
+                document.getElementById('contactName').textContent = name;
+            },
+            
+            updateStatus(text, isConnected = false) {
+                document.getElementById('statusText').textContent = text;
+                const dot = document.getElementById('statusDot');
+                dot.className = isConnected ? 'status-dot connected' : 'status-dot';
+            },
+            
+            enableCallButton(enabled) {
+                const btn = document.getElementById('callBtn');
+                btn.disabled = !enabled || state.isCallActive;
+            },
+            
+            setCallButtonLoading(loading) {
+                const btn = document.getElementById('callBtn');
+                if (loading) {
+                    btn.classList.add('loading');
+                    btn.disabled = true;
+                } else {
+                    btn.classList.remove('loading');
+                    btn.disabled = !state.isPaired || state.isCallActive;
+                }
+            },
+            
+            setCallActive(active) {
+                const callBtn = document.getElementById('callBtn');
+                const endBtn = document.getElementById('endBtn');
+                
+                if (active) {
+                    callBtn.style.display = 'none';
+                    endBtn.style.display = 'flex';
+                } else {
+                    callBtn.style.display = 'flex';
+                    endBtn.style.display = 'none';
+                    this.setCallButtonLoading(false);
+                }
+            },
+            
+            startTimer() {
+                state.callDuration = 0;
+                clearInterval(state.timerInterval);
+                
+                const timer = document.getElementById('timer');
+                timer.classList.add('active');
+                
+                state.timerInterval = setInterval(() => {
+                    state.callDuration++;
+                    const minutes = Math.floor(state.callDuration / 60).toString().padStart(2, '0');
+                    const seconds = (state.callDuration % 60).toString().padStart(2, '0');
+                    timer.textContent = `${minutes}:${seconds}`;
+                }, 1000);
+            },
+            
+            stopTimer() {
+                clearInterval(state.timerInterval);
+                const timer = document.getElementById('timer');
+                timer.textContent = '00:00';
+                timer.classList.remove('active');
+            },
+            
+            showIncomingCall(callerName, onAccept, onReject) {
+                document.getElementById('callerName').textContent = callerName;
+                const overlay = document.getElementById('notificationOverlay');
+                overlay.classList.add('active');
+                
+                document.getElementById('acceptBtn').onclick = () => {
+                    overlay.classList.remove('active');
+                    onAccept();
+                };
+                
+                document.getElementById('rejectBtn').onclick = () => {
+                    overlay.classList.remove('active');
+                    onReject();
+                };
+            }
+        };
+        
+        // ============================================
+        // WEBSOCKET
+        // ============================================
+        function connectWebSocket() {
+            console.log('🔗 Conectando WebSocket a:', WS_URL);
+            
+            state.ws = new WebSocket(WS_URL);
+            
+            state.ws.onopen = () => {
+                console.log('✅ WebSocket conectado');
+                UI.updateStatus('Conectado', true);
+                UI.updateContactName('Esperando compañero...');
+            };
+            
+            state.ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    console.log('📩 Recibido:', data.type, data);
+                    handleWebSocketMessage(data);
+                } catch (error) {
+                    console.error('❌ Error parseando:', error, event.data);
+                }
+            };
+            
+            state.ws.onclose = (event) => {
+                console.log('❌ WebSocket desconectado', event.code, event.reason);
+                UI.updateStatus('Desconectado', false);
+                UI.updateContactName('Reconectando...');
+                endCall();
+                
+                // Intentar reconectar después de 3 segundos
+                setTimeout(() => {
+                    if (!state.isCallActive) {
+                        console.log('🔄 Intentando reconectar...');
+                        connectWebSocket();
+                    }
+                }, 3000);
+            };
+            
+            state.ws.onerror = (error) => {
+                console.error('💥 Error WebSocket:', error);
+            };
+        }
+        
+        function sendWebSocketMessage(type, data = {}) {
+            if (state.ws && state.ws.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({ type, ...data });
+                console.log('📤 Enviando:', type, data);
+                state.ws.send(message);
+            } else {
+                console.error('⚠️ WebSocket no está conectado');
+            }
+        }
+        
+        function handleWebSocketMessage(data) {
+            switch(data.type) {
+                case 'connection_info':
+                    state.userId = data.userId;
+                    state.username = data.username;
+                    console.log(`👤 Yo: ${state.username} (${state.userId})`);
+                    break;
+                    
+                case 'waiting_for_peer':
+                    UI.updateContactName('Esperando compañero...');
+                    UI.updateStatus('Esperando...', false);
+                    state.isPaired = false;
+                    UI.enableCallButton(false);
+                    break;
+                    
+                case 'peer_connected':
+                    state.peerId = data.peerId;
+                    state.peerName = data.peerName;
+                    state.isPaired = true;
+                    UI.updateContactName(data.peerName);
+                    UI.updateStatus('Compañero conectado', true);
+                    UI.enableCallButton(true);
+                    console.log(`🤝 Emparejado con: ${data.peerName} (${data.peerId})`);
+                    break;
+                    
+                case 'peer_disconnected':
+                    UI.updateContactName('Compañero desconectado');
+                    UI.updateStatus('Desconectado', false);
+                    state.isPaired = false;
+                    endCall();
+                    UI.enableCallButton(false);
+                    break;
+                    
+                case 'webrtc_signal':
+                    console.log('📡 Señal WebRTC recibida:', data.signal?.type);
+                    if (!state.peer && data.signal?.type === 'offer') {
+                        handleIncomingCall(data);
+                    } else if (state.peer) {
+                        state.peer.signal(data.signal);
+                    }
+                    break;
+                    
+                case 'call_decline':
+                    UI.updateContactName('Llamada rechazada');
+                    UI.updateStatus('Compañero rechazó la llamada', false);
+                    endCall();
+                    break;
+                    
+                case 'call_end':
+                    UI.updateContactName(state.peerName || 'Compañero');
+                    UI.updateStatus('Llamada finalizada', true);
+                    endCall();
+                    break;
+            }
+        }
+        
+        // ============================================
+        // WEBRTC
+        // ============================================
+        async function makeCall() {
+            if (!state.isPaired) {
+                console.error('❌ No hay compañero para llamar');
+                return;
+            }
+            
+            try {
+                UI.setCallButtonLoading(true);
+                UI.updateStatus('Iniciando llamada...', false);
+                
+                // Obtener micrófono
+                state.localStream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+                
+                console.log('🎤 Micrófono obtenido');
+                document.getElementById('localAudio').srcObject = state.localStream;
+                
+                // Crear peer
+                createPeer(true);
+                
+            } catch (error) {
+                console.error('❌ Error obteniendo micrófono:', error);
+                UI.setCallButtonLoading(false);
+                UI.updateStatus('Error de micrófono', false);
+                
+                // Mostrar alerta al usuario
+                if (error.name === 'NotAllowedError') {
+                    alert('Permiso de micrófono denegado. Por favor, permite el acceso al micrófono.');
+                } else if (error.name === 'NotFoundError') {
+                    alert('No se encontró ningún micrófono. Conecta un micrófono e intenta nuevamente.');
+                }
+            }
+        }
+        
+        function createPeer(initiator) {
+            console.log(`🎯 Creando peer (initiator: ${initiator})`);
+            
+            state.peer = new SimplePeer({
+                initiator: initiator,
+                stream: state.localStream,
+                config: CONFIG,
+                trickle: true
+            });
+            
+            // Señal generada
+            state.peer.on('signal', (signal) => {
+                console.log(`📡 Señal ${signal.type} generada`);
+                sendWebSocketMessage('webrtc_signal', {
+                    signal: signal,
+                    to: state.peerId
+                });
+            });
+            
+            // Audio remoto
+            state.peer.on('stream', (remoteStream) => {
+                console.log('🔊 Stream remoto recibido');
+                document.getElementById('remoteAudio').srcObject = remoteStream;
+                state.isCallActive = true;
+                UI.setCallActive(true);
+                UI.startTimer();
+                UI.updateStatus('En llamada...', true);
+            });
+            
+            // Conexión establecida
+            state.peer.on('connect', () => {
+                console.log('✅ Conexión WebRTC establecida');
+            });
+            
+            // Errores
+            state.peer.on('error', (error) => {
+                console.error('💥 Error WebRTC:', error);
+                UI.updateStatus('Error en conexión', false);
+                endCall();
+            });
+            
+            // Cerrado
+            state.peer.on('close', () => {
+                console.log('🔒 Conexión WebRTC cerrada');
+                cleanup();
+            });
+        }
+        
+        function handleIncomingCall(data) {
+            console.log('📞 Llamada entrante de:', data.senderName);
+            UI.showIncomingCall(
+                data.senderName || 'Usuario',
+                () => acceptIncomingCall(data),
+                () => declineIncomingCall()
+            );
+        }
+        
+        async function acceptIncomingCall(data) {
+            try {
+                console.log('✅ Aceptando llamada...');
+                UI.updateStatus('Aceptando llamada...', false);
+                
+                if (!state.localStream) {
+                    state.localStream = await navigator.mediaDevices.getUserMedia({
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true
+                        }
+                    });
+                    document.getElementById('localAudio').srcObject = state.localStream;
+                }
+                
+                createPeer(false);
+                
+                // Pequeño delay para asegurar que el peer esté listo
+                setTimeout(() => {
+                    if (state.peer && data.signal) {
+                        console.log('📡 Procesando señal de oferta');
+                        state.peer.signal(data.signal);
+                    }
+                }, 500);
+                
+            } catch (error) {
+                console.error('❌ Error aceptando llamada:', error);
+                UI.updateStatus('Error aceptando llamada', false);
+            }
+        }
+        
+        function declineIncomingCall() {
+            console.log('❌ Rechazando llamada');
+            sendWebSocketMessage('call_decline', { to: state.peerId });
+            cleanup();
+            UI.updateStatus('Llamada rechazada', false);
+        }
+        
+        function endCall() {
+            console.log('📞 Finalizando llamada');
+            if (state.isCallActive) {
+                sendWebSocketMessage('call_end', { to: state.peerId });
+            }
+            cleanup();
+            UI.setCallActive(false);
+            UI.stopTimer();
+            
+            if (state.peerName) {
+                UI.updateContactName(state.peerName);
+                UI.updateStatus('Compañero conectado', true);
+            } else {
+                UI.updateContactName('Esperando compañero...');
+            }
+        }
+        
+        function cleanup() {
+            console.log('🧹 Limpiando recursos...');
+            if (state.peer) {
+                state.peer.destroy();
+                state.peer = null;
+            }
+            if (state.localStream) {
+                state.localStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+                state.localStream = null;
+            }
+            document.getElementById('localAudio').srcObject = null;
+            document.getElementById('remoteAudio').srcObject = null;
+            state.isCallActive = false;
+        }
+        
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        window.onload = function() {
+            console.log('🚀 Iniciando aplicación WebRTC...');
+            console.log('📍 URL actual:', window.location.href);
+            
+            // Conectar WebSocket
+            connectWebSocket();
+            
+            // Botones
+            document.getElementById('callBtn').addEventListener('click', () => {
+                if (state.isPaired && !state.isCallActive) {
+                    makeCall();
+                }
+            });
+            
+            document.getElementById('endBtn').addEventListener('click', () => {
+                endCall();
+            });
+            
+            // Limpiar al cerrar
+            window.addEventListener('beforeunload', () => {
+                console.log('👋 Cerrando aplicación...');
+                if (state.ws) {
+                    state.ws.close();
+                }
+                endCall();
+            });
+            
+            // Solicitar permiso de micrófono anticipadamente (opcional)
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        // Solo para obtener permiso, luego detenemos
+                        stream.getTracks().forEach(track => track.stop());
+                        console.log('✅ Permiso de micrófono concedido');
+                    })
+                    .catch(err => {
+                        console.log('⚠️ Permiso de micrófono no concedido aún:', err.name);
+                    });
+            }
+        };
+    </script>
+</body>
+</html>
