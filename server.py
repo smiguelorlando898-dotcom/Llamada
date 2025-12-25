@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 SERVIDOR DE SEÑALIZACIÓN WEBRTC - SISTEMA MEJORADO
-Con sincronización robusta de estados y gestión de errores
+Con sincronización robusta y manejo de llamadas
 """
 
 import asyncio
@@ -25,6 +25,7 @@ class UserManager:
     def __init__(self):
         self.users = {}  # {user_id: {ws, username, status, in_call_with, avatar_color, last_seen}}
         self.heartbeats = {}  # {user_id: last_heartbeat}
+        self.pending_signals = {}  # {user_id: [signals]} para señales pendientes
     
     def generate_avatar_color(self, user_id):
         """Generar color consistente para el avatar basado en user_id"""
@@ -52,6 +53,7 @@ class UserManager:
         }
         
         self.heartbeats[user_id] = time.time()
+        self.pending_signals[user_id] = []
         logger.info(f"✅ Usuario registrado: {username} ({user_id})")
         return avatar_color
     
@@ -70,6 +72,8 @@ class UserManager:
             # Limpiar
             if user_id in self.heartbeats:
                 del self.heartbeats[user_id]
+            if user_id in self.pending_signals:
+                del self.pending_signals[user_id]
             
             del self.users[user_id]
             logger.info(f"🗑️  Usuario eliminado: {username}")
@@ -202,6 +206,9 @@ class UserManager:
         
         partner = self.users[user_id]['in_call_with']
         if not partner or partner not in self.users:
+            # Si no hay compañero pero el usuario está en llamada, liberarlo
+            if self.users[user_id]['status'] == 'en_llamada':
+                self.update_user_status(user_id, 'disponible', None)
             return None
         
         # Actualizar ambos estados
@@ -226,6 +233,21 @@ class UserManager:
         
         logger.info(f"❌ {self.users[user_id]['username']} rechazó llamada de {self.users[partner]['username']}")
         return partner
+    
+    def store_signal(self, target_id, signal_data):
+        """Almacenar señal WebRTC para un usuario"""
+        if target_id in self.pending_signals:
+            self.pending_signals[target_id].append(signal_data)
+            return True
+        return False
+    
+    def get_pending_signals(self, user_id):
+        """Obtener señales WebRTC pendientes para un usuario"""
+        if user_id in self.pending_signals:
+            signals = self.pending_signals[user_id].copy()
+            self.pending_signals[user_id].clear()
+            return signals
+        return []
 
 user_manager = UserManager()
 
@@ -240,6 +262,11 @@ async def websocket_handler(request):
     username = None
     
     try:
+        # Enviar señales pendientes si las hay
+        pending_signals = user_manager.get_pending_signals(client_id)
+        for signal in pending_signals:
+            await ws.send_json(signal)
+        
         async for msg in ws:
             if msg.type == web.WSMsgType.TEXT:
                 try:
@@ -370,15 +397,26 @@ async def websocket_handler(request):
                         # Señal WebRTC
                         target_id = data.get('targetId')
                         signal = data.get('signal')
+                        sender_id = client_id
                         
                         if target_id in user_manager.users:
                             target_ws = user_manager.users[target_id]['ws']
-                            await target_ws.send_json({
+                            signal_data = {
                                 'type': 'webrtc_signal',
                                 'signal': signal,
-                                'senderId': client_id,
+                                'senderId': sender_id,
                                 'timestamp': datetime.now().isoformat()
-                            })
+                            }
+                            
+                            try:
+                                await target_ws.send_json(signal_data)
+                                logger.info(f"📡 Señal WebRTC enviada de {sender_id} a {target_id}")
+                            except:
+                                # Almacenar señal si el usuario no está disponible
+                                user_manager.store_signal(target_id, signal_data)
+                                logger.info(f"💾 Señal almacenada para {target_id}")
+                        else:
+                            logger.warning(f"⚠️  Usuario objetivo {target_id} no encontrado")
                     
                 except json.JSONDecodeError as e:
                     logger.error(f"❌ JSON inválido: {e}")
@@ -446,7 +484,8 @@ async def handle_status(request):
         'status': 'online',
         'timestamp': datetime.now().isoformat(),
         'totalUsers': len(user_manager.users),
-        'onlineUsers': len(user_manager.get_online_users())
+        'onlineUsers': len(user_manager.get_online_users()),
+        'activeCalls': len([u for u in user_manager.users.values() if u['status'] == 'en_llamada'])
     })
 
 async def start_server():
