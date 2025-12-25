@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión</title>
+    <title>Iniciar Sesión - Llamadas</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg: #0f1419;
@@ -12,16 +13,18 @@
             --text-primary: #ffffff;
             --text-secondary: #b0b8c0;
             --accent: #3390ec;
+            --success: #4caf50;
+            --danger: #f44336;
+            --border: #2f3a42;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: var(--bg);
-            color: var(--text-primary);
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background: var(--bg); 
+            color: var(--text-primary); 
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
@@ -29,77 +32,336 @@
 
         .login-container {
             width: 100%;
-            max-width: 360px;
+            max-width: 400px;
             background: var(--surface);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header {
             text-align: center;
-        }
-
-        .login-title {
-            font-size: 1.8rem;
-            font-weight: 500;
-            margin-bottom: 40px;
-        }
-
-        .input-group {
             margin-bottom: 30px;
         }
 
-        .input-field {
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #5ba8f5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ffffff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-input {
             width: 100%;
-            padding: 14px 16px;
-            background: var(--bg);
-            border: 1px solid #2f3a42;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
             border-radius: 8px;
             color: var(--text-primary);
             font-size: 1rem;
+            transition: all 0.3s ease;
         }
 
-        .input-field:focus {
+        .form-input:focus {
             outline: none;
             border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(51, 144, 236, 0.2);
         }
 
-        .btn-continue {
+        .form-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .permissions-info {
+            background: rgba(51, 144, 236, 0.1);
+            border: 1px solid rgba(51, 144, 236, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .permissions-info i {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        .permissions-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .login-button {
             width: 100%;
-            padding: 14px;
-            background: var(--accent);
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent), #5ba8f5);
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .btn-continue:active {
-            opacity: 0.8;
+        .login-button:hover {
+            background: linear-gradient(135deg, #5ba8f5, var(--accent));
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(51, 144, 236, 0.3);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 24px;
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-message.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 24px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            .login-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+            
+            .login-header h1 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h1 class="login-title">Bienvenido</h1>
-        <div class="input-group">
-            <input type="text" id="usernameInput" class="input-field" placeholder="Ingresa tu nombre" maxlength="30" autocomplete="off">
+        <div class="login-header">
+            <div class="login-icon">
+                <i class="fas fa-phone-alt"></i>
+            </div>
+            <h1>Llamadas WebRTC</h1>
+            <p>Conecta con usuarios en tiempo real</p>
         </div>
-        <button class="btn-continue" id="continueBtn">Continuar</button>
+
+        <div class="permissions-info">
+            <i class="fas fa-info-circle"></i>
+            <p>Esta aplicación necesita acceso al micrófono y cámara para realizar llamadas. Por favor, permite estos permisos cuando tu navegador lo solicite.</p>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="errorText"></span>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Tu nombre</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    class="form-input" 
+                    placeholder="Ej: Juan Pérez" 
+                    autocomplete="name"
+                    maxlength="30"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="login-button" id="loginButton">
+                <span>Iniciar sesión</span>
+                <div class="loading-spinner" id="loadingSpinner"></div>
+            </button>
+        </form>
+
+        <div class="footer-note">
+            <p><i class="fas fa-shield-alt"></i> Tu información es privada y segura</p>
+        </div>
     </div>
 
     <script>
-        document.getElementById('continueBtn').addEventListener('click', () => {
-            const username = document.getElementById('usernameInput').value.trim();
-            if (username) {
-                localStorage.setItem('webrtc_username', username);
-                window.location.href = '/index';
-            } else {
-                alert('Por favor ingresa un nombre');
-            }
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const loginButton = document.getElementById('loginButton');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
 
-        document.getElementById('usernameInput').addEventListener('keypress', e => {
-            if (e.key === 'Enter') document.getElementById('continueBtn').click();
+            // Verificar si ya hay un usuario guardado
+            const savedUsername = localStorage.getItem('webrtc_username');
+            if (savedUsername) {
+                usernameInput.value = savedUsername;
+            }
+
+            // Test de permisos de micrófono
+            async function testMicrophonePermissions() {
+                try {
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                        throw new Error('Tu navegador no soporta llamadas de audio');
+                    }
+
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            autoGainControl: true
+                        }
+                    });
+                    
+                    // Detener el stream de prueba
+                    stream.getTracks().forEach(track => track.stop());
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Error de permisos:', error);
+                    return false;
+                }
+            }
+
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = usernameInput.value.trim();
+                if (!username) {
+                    showError('Por favor, ingresa tu nombre');
+                    return;
+                }
+
+                if (username.length < 2) {
+                    showError('El nombre debe tener al menos 2 caracteres');
+                    return;
+                }
+
+                // Mostrar loading
+                loginButton.disabled = true;
+                loadingSpinner.style.display = 'block';
+                loginButton.querySelector('span').textContent = 'Verificando...';
+
+                try {
+                    // Testear permisos
+                    const hasPermissions = await testMicrophonePermissions();
+                    
+                    if (!hasPermissions) {
+                        showError('Se necesita acceso al micrófono para usar la aplicación');
+                        loginButton.disabled = false;
+                        loadingSpinner.style.display = 'none';
+                        loginButton.querySelector('span').textContent = 'Iniciar sesión';
+                        return;
+                    }
+
+                    // Guardar usuario
+                    localStorage.setItem('webrtc_username', username);
+                    
+                    // Redirigir a la aplicación principal
+                    window.location.href = '/index';
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    showError('Ocurrió un error. Por favor, intenta de nuevo.');
+                    loginButton.disabled = false;
+                    loadingSpinner.style.display = 'none';
+                    loginButton.querySelector('span').textContent = 'Iniciar sesión';
+                }
+            });
+
+            function showError(message) {
+                errorText.textContent = message;
+                errorMessage.classList.add('show');
+                
+                // Ocultar error después de 5 segundos
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 5000);
+            }
+
+            // Focus en el input
+            usernameInput.focus();
         });
     </script>
 </body>
