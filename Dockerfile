@@ -9,8 +9,11 @@ RUN apt-get update && apt-get install -y coturn nodejs npm tzdata && rm -rf /var
 COPY turnserver.conf /etc/turnserver.conf
 
 # Copiar servidor Webhook
-COPY server.js /app/server.js
 WORKDIR /app
+COPY server.js /app/server.js
+
+# Instalar dependencias de Node.js
+RUN npm init -y && npm install express
 
 # Exponer puertos
 EXPOSE 80
