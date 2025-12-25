@@ -3,7 +3,7 @@ const app = express();
 
 app.use(express.json());
 
-// Endpoint de prueba para Render
+// Endpoint raíz para que Render detecte HTTP
 app.get('/', (req, res) => {
   res.send('Webhook activo, servidor TURN corriendo');
 });
