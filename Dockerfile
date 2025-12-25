@@ -1,24 +1,44 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
 
-# Instalar Coturn y Node.js
-RUN apt-get update && apt-get install -y coturn nodejs npm tzdata && rm -rf /var/lib/apt/lists/*
+# 1. Instalar dependencias base
+RUN apt-get update && apt-get install -y \
+    curl \
+    coturn \
+    tzdata \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copiar configuración Coturn
+# 2. Instalar Node.js 18.x LTS (¡CRÍTICO!)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# 3. Preparar directorios para TURN
+RUN mkdir -p /var/lib/turn /var/log/turn \
+    && chown -R turnserver:turnserver /var/lib/turn /var/log/turn
+
+# 4. Copiar configuración TURN
 COPY turnserver.conf /etc/turnserver.conf
 
-# Copiar servidor Webhook
+# 5. Copiar aplicación Node.js
 WORKDIR /app
 COPY server.js /app/server.js
+COPY package.json /app/package.json
 
-# Instalar dependencias de Node.js
-RUN npm init -y && npm install express
+# 6. Instalar dependencias Node.js
+RUN npm install
 
-# Exponer puertos
+# 7. Copiar y hacer ejecutable el entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# 8. Exponer puertos (HTTP + TURN + Relay UDP)
 EXPOSE 80
 EXPOSE 3478/tcp
 EXPOSE 3478/udp
+EXPOSE 49152-65535/udp
 
-# Ejecutar ambos procesos: TURN + Webhook
-CMD turnserver -c /etc/turnserver.conf --no-cli & node server.js
+# 9. Ejecutar con entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
