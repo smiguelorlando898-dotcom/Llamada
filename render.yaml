@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: coturn-server
+    env: docker
+    plan: free
+    ports:
+      - port: 3478
+        protocol: tcp
+      - port: 3478
+        protocol: udp
