@@ -35,7 +35,37 @@
         }
 
         .header-title { font-size: 1.4rem; font-weight: 500; }
-        .connection-status { font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+
+        .my-avatar-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .my-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #5ba8f5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .status-indicator {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--success);
+            border: 3px solid var(--surface);
+        }
+
+        .status-indicator.offline { background: var(--danger); }
 
         .users-list { background: var(--bg); }
 
@@ -61,6 +91,7 @@
             color: white;
             margin-right: 16px;
             flex-shrink: 0;
+            object-fit: cover;
         }
 
         .user-info { flex: 1; }
@@ -72,7 +103,6 @@
         .call-action { color: var(--accent); font-size: 1.4rem; }
         .call-action.disabled { color: var(--text-secondary); }
 
-        /* Overlay de llamada (entrante y activa) */
         .call-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -106,6 +136,7 @@
             font-size: 4rem;
             font-weight: 700;
             color: white;
+            object-fit: cover;
         }
 
         .call-name { font-size: 1.8rem; font-weight: 500; margin-bottom: 8px; }
@@ -167,6 +198,74 @@
 
         .video-preview video { width: 100%; height: 100%; object-fit: cover; }
 
+        .profile-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg);
+            z-index: 1100;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .profile-modal.active { display: flex; }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+
+        .profile-title {
+            flex: 1;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-right: 40px;
+        }
+
+        .profile-avatar-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--surface);
+        }
+
+        .profile-input {
+            width: 100%;
+            padding: 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .btn-change-photo {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
         .hidden { display: none !important; }
 
         .notification-toast {
@@ -190,8 +289,9 @@
 <body>
     <header class="app-header">
         <div class="header-title">Llamadas</div>
-        <div class="connection-status" id="connectionStatus">
-            <i class="fas fa-circle status-dot"></i> Conectado
+        <div class="my-avatar-container" id="myAvatarContainer">
+            <div class="my-avatar" id="myAvatar">U</div>
+            <div class="status-indicator" id="myStatusIndicator"></div>
         </div>
     </header>
 
@@ -215,18 +315,33 @@
             <video id="localVideoPreview" autoplay playsinline muted></video>
         </div>
 
-        <!-- Controles durante llamada activa -->
         <div class="call-bottom" id="callControls">
             <button class="call-btn" id="toggleMic"><i class="fas fa-microphone"></i></button>
             <button class="call-btn end" id="endCall"><i class="fas fa-phone-slash"></i></button>
             <button class="call-btn" id="toggleCamera"><i class="fas fa-video"></i></button>
         </div>
 
-        <!-- Controles para llamada entrante -->
         <div class="call-bottom hidden" id="incomingControls">
             <button class="call-btn end" id="rejectCall"><i class="fas fa-phone-slash"></i></button>
             <button class="call-btn accept" id="acceptCall"><i class="fas fa-phone"></i></button>
         </div>
+    </div>
+
+    <!-- Modal de Mi Perfil -->
+    <div class="profile-modal" id="profileModal">
+        <div class="profile-header">
+            <button class="back-btn" id="profileBackBtn"><i class="fas fa-arrow-left"></i></button>
+            <div class="profile-title">Mi Perfil</div>
+        </div>
+
+        <div class="profile-avatar-container">
+            <img class="profile-avatar" id="profileAvatarImg" src="">
+            <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;">
+            <button class="btn-change-photo" id="changePhotoBtn">Cambiar foto</button>
+        </div>
+
+        <input type="text" class="profile-input" id="profileNameInput" placeholder="Tu nombre">
+        <button class="btn-change-photo" id="saveProfileBtn" style="background:#4caf50;">Guardar cambios</button>
     </div>
 
     <div class="notification-toast" id="notificationToast"></div>
@@ -279,6 +394,7 @@
             userId: '',
             username: '',
             avatarColor: '#3390ec',
+            profilePhoto: null,
             users: [],
             currentCall: {
                 peerId: '',
@@ -293,25 +409,40 @@
             },
             timerInterval: null,
             callTimeout: null,
-            reconnectAttempts: 0,
-            maxReconnectAttempts: 5,
-            heartbeatInterval: null
+            connected: false
         };
+
+        // Cargar perfil desde localStorage
+        function loadProfile() {
+            const savedName = localStorage.getItem('webrtc_username');
+            const savedPhoto = localStorage.getItem('webrtc_profile_photo');
+            if (savedName) AppState.username = savedName;
+            if (savedPhoto) AppState.profilePhoto = savedPhoto;
+            updateMyAvatar();
+        }
+
+        function updateMyAvatar() {
+            const avatar = document.getElementById('myAvatar');
+            const img = document.getElementById('profileAvatarImg');
+            if (AppState.profilePhoto) {
+                avatar.style.background = 'none';
+                avatar.innerHTML = `<img src="${AppState.profilePhoto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+                img.src = AppState.profilePhoto;
+            } else {
+                avatar.style.background = `linear-gradient(135deg, ${AppState.avatarColor}, #5ba8f5)`;
+                avatar.textContent = AppState.username.charAt(0).toUpperCase() || 'U';
+                img.src = '';
+            }
+            document.getElementById('profileNameInput').value = AppState.username;
+            document.getElementById('myStatusIndicator').classList.toggle('offline', !AppState.connected);
+        }
 
         // ============================================
         // UI MANAGER
         // ============================================
         const UIManager = {
-            updateConnectionStatus(connected) {
-                const el = document.getElementById('connectionStatus');
-                el.innerHTML = connected 
-                    ? '<i class="fas fa-circle status-dot"></i> Conectado'
-                    : '<i class="fas fa-circle" style="color: var(--danger);"></i> Desconectado';
-            },
-
             updateUserList(users) {
                 const list = document.getElementById('usersList');
-                const availableUsers = users.filter(u => u.status === 'disponible');
                 list.innerHTML = users.map(user => {
                     const available = user.status === 'disponible';
                     const initials = user.username.charAt(0).toUpperCase();
@@ -489,7 +620,6 @@
 
             async toggleCamera() {
                 if (AppState.settings.cameraEnabled) {
-                    // Desactivar
                     if (AppState.videoStream) {
                         AppState.videoStream.getTracks().forEach(track => track.stop());
                     }
@@ -498,28 +628,34 @@
                     }
                     document.getElementById('videoPreview').classList.remove('active');
                     AppState.settings.cameraEnabled = false;
-                    const icon = document.getElementById('toggleCamera').querySelector('i');
-                    icon.className = 'fas fa-video-slash';
+                    document.getElementById('toggleCamera').querySelector('i').className = 'fas fa-video-slash';
                     this.showNotification('Cámara desactivada');
                 } else {
-                    // Activar
                     try {
                         const videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
                         AppState.videoStream = videoStream;
                         AppState.settings.cameraEnabled = true;
 
-                        videoStream.getVideoTracks().forEach(track => AppState.localStream.addTrack(track));
+                        if (AppState.localStream) {
+                            videoStream.getVideoTracks().forEach(track => AppState.localStream.addTrack(track));
+                        }
 
                         document.getElementById('localVideoPreview').srcObject = videoStream;
                         document.getElementById('videoPreview').classList.add('active');
-
-                        const icon = document.getElementById('toggleCamera').querySelector('i');
-                        icon.className = 'fas fa-video';
+                        document.getElementById('toggleCamera').querySelector('i').className = 'fas fa-video';
                         this.showNotification('Cámara activada');
                     } catch (err) {
                         this.showNotification('Error al acceder a la cámara');
                     }
                 }
+            },
+
+            showProfileModal() {
+                document.getElementById('profileModal').classList.add('active');
+            },
+
+            hideProfileModal() {
+                document.getElementById('profileModal').classList.remove('active');
             }
         };
 
@@ -531,7 +667,8 @@
                 AppState.ws = new WebSocket(WS_URL);
 
                 AppState.ws.onopen = () => {
-                    UIManager.updateConnectionStatus(true);
+                    AppState.connected = true;
+                    updateMyAvatar();
                     const username = localStorage.getItem('webrtc_username') || 'Usuario';
                     this.send('register', { username });
                     this.startHeartbeat();
@@ -543,9 +680,10 @@
                 };
 
                 AppState.ws.onclose = () => {
-                    UIManager.updateConnectionStatus(false);
+                    AppState.connected = false;
+                    updateMyAvatar();
                     this.stopHeartbeat();
-                    if (!AppState.currentCall.isActive) this.reconnect();
+                    setTimeout(() => this.connect(), 3000);
                 };
             },
 
@@ -561,6 +699,8 @@
                         AppState.userId = data.userId;
                         AppState.username = data.username;
                         AppState.avatarColor = data.avatarColor;
+                        localStorage.setItem('webrtc_username', data.username);
+                        updateMyAvatar();
                         UIManager.updateUserList(data.onlineUsers || []);
                         break;
 
@@ -597,12 +737,6 @@
                         }
                         break;
                 }
-            },
-
-            reconnect() {
-                if (AppState.reconnectAttempts >= AppState.maxReconnectAttempts) return;
-                AppState.reconnectAttempts++;
-                setTimeout(() => this.connect(), Math.min(1000 * Math.pow(2, AppState.reconnectAttempts), 10000));
             },
 
             startHeartbeat() {
@@ -663,14 +797,8 @@
                     WebSocketManager.send('call_connected', { partnerId: AppState.currentCall.peerId });
                 });
 
-                AppState.peer.on('error', err => {
-                    UIManager.showNotification('Error en conexión');
-                    UIManager.endCall();
-                });
-
-                AppState.peer.on('close', () => {
-                    if (AppState.currentCall.isActive) UIManager.endCall();
-                });
+                AppState.peer.on('error', () => UIManager.endCall());
+                AppState.peer.on('close', () => { if (AppState.currentCall.isActive) UIManager.endCall(); });
             },
 
             cleanup() {
@@ -695,13 +823,44 @@
         };
 
         // ============================================
-        // INICIALIZACIÓN
+        // INICIALIZACIÓN Y EVENTOS DE PERFIL
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
-            const username = localStorage.getItem('webrtc_username');
-            if (!username) return window.location.href = '/';
+            loadProfile();
 
             WebSocketManager.connect();
+
+            document.getElementById('myAvatarContainer').addEventListener('click', UIManager.showProfileModal);
+            document.getElementById('profileBackBtn').addEventListener('click', UIManager.hideProfileModal);
+
+            document.getElementById('changePhotoBtn').addEventListener('click', () => {
+                document.getElementById('profilePhotoInput').click();
+            });
+
+            document.getElementById('profilePhotoInput').addEventListener('change', e => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = ev => {
+                        AppState.profilePhoto = ev.target.result;
+                        localStorage.setItem('webrtc_profile_photo', AppState.profilePhoto);
+                        updateMyAvatar();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            document.getElementById('saveProfileBtn').addEventListener('click', () => {
+                const newName = document.getElementById('profileNameInput').value.trim();
+                if (newName && newName !== AppState.username) {
+                    AppState.username = newName;
+                    localStorage.setItem('webrtc_username', newName);
+                    updateMyAvatar();
+                    // Opcional: notificar al servidor si quieres cambiar nombre en tiempo real
+                    UIManager.showNotification('Perfil actualizado');
+                }
+                UIManager.hideProfileModal();
+            });
 
             document.getElementById('endCall').addEventListener('click', UIManager.endCall);
             document.getElementById('toggleMic').addEventListener('click', UIManager.toggleMic);
