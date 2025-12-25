@@ -155,16 +155,18 @@ class UserManager:
 
     def can_call_user(self, caller_id, target_id):
         """Verificar si se puede llamar a un usuario"""
-        if (target_id in self.users and 
-            caller_id in self.users and
-            target_id != caller_id):
+        # Primero verificar que ambos existan
+        if caller_id not in self.users or target_id not in self.users:
+            return False
+        if target_id == caller_id:
+            return False
 
-            target = self.users[target_id]
-            caller = self.users[caller_id]
+        caller = self.users[caller_id]
+        target = self.users[target_id]
 
-            # Verificar que ninguno esté en llamada
-            if target['status'] == 'disponible' and caller['status'] == 'disponible':
-                return True
+        # Ambos deben estar disponibles
+        if target['status'] == 'disponible' and caller['status'] == 'disponible':
+            return True
 
         return False
 
@@ -249,10 +251,10 @@ class UserManager:
 
     def store_signal(self, target_id, signal_data):
         """Almacenar señal WebRTC para un usuario"""
-        if target_id in self.pending_signals:
-            self.pending_signals[target_id].append(signal_data)
-            return True
-        return False
+        if target_id not in self.pending_signals:
+            self.pending_signals[target_id] = []
+        self.pending_signals[target_id].append(signal_data)
+        return True
 
     def get_pending_signals(self, user_id):
         """Obtener señales WebRTC pendientes para un usuario"""
@@ -275,7 +277,7 @@ async def websocket_handler(request):
     username = None
 
     try:
-        # Enviar señales pendientes si las hay
+        # Enviar señales pendientes si las hay (por reconexión rápida)
         pending_signals = user_manager.get_pending_signals(client_id)
         for signal in pending_signals:
             await ws.send_json(signal)
@@ -287,11 +289,9 @@ async def websocket_handler(request):
                     msg_type = data.get('type', 'unknown')
 
                     if msg_type == 'register':
-                        # Registrar nuevo usuario
                         username = data.get('username', f'Usuario_{client_id}')
                         avatar_color = user_manager.add_user(client_id, ws, username)
 
-                        # Enviar información de registro
                         await ws.send_json({
                             'type': 'registered',
                             'userId': client_id,
@@ -301,125 +301,64 @@ async def websocket_handler(request):
                             'timestamp': datetime.now().isoformat()
                         })
 
-                        # Notificar a todos que hay un nuevo usuario
                         await broadcast_user_list()
                         logger.info(f"👤 {username} se registró exitosamente")
 
                     elif msg_type == 'heartbeat':
-                        # Actualizar heartbeat
                         user_manager.update_heartbeat(client_id)
-                        await ws.send_json({
-                            'type': 'heartbeat_ack',
-                            'timestamp': datetime.now().isoformat()
-                        })
+                        await ws.send_json({'type': 'heartbeat_ack'})
 
                     elif msg_type == 'get_users':
-                        # Enviar lista de usuarios actualizada
                         await ws.send_json({
                             'type': 'user_list',
-                            'users': user_manager.get_online_users(exclude_user_id=client_id),
-                            'timestamp': datetime.now().isoformat()
+                            'users': user_manager.get_online_users(exclude_user_id=client_id)
                         })
 
                     elif msg_type == 'call_request':
-                        # Solicitar llamada a otro usuario
                         target_id = data.get('targetId')
-                        caller_name = user_manager.users[client_id]['username'] if client_id in user_manager.users else 'Usuario'
-
                         if user_manager.initiate_call(client_id, target_id):
                             target_ws = user_manager.users[target_id]['ws']
-
-                            # Notificar al objetivo
+                            caller_name = user_manager.users[client_id]['username']
                             await target_ws.send_json({
                                 'type': 'incoming_call',
                                 'callerId': client_id,
                                 'callerName': caller_name,
-                                'callerAvatar': user_manager.users[client_id]['avatar_color'],
-                                'timestamp': datetime.now().isoformat()
+                                'callerAvatar': user_manager.users[client_id]['avatar_color']
                             })
-
-                            # Actualizar lista para todos
                             await broadcast_user_list()
-
-                            logger.info(f"📤 Solicitud de llamada enviada a {target_id}")
                         else:
                             await ws.send_json({
                                 'type': 'call_error',
-                                'message': 'No se puede llamar a este usuario',
-                                'timestamp': datetime.now().isoformat()
+                                'message': 'No se puede llamar a este usuario'
                             })
 
                     elif msg_type == 'call_accept':
-                        # Aceptar llamada entrante
                         partner_id = user_manager.accept_call(client_id)
                         if partner_id:
                             caller_ws = user_manager.users[partner_id]['ws']
-
-                            # Notificar al que inició la llamada
                             await caller_ws.send_json({
                                 'type': 'call_accepted',
                                 'calleeId': client_id,
-                                'calleeName': user_manager.users[client_id]['username'],
-                                'timestamp': datetime.now().isoformat()
+                                'calleeName': user_manager.users[client_id]['username']
                             })
-
-                            # Actualizar lista para todos
                             await broadcast_user_list()
 
-                            logger.info(f"✅ Llamada aceptada por {client_id}")
-                        else:
-                            await ws.send_json({
-                                'type': 'call_error',
-                                'message': 'No se puede aceptar la llamada',
-                                'timestamp': datetime.now().isoformat()
-                            })
-
                     elif msg_type == 'call_decline':
-                        # Rechazar llamada
                         partner_id = user_manager.decline_call(client_id)
                         if partner_id:
                             caller_ws = user_manager.users[partner_id]['ws']
-                            await caller_ws.send_json({
-                                'type': 'call_declined',
-                                'message': 'Llamada rechazada',
-                                'timestamp': datetime.now().isoformat()
-                            })
+                            await caller_ws.send_json({'type': 'call_declined'})
 
-                            # Actualizar lista
                             await broadcast_user_list()
 
-                            logger.info(f"❌ Llamada rechazada por {client_id}")
-
                     elif msg_type == 'call_end':
-                        # Terminar llamada
                         partner_id = user_manager.end_call(client_id)
                         if partner_id:
                             partner_ws = user_manager.users[partner_id]['ws']
-                            await partner_ws.send_json({
-                                'type': 'call_ended',
-                                'message': 'Llamada finalizada',
-                                'timestamp': datetime.now().isoformat()
-                            })
-
-                            # Actualizar lista
+                            await partner_ws.send_json({'type': 'call_ended'})
                             await broadcast_user_list()
 
-                            logger.info(f"📞 Llamada finalizada por {client_id}")
-
-                    elif msg_type == 'call_connected':
-                        # Notificar que la llamada se conectó exitosamente
-                        partner_id = data.get('partnerId')
-                        if partner_id and partner_id in user_manager.users:
-                            partner_ws = user_manager.users[partner_id]['ws']
-                            await partner_ws.send_json({
-                                'type': 'call_connected',
-                                'message': 'Conexión establecida',
-                                'timestamp': datetime.now().isoformat()
-                            })
-                            logger.info(f"🔗 Conexión confirmada entre {client_id} y {partner_id}")
-
                     elif msg_type == 'webrtc_signal':
-                        # Señal WebRTC
                         target_id = data.get('targetId')
                         signal = data.get('signal')
                         sender_id = client_id
@@ -429,42 +368,22 @@ async def websocket_handler(request):
                             signal_data = {
                                 'type': 'webrtc_signal',
                                 'signal': signal,
-                                'senderId': sender_id,
-                                'timestamp': datetime.now().isoformat()
+                                'senderId': sender_id
                             }
-
                             try:
                                 await target_ws.send_json(signal_data)
-                                logger.info(f"📡 Señal WebRTC enviada de {sender_id} a {target_id}")
                             except:
-                                # Almacenar señal si el usuario no está disponible
                                 user_manager.store_signal(target_id, signal_data)
-                                logger.info(f"💾 Señal almacenada para {target_id}")
                         else:
                             logger.warning(f"⚠️  Usuario objetivo {target_id} no encontrado")
 
-                except json.JSONDecodeError as e:
-                    logger.error(f"❌ JSON inválido: {e}")
-                    await ws.send_json({
-                        'type': 'error',
-                        'message': 'Mensaje JSON inválido',
-                        'timestamp': datetime.now().isoformat()
-                    })
+                except json.JSONDecodeError:
+                    await ws.send_json({'type': 'error', 'message': 'JSON inválido'})
                 except Exception as e:
-                    logger.error(f"💥 Error procesando mensaje: {e}")
-                    await ws.send_json({
-                        'type': 'error',
-                        'message': 'Error interno del servidor',
-                        'timestamp': datetime.now().isoformat()
-                    })
+                    logger.error(f"Error procesando mensaje: {e}")
+                    await ws.send_json({'type': 'error', 'message': 'Error interno'})
 
-            elif msg.type == web.WSMsgType.ERROR:
-                logger.error(f"💥 Error WS: {ws.exception()}")
-
-    except Exception as e:
-        logger.error(f"💥 Error en conexión: {e}")
     finally:
-        # Limpiar usuario desconectado
         logger.info(f"🔌 Conexión cerrada: {client_id}")
         if user_manager.remove_user(client_id):
             await broadcast_user_list()
@@ -472,27 +391,21 @@ async def websocket_handler(request):
     return ws
 
 async def broadcast_user_list():
-    """Enviar lista actualizada de usuarios a todos conectados"""
     for user_id, user_data in list(user_manager.users.items()):
         try:
-            ws = user_data['ws']
-            if not ws.closed:
-                await ws.send_json({
+            if not user_data['ws'].closed:
+                await user_data['ws'].send_json({
                     'type': 'user_list',
-                    'users': user_manager.get_online_users(exclude_user_id=user_id),
-                    'timestamp': datetime.now().isoformat()
+                    'users': user_manager.get_online_users(exclude_user_id=user_id)
                 })
         except:
-            # Si hay error al enviar, marcar usuario como desconectado
             user_manager.remove_user(user_id)
 
 async def cleanup_inactive_users():
-    """Tarea periódica para limpiar usuarios inactivos"""
     while True:
-        await asyncio.sleep(60)  # Verificar cada minuto
-        inactive_users = user_manager.check_inactive_users()
-        if inactive_users:
-            logger.info(f"🧹 Limpiados {len(inactive_users)} usuarios inactivos")
+        await asyncio.sleep(60)
+        inactive = user_manager.check_inactive_users()
+        if inactive:
             await broadcast_user_list()
 
 # ============================================
@@ -504,61 +417,26 @@ async def handle_login(request):
 async def handle_index(request):
     return web.FileResponse('./index.html')
 
-async def handle_status(request):
-    return web.json_response({
-        'status': 'online',
-        'timestamp': datetime.now().isoformat(),
-        'totalUsers': len(user_manager.users),
-        'onlineUsers': len(user_manager.get_online_users()),
-        'activeCalls': len(user_manager.active_calls)
-    })
-
 async def start_server():
-    print("=" * 60)
-    print("🚀 SERVIDOR WEBRTC - SISTEMA MEJORADO")
-    print("=" * 60)
-
-    # Obtener puerto de Render o usar 3000 por defecto
     port = int(os.environ.get("PORT", 3000))
     host = "0.0.0.0"
 
-    print(f"🌐 Servidor iniciado en: http://{host}:{port}")
-    print(f"📞 WebSocket disponible en: /ws")
-    print(f"📊 Estado del sistema en: /status")
-    print("=" * 60)
-
-    # Iniciar tarea de limpieza
     asyncio.create_task(cleanup_inactive_users())
 
-    # Configurar app
     app = web.Application()
-
-    # Rutas HTTP
     app.router.add_get('/', handle_login)
     app.router.add_get('/index', handle_index)
-    app.router.add_get('/status', handle_status)
     app.router.add_get('/ws', websocket_handler)
     app.router.add_static('/', './')
 
-    # Iniciar servidor
     runner = web.AppRunner(app)
     await runner.setup()
     site = web.TCPSite(runner, host, port)
     await site.start()
 
-    print("✅ Servidor listo")
-    print("👥 Esperando usuarios...")
-    print("=" * 60)
+    print("🚀 Servidor iniciado correctamente")
 
     await asyncio.Future()
 
-# ============================================
-# EJECUCIÓN
-# ============================================
 if __name__ == "__main__":
-    try:
-        asyncio.run(start_server())
-    except KeyboardInterrupt:
-        print("\n⏹️  Servidor detenido")
-    except Exception as e:
-        print(f"\n💥 Error fatal: {e}")
+    asyncio.run(start_server())
