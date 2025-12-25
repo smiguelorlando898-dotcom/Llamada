@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WebRTC Voice - Iniciar Sesión</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --surface-light: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--surface);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* HEADER */
+        .login-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.1;
+            animation: float 20s linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-30px, -30px) rotate(360deg); }
+        }
+        
+        .login-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .login-header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .icon-container {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .icon-container i {
+            font-size: 2.5rem;
+            color: white;
+        }
+        
+        /* FORM */
+        .login-form {
+            padding: 40px 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .input-container i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: var(--surface-light);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        
+        input::placeholder {
+            color: var(--text-secondary);
+        }
+        
+        /* BUTTON */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn i {
+            font-size: 1.1rem;
+        }
+        
+        /* FOOTER */
+        .login-footer {
+            padding: 20px 30px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .feature i {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-container {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .login-container {
+                max-width: 100%;
+                border-radius: 20px;
+            }
+            
+            .login-header {
+                padding: 30px 20px;
+            }
+            
+            .login-form {
+                padding: 30px 20px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .icon-container {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .icon-container i {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- HEADER -->
+        <div class="login-header">
+            <div class="icon-container">
+                <i class="fas fa-phone-alt"></i>
+            </div>
+            <h1>WebRTC Voice</h1>
+            <p>Llamadas de voz seguras P2P</p>
+        </div>
+        
+        <!-- FORM -->
+        <div class="login-form">
+            <div class="form-group">
+                <label for="username">Tu Nombre</label>
+                <div class="input-container">
+                    <i class="fas fa-user"></i>
+                    <input type="text" 
+                           id="username" 
+                           placeholder="Ingresa tu nombre" 
+                           maxlength="20"
+                           autocomplete="off">
+                </div>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Cifrado E2E</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <span>Baja latencia</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-users"></i>
+                    <span>P2P directo</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-globe"></i>
+                    <span>Sin servidor</span>
+                </div>
+            </div>
+            
+            <button class="btn" id="continueBtn">
+                <i class="fas fa-sign-in-alt"></i>
+                Continuar
+            </button>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="login-footer">
+            <p>No se requieren contraseñas • Conexión segura</p>
+        </div>
+    </div>
+    
+    <!-- NOTIFICATION -->
+    <div class="notification" id="notification" style="display: none;"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const usernameInput = document.getElementById('username');
+            const continueBtn = document.getElementById('continueBtn');
+            const notification = document.getElementById('notification');
+            
+            // Focus al cargar
+            usernameInput.focus();
+            
+            // Validar entrada
+            usernameInput.addEventListener('input', function() {
+                const name = usernameInput.value.trim();
+                continueBtn.disabled = name.length < 2;
+            });
+            
+            // Manejar clic en continuar
+            continueBtn.addEventListener('click', function() {
+                const name = usernameInput.value.trim();
+                
+                if (name.length < 2) {
+                    showNotification('Por favor ingresa un nombre válido (mínimo 2 caracteres)', 'error');
+                    return;
+                }
+                
+                if (name.length > 20) {
+                    showNotification('El nombre no debe exceder 20 caracteres', 'error');
+                    return;
+                }
+                
+                // Guardar nombre y redirigir
+                localStorage.setItem('webrtc_username', name);
+                
+                // Animación de salida
+                continueBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+                continueBtn.disabled = true;
+                
+                setTimeout(() => {
+                    window.location.href = '/index';
+                }, 800);
+            });
+            
+            // Enter para continuar
+            usernameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    continueBtn.click();
+                }
+            });
+            
+            // Cargar nombre guardado si existe
+            const savedName = localStorage.getItem('webrtc_username');
+            if (savedName) {
+                usernameInput.value = savedName;
+                continueBtn.disabled = false;
+            }
+            
+            // Función para mostrar notificaciones
+            function showNotification(message, type = 'info') {
+                notification.textContent = message;
+                notification.style.display = 'block';
+                notification.className = `notification ${type}`;
+                
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+            
+            // Estilos para notificación
+            const style = document.createElement('style');
+            style.textContent = `
+                .notification {
+                    position: fixed;
+                    bottom: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: var(--surface);
+                    color: var(--text-primary);
+                    padding: 12px 24px;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                    border: 1px solid rgba(255,255,255,0.1);
+                    z-index: 1000;
+                    font-weight: 500;
+                    animation: slideUp 0.3s ease;
+                }
+                
+                .notification.error {
+                    background: var(--danger);
+                    color: white;
+                }
+                
+                @keyframes slideUp {
+                    from {
+                        opacity: 0;
+                        transform: translate(-50%, 20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translate(-50%, 0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
