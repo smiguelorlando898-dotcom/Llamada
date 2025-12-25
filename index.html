@@ -38,7 +38,6 @@
             overflow-x: hidden;
         }
         
-        /* HEADER MINIMALISTA */
         .app-header {
             background: var(--surface);
             padding: 16px 20px;
@@ -118,7 +117,6 @@
             gap: 6px;
         }
         
-        /* MAIN CONTENT */
         .main-content {
             padding: 20px;
             max-width: 600px;
@@ -140,7 +138,6 @@
             color: var(--text-secondary);
         }
         
-        /* USER LIST - ESTILO MINIMALISTA */
         .users-list {
             display: flex;
             flex-direction: column;
@@ -157,7 +154,6 @@
             transition: all 0.2s ease;
             border: 1px solid var(--border);
             cursor: pointer;
-            position: relative;
         }
         
         .user-card:hover {
@@ -259,7 +255,6 @@
             background: var(--surface-light);
         }
         
-        /* CALL SCREEN - DISEÑO MINIMALISTA */
         .call-screen {
             position: fixed;
             top: 0;
@@ -321,19 +316,19 @@
         }
         
         .timer {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-family: 'Poppins', monospace;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--success);
             margin: 24px 0;
-            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
-        .timer.active {
-            display: block;
+        .timer.visible {
+            opacity: 1;
         }
         
-        /* CALL CONTROLS MINIMALISTAS */
         .call-controls {
             display: flex;
             justify-content: center;
@@ -376,7 +371,6 @@
             background: #dc2626;
         }
         
-        /* INCOMING CALL - MINIMALISTA */
         .incoming-call {
             position: fixed;
             top: 0;
@@ -471,7 +465,6 @@
             transform: scale(1.05);
         }
         
-        /* NOTIFICATION */
         .notification-toast {
             position: fixed;
             bottom: 20px;
@@ -497,7 +490,6 @@
             transform: translateX(-50%) translateY(0);
         }
         
-        /* LOADING STATES */
         .loading {
             display: flex;
             align-items: center;
@@ -520,7 +512,6 @@
             to { transform: rotate(360deg); }
         }
         
-        /* EMPTY STATE */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -540,7 +531,6 @@
             font-weight: 500;
         }
         
-        /* AUDIO PERMISSION BANNER */
         .permission-banner {
             position: fixed;
             top: 0;
@@ -569,8 +559,7 @@
             }
         }
         
-        /* CALL QUALITY INDICATOR */
-        .quality-indicator {
+        .connection-indicator {
             position: fixed;
             top: 80px;
             right: 20px;
@@ -585,29 +574,30 @@
             z-index: 999;
         }
         
-        .quality-indicator.show {
+        .connection-indicator.show {
             display: flex;
         }
         
-        .quality-dot {
+        .connection-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
         }
         
-        .quality-dot.good {
+        .connection-dot.connected {
             background: var(--success);
+            animation: pulse 1.5s infinite;
         }
         
-        .quality-dot.fair {
+        .connection-dot.connecting {
             background: var(--warning);
+            animation: pulse 1s infinite;
         }
         
-        .quality-dot.poor {
+        .connection-dot.disconnected {
             background: var(--danger);
         }
         
-        /* RESPONSIVE */
         @media (max-width: 768px) {
             .main-content {
                 padding: 16px;
@@ -628,7 +618,7 @@
             }
             
             .timer {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
         }
         
@@ -656,56 +646,22 @@
             }
         }
         
-        /* ANIMATIONS */
-        .fade-in {
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .slide-up {
-            animation: slideUp 0.3s ease;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* UTILITY CLASSES */
         .hidden {
             display: none !important;
         }
-        
-        .text-center {
-            text-align: center;
-        }
-        
-        .mb-1 { margin-bottom: 4px; }
-        .mb-2 { margin-bottom: 8px; }
-        .mb-3 { margin-bottom: 12px; }
-        .mb-4 { margin-bottom: 16px; }
-        .mb-5 { margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    <!-- PERMISSION BANNER -->
     <div class="permission-banner" id="permissionBanner">
         <i class="fas fa-microphone-alt"></i> 
         Esta aplicación necesita acceso al micrófono para las llamadas
     </div>
     
-    <!-- QUALITY INDICATOR -->
-    <div class="quality-indicator" id="qualityIndicator">
-        <span class="quality-dot good" id="qualityDot"></span>
-        <span id="qualityText">Buena calidad</span>
+    <div class="connection-indicator" id="connectionIndicator">
+        <span class="connection-dot connecting" id="connectionDot"></span>
+        <span id="connectionText">Conectando...</span>
     </div>
     
-    <!-- HEADER -->
     <header class="app-header">
         <div class="header-content">
             <div class="user-avatar" id="myAvatar" style="background: #2563eb;">Y</div>
@@ -723,7 +679,6 @@
         </div>
     </header>
     
-    <!-- MAIN CONTENT -->
     <main class="main-content">
         <div class="section-header">
             <h1 class="section-title">Usuarios Conectados</h1>
@@ -746,7 +701,6 @@
         </div>
     </main>
     
-    <!-- CALL SCREEN -->
     <div class="call-screen" id="callScreen">
         <div class="call-content">
             <div class="call-avatar" id="callAvatar" style="background: #2563eb;">U</div>
@@ -754,7 +708,7 @@
                 <h2 id="callPeerName">Usuario</h2>
                 <p class="call-status" id="callStatus">Conectando...</p>
             </div>
-            <div class="timer hidden" id="timer">00:00</div>
+            <div class="timer" id="timer">00:00</div>
             
             <div class="call-controls">
                 <button class="control-button end-call" id="endCall">
@@ -764,7 +718,6 @@
         </div>
     </div>
     
-    <!-- INCOMING CALL -->
     <div class="incoming-call" id="incomingCall">
         <div class="incoming-content">
             <div class="incoming-avatar" id="incomingAvatar" style="background: #2563eb;">U</div>
@@ -784,10 +737,8 @@
         </div>
     </div>
     
-    <!-- NOTIFICATION TOAST -->
     <div class="notification-toast" id="notificationToast"></div>
     
-    <!-- AUDIO ELEMENTS -->
     <audio id="localAudio" autoplay muted></audio>
     <audio id="remoteAudio" autoplay></audio>
     
@@ -799,22 +750,18 @@
             ? `wss://${window.location.host}/ws`
             : `ws://${window.location.host}/ws`;
         
-        // CONFIGURACIÓN MEJORADA DE ICE SERVERS
         const ICE_CONFIG = {
             iceServers: [
-                // STUN servers
                 { urls: 'stun:stun.l.google.com:19302' },
                 { urls: 'stun:stun1.l.google.com:19302' },
                 { urls: 'stun:stun2.l.google.com:19302' },
                 { urls: 'stun:stun3.l.google.com:19302' },
                 { urls: 'stun:stun4.l.google.com:19302' },
-                // TURN server
                 {
                     urls: "turn:turn-wn1v.onrender.com:3478",
                     username: "admin",
                     credential: "mO*061119"
                 },
-                // TURN server con protocolos alternativos
                 {
                     urls: "turn:turn-wn1v.onrender.com:3478?transport=tcp",
                     username: "admin",
@@ -849,23 +796,19 @@
                 peerAvatar: '',
                 isActive: false,
                 isInitiator: false,
-                startTime: null,
-                connectionAttempts: 0
+                startTime: null
             },
             callDuration: 0,
             timerInterval: null,
             reconnectAttempts: 0,
             maxReconnectAttempts: 5,
-            heartbeatInterval: null,
-            iceConnectionState: 'new',
-            callTimeout: null
+            heartbeatInterval: null
         };
         
         // ============================================
         // UI MANAGER
         // ============================================
         const UIManager = {
-            // Actualizar información del usuario
             updateUserInfo(name, color) {
                 document.getElementById('myName').textContent = name;
                 const avatar = document.getElementById('myAvatar');
@@ -874,13 +817,11 @@
                 document.getElementById('myStatusText').textContent = 'Conectado';
             },
             
-            // Actualizar lista de usuarios
             updateUserList(users) {
                 const usersList = document.getElementById('usersList');
                 const emptyState = document.getElementById('emptyState');
                 const userCount = document.getElementById('userCount');
                 
-                // Filtrar usuarios disponibles
                 const availableUsers = users.filter(user => user.status === 'disponible');
                 userCount.textContent = `${availableUsers.length} usuario${availableUsers.length !== 1 ? 's' : ''} disponible${availableUsers.length !== 1 ? 's' : ''}`;
                 
@@ -925,11 +866,9 @@
                     `;
                 }).join('');
                 
-                // Agregar event listeners
                 this.addUserCardListeners();
             },
             
-            // Obtener texto del estado
             getStatusText(status) {
                 const statusMap = {
                     'disponible': 'Disponible',
@@ -940,7 +879,6 @@
                 return statusMap[status] || 'Desconectado';
             },
             
-            // Agregar listeners a las tarjetas de usuario
             addUserCardListeners() {
                 document.querySelectorAll('.user-card').forEach(card => {
                     const userId = card.getAttribute('data-user-id');
@@ -971,10 +909,8 @@
                 });
             },
             
-            // Iniciar llamada
             initiateCall(targetId, peerName, peerAvatar) {
-                // Limpiar cualquier llamada anterior
-                this.cleanupCall();
+                WebRTCManager.cleanup();
                 
                 AppState.currentCall = {
                     peerId: targetId,
@@ -982,26 +918,20 @@
                     peerAvatar: peerAvatar,
                     isActive: false,
                     isInitiator: true,
-                    startTime: null,
-                    connectionAttempts: 0
+                    startTime: null
                 };
                 
-                // Mostrar pantalla de llamada
                 document.getElementById('callAvatar').style.background = peerAvatar;
                 document.getElementById('callAvatar').textContent = peerName.charAt(0).toUpperCase();
                 document.getElementById('callPeerName').textContent = peerName;
                 document.getElementById('callStatus').textContent = 'Llamando...';
                 document.getElementById('callScreen').classList.add('active');
-                document.getElementById('timer').classList.add('hidden');
+                document.getElementById('timer').classList.remove('visible');
                 
-                // Solicitar permiso de micrófono
                 this.requestMicrophonePermission().then(hasPermission => {
                     if (hasPermission) {
-                        // Enviar solicitud de llamada
                         WebSocketManager.send('call_request', { targetId: targetId });
-                        
-                        // Establecer timeout para la llamada
-                        this.setCallTimeout(30000); // 30 segundos
+                        this.setCallTimeout(30000);
                     } else {
                         this.showNotification('Se necesita acceso al micrófono para llamar');
                         this.endCall();
@@ -1009,7 +939,6 @@
                 });
             },
             
-            // Mostrar llamada entrante
             showIncomingCall(callerId, callerName, callerAvatar) {
                 AppState.currentCall.peerId = callerId;
                 AppState.currentCall.peerName = callerName;
@@ -1022,11 +951,16 @@
                 document.getElementById('incomingCall').classList.add('active');
             },
             
-            // Aceptar llamada entrante
             async acceptIncomingCall() {
                 document.getElementById('incomingCall').classList.remove('active');
                 
-                // Solicitar permiso de micrófono
+                document.getElementById('callAvatar').style.background = AppState.currentCall.peerAvatar;
+                document.getElementById('callAvatar').textContent = AppState.currentCall.peerName.charAt(0).toUpperCase();
+                document.getElementById('callPeerName').textContent = AppState.currentCall.peerName;
+                document.getElementById('callStatus').textContent = 'Conectando...';
+                document.getElementById('callScreen').classList.add('active');
+                document.getElementById('timer').classList.remove('visible');
+                
                 const hasPermission = await this.requestMicrophonePermission();
                 if (!hasPermission) {
                     this.showNotification('Se necesita acceso al micrófono para aceptar la llamada');
@@ -1034,19 +968,9 @@
                     return;
                 }
                 
-                // Mostrar pantalla de llamada
-                document.getElementById('callAvatar').style.background = AppState.currentCall.peerAvatar;
-                document.getElementById('callAvatar').textContent = AppState.currentCall.peerName.charAt(0).toUpperCase();
-                document.getElementById('callPeerName').textContent = AppState.currentCall.peerName;
-                document.getElementById('callStatus').textContent = 'Conectando...';
-                document.getElementById('callScreen').classList.add('active');
-                document.getElementById('timer').classList.add('hidden');
-                
-                // Aceptar llamada
                 WebSocketManager.send('call_accept');
             },
             
-            // Rechazar llamada entrante
             declineIncomingCall() {
                 WebSocketManager.send('call_decline');
                 document.getElementById('incomingCall').classList.remove('active');
@@ -1059,18 +983,20 @@
                 };
             },
             
-            // Actualizar estado de la llamada
             updateCallStatus(status) {
                 document.getElementById('callStatus').textContent = status;
             },
             
-            // Iniciar temporizador de llamada
             startTimer() {
                 AppState.callDuration = 0;
                 clearInterval(AppState.timerInterval);
                 
                 const timer = document.getElementById('timer');
-                timer.classList.remove('hidden');
+                timer.textContent = '00:00';
+                
+                setTimeout(() => {
+                    timer.classList.add('visible');
+                }, 300);
                 
                 AppState.timerInterval = setInterval(() => {
                     AppState.callDuration++;
@@ -1082,15 +1008,13 @@
                 AppState.currentCall.startTime = Date.now();
             },
             
-            // Detener temporizador
             stopTimer() {
                 clearInterval(AppState.timerInterval);
                 const timer = document.getElementById('timer');
                 timer.textContent = '00:00';
-                timer.classList.add('hidden');
+                timer.classList.remove('visible');
             },
             
-            // Finalizar llamada
             endCall() {
                 this.clearCallTimeout();
                 
@@ -1102,17 +1026,14 @@
                 this.showNotification('Llamada finalizada');
             },
             
-            // Limpiar llamada
             cleanupCall() {
                 WebRTCManager.cleanup();
                 document.getElementById('callScreen').classList.remove('active');
                 AppState.currentCall.isActive = false;
                 this.stopTimer();
                 this.clearCallTimeout();
-                this.hideQualityIndicator();
             },
             
-            // Mostrar notificación
             showNotification(message, duration = 3000) {
                 const toast = document.getElementById('notificationToast');
                 toast.innerHTML = message;
@@ -1123,7 +1044,6 @@
                 }, duration);
             },
             
-            // Solicitar permiso de micrófono
             async requestMicrophonePermission() {
                 try {
                     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -1131,7 +1051,6 @@
                         return false;
                     }
                     
-                    // Solicitar permiso
                     const stream = await navigator.mediaDevices.getUserMedia({ 
                         audio: {
                             echoCancellation: true,
@@ -1141,21 +1060,17 @@
                         }
                     });
                     
-                    // Detener stream inmediatamente (solo queríamos el permiso)
                     stream.getTracks().forEach(track => track.stop());
                     
-                    // Ocultar banner de permiso
                     document.getElementById('permissionBanner').classList.remove('show');
                     
                     return true;
                 } catch (error) {
                     console.error('❌ Error de permiso de micrófono:', error);
                     
-                    // Mostrar banner de permiso
                     const banner = document.getElementById('permissionBanner');
                     banner.classList.add('show');
                     
-                    // Agregar event listener al banner
                     banner.onclick = () => {
                         this.showNotification('Haz clic en el ícono de micrófono en la barra de direcciones para permitir el acceso');
                     };
@@ -1164,7 +1079,6 @@
                 }
             },
             
-            // Actualizar estado de conexión
             updateConnectionStatus(connected) {
                 const statusElement = document.getElementById('connectionStatus');
                 if (connected) {
@@ -1178,32 +1092,6 @@
                 }
             },
             
-            // Mostrar indicador de calidad
-            showQualityIndicator(quality) {
-                const indicator = document.getElementById('qualityIndicator');
-                const dot = document.getElementById('qualityDot');
-                const text = document.getElementById('qualityText');
-                
-                if (quality === 'good') {
-                    dot.className = 'quality-dot good';
-                    text.textContent = 'Buena calidad';
-                } else if (quality === 'fair') {
-                    dot.className = 'quality-dot fair';
-                    text.textContent = 'Calidad media';
-                } else {
-                    dot.className = 'quality-dot poor';
-                    text.textContent = 'Mala calidad';
-                }
-                
-                indicator.classList.add('show');
-            },
-            
-            // Ocultar indicador de calidad
-            hideQualityIndicator() {
-                document.getElementById('qualityIndicator').classList.remove('show');
-            },
-            
-            // Establecer timeout para la llamada
             setCallTimeout(duration) {
                 this.clearCallTimeout();
                 AppState.callTimeout = setTimeout(() => {
@@ -1214,7 +1102,6 @@
                 }, duration);
             },
             
-            // Limpiar timeout de la llamada
             clearCallTimeout() {
                 if (AppState.callTimeout) {
                     clearTimeout(AppState.callTimeout);
@@ -1237,11 +1124,9 @@
                     AppState.reconnectAttempts = 0;
                     UIManager.updateConnectionStatus(true);
                     
-                    // Registrar usuario
                     const username = localStorage.getItem('webrtc_username') || 'Usuario';
                     this.send('register', { username: username });
                     
-                    // Iniciar heartbeat
                     this.startHeartbeat();
                 };
                 
@@ -1258,10 +1143,8 @@
                     console.log('❌ Desconectado del servidor');
                     UIManager.updateConnectionStatus(false);
                     
-                    // Limpiar heartbeat
                     this.stopHeartbeat();
                     
-                    // Intentar reconectar si no está en llamada
                     if (!AppState.currentCall.isActive) {
                         this.reconnect();
                     }
@@ -1307,7 +1190,11 @@
                     case 'call_accepted':
                         UIManager.clearCallTimeout();
                         UIManager.updateCallStatus('Conectando...');
-                        WebRTCManager.start(true);
+                        
+                        // El que inició la llamada también necesita obtener su stream
+                        WebRTCManager.start(true).then(() => {
+                            console.log('✅ Iniciador listo para recibir stream');
+                        });
                         break;
                         
                     case 'call_declined':
@@ -1327,11 +1214,21 @@
                         
                     case 'webrtc_signal':
                         console.log('📡 Señal WebRTC recibida:', data.signal.type);
-                        WebRTCManager.handleSignal(data.signal, data.senderId);
+                        if (AppState.peer) {
+                            AppState.peer.signal(data.signal);
+                        } else if (data.signal.type === 'offer') {
+                            // Si recibimos un offer y no tenemos peer, crear uno
+                            WebRTCManager.start(false).then(() => {
+                                setTimeout(() => {
+                                    if (AppState.peer) {
+                                        AppState.peer.signal(data.signal);
+                                    }
+                                }, 1000);
+                            });
+                        }
                         break;
                         
                     case 'heartbeat_ack':
-                        // Heartbeat recibido, todo bien
                         break;
                         
                     case 'error':
@@ -1365,7 +1262,7 @@
                     if (AppState.ws && AppState.ws.readyState === WebSocket.OPEN) {
                         this.send('heartbeat');
                     }
-                }, 10000); // Cada 10 segundos
+                }, 10000);
             },
             
             stopHeartbeat() {
@@ -1377,12 +1274,12 @@
         };
         
         // ============================================
-        // WEBRTC MANAGER
+        // WEBRTC MANAGER - CORREGIDO PARA BIDIRECCIONALIDAD
         // ============================================
         const WebRTCManager = {
             async start(isInitiator) {
                 try {
-                    console.log('🎤 Obteniendo stream de audio...');
+                    console.log(`🎤 ${isInitiator ? 'Iniciador' : 'Receptor'} obteniendo stream...`);
                     
                     // Obtener stream de audio
                     AppState.localStream = await navigator.mediaDevices.getUserMedia({
@@ -1397,13 +1294,15 @@
                     
                     console.log('✅ Stream de audio obtenido');
                     
-                    // Asignar stream al elemento de audio local
+                    // Asignar stream local
                     const localAudio = document.getElementById('localAudio');
                     localAudio.srcObject = AppState.localStream;
-                    localAudio.muted = true; // Silenciar audio local para evitar eco
+                    localAudio.muted = true;
                     
-                    // Crear conexión WebRTC
+                    // Crear peer
                     this.createPeer(isInitiator);
+                    
+                    return true;
                     
                 } catch (error) {
                     console.error('❌ Error WebRTC:', error);
@@ -1415,27 +1314,22 @@
                         UIManager.showNotification('No se encontró ningún micrófono');
                         UIManager.endCall();
                     } else {
-                        UIManager.showNotification('Error al conectar la llamada: ' + error.message);
+                        UIManager.showNotification('Error al conectar la llamada');
                         UIManager.endCall();
                     }
+                    return false;
                 }
             },
             
             createPeer(isInitiator) {
                 console.log(`🎯 Creando peer (initiator: ${isInitiator})`);
                 
-                // Configuración mejorada de SimplePeer
                 const peerOptions = {
                     initiator: isInitiator,
                     stream: AppState.localStream,
                     config: ICE_CONFIG,
                     trickle: true,
-                    reconnectTimer: 2000,
-                    sdpTransform: (sdp) => {
-                        // Optimizar SDP para audio
-                        return sdp.replace(/a=mid:video\r\n/g, '')
-                                   .replace(/m=video.*\r\n/g, '');
-                    }
+                    reconnectTimer: 2000
                 };
                 
                 AppState.peer = new SimplePeer(peerOptions);
@@ -1448,45 +1342,33 @@
                     });
                 });
                 
-                AppState.peer.on('stream', (stream) => {
-                    console.log('🔊 Audio remoto recibido');
+                AppState.peer.on('stream', (remoteStream) => {
+                    console.log('🔊 Stream remoto recibido!');
+                    
                     const remoteAudio = document.getElementById('remoteAudio');
-                    remoteAudio.srcObject = stream;
+                    remoteAudio.srcObject = remoteStream;
                     
                     // Reproducir audio
                     remoteAudio.play().catch(e => {
                         console.log('⚠️ Error reproduciendo audio:', e);
                     });
                     
+                    // Actualizar UI para AMBOS usuarios
                     AppState.currentCall.isActive = true;
                     UIManager.updateCallStatus('En llamada');
                     UIManager.startTimer();
-                    UIManager.showQualityIndicator('good');
                     
-                    console.log('✅ Llamada conectada exitosamente');
+                    console.log('✅ Conexión WebRTC establecida - audio bidireccional funcionando');
                 });
                 
                 AppState.peer.on('connect', () => {
                     console.log('✅ Conexión WebRTC establecida');
-                    AppState.currentCall.connectionAttempts = 0;
                 });
                 
                 AppState.peer.on('error', (error) => {
                     console.error('💥 Error WebRTC:', error);
-                    
-                    if (error.code === 'ERR_CANNOT_CONNECT') {
-                        AppState.currentCall.connectionAttempts++;
-                        if (AppState.currentCall.connectionAttempts < 3) {
-                            UIManager.updateCallStatus('Reintentando conexión...');
-                            console.log(`🔄 Reintento ${AppState.currentCall.connectionAttempts}`);
-                        } else {
-                            UIManager.showNotification('No se pudo establecer la conexión');
-                            UIManager.endCall();
-                        }
-                    } else {
-                        UIManager.showNotification('Error en la conexión: ' + error.message);
-                        UIManager.endCall();
-                    }
+                    UIManager.showNotification('Error en la conexión: ' + error.message);
+                    UIManager.endCall();
                 });
                 
                 AppState.peer.on('close', () => {
@@ -1497,33 +1379,10 @@
                     }
                 });
                 
-                AppState.peer.on('iceStateChange', (state) => {
-                    console.log('🧊 Estado ICE:', state);
-                    AppState.iceConnectionState = state;
-                    
-                    if (state === 'connected' || state === 'completed') {
-                        UIManager.showQualityIndicator('good');
-                    } else if (state === 'disconnected' || state === 'failed') {
-                        UIManager.showQualityIndicator('poor');
-                    }
-                });
-            },
-            
-            handleSignal(signal, senderId) {
-                if (!AppState.peer) {
-                    console.log('⚠️ Peer no creado aún, creando...');
-                    this.createPeer(false);
-                    
-                    // Pequeño delay para asegurar que el peer esté listo
-                    setTimeout(() => {
-                        if (AppState.peer) {
-                            console.log('📡 Procesando señal tardía:', signal.type);
-                            AppState.peer.signal(signal);
-                        }
-                    }, 500);
-                } else {
-                    console.log('📡 Procesando señal:', signal.type);
-                    AppState.peer.signal(signal);
+                // Si somos el iniciador y ya tenemos stream local, 
+                // esperar a que el receptor envíe su stream
+                if (isInitiator) {
+                    console.log('👂 Iniciador esperando stream del receptor...');
                 }
             },
             
@@ -1552,9 +1411,6 @@
                     remoteAudio.srcObject = null;
                     remoteAudio.pause();
                 }
-                
-                AppState.iceConnectionState = 'new';
-                AppState.currentCall.connectionAttempts = 0;
             }
         };
         
@@ -1562,17 +1418,14 @@
         // INICIALIZACIÓN
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
-            // Verificar si hay nombre de usuario
             const username = localStorage.getItem('webrtc_username');
             if (!username) {
                 window.location.href = '/';
                 return;
             }
             
-            // Conectar WebSocket
             WebSocketManager.connect();
             
-            // Event listeners para controles
             document.getElementById('endCall').addEventListener('click', () => {
                 UIManager.endCall();
             });
@@ -1585,17 +1438,14 @@
                 UIManager.declineIncomingCall();
             });
             
-            // Actualizar lista de usuarios periódicamente
             setInterval(() => {
                 if (AppState.ws && AppState.ws.readyState === WebSocket.OPEN) {
                     WebSocketManager.send('get_users');
                 }
             }, 10000);
             
-            // Solicitar permiso de micrófono al cargar
             UIManager.requestMicrophonePermission();
             
-            // Limpiar al cerrar
             window.addEventListener('beforeunload', () => {
                 if (AppState.ws) {
                     WebSocketManager.send('call_end');
@@ -1603,19 +1453,6 @@
                 }
                 WebRTCManager.cleanup();
                 WebSocketManager.stopHeartbeat();
-            });
-            
-            // Manejar cambios en la visibilidad de la página
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    console.log('📱 Página en segundo plano');
-                } else {
-                    console.log('📱 Página en primer plano');
-                    // Re-solicitar permiso si es necesario
-                    if (!AppState.localStream && AppState.currentCall.isActive) {
-                        UIManager.requestMicrophonePermission();
-                    }
-                }
             });
         });
     </script>
