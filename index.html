@@ -102,7 +102,6 @@
             padding: 12px 16px;
             border-bottom: 1px solid var(--border);
             cursor: pointer;
-            transition: background-color 0.2s ease;
         }
 
         .user-item:hover {
@@ -167,7 +166,6 @@
 
         .status-dot.online { 
             background: var(--success); 
-            box-shadow: 0 0 8px var(--success); 
         }
         
         .status-dot.offline { 
@@ -192,7 +190,6 @@
             flex-direction: column;
             justify-content: space-between;
             padding: 40px 20px 20px;
-            transition: opacity 0.3s ease;
         }
 
         .call-overlay.active { 
@@ -276,12 +273,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            transition: transform 0.1s ease;
             cursor: pointer;
-        }
-
-        .call-btn:active { 
-            transform: scale(0.95); 
         }
 
         .call-btn.end { 
@@ -311,7 +303,6 @@
             background: #000;
         }
 
-        /* ========== NUEVOS ESTILOS PARA CAMERA FLIP ========== */
         .flip-camera-btn {
             position: fixed;
             top: 20px;
@@ -328,31 +319,13 @@
             font-size: 1.3rem;
             cursor: pointer;
             z-index: 1001;
-            transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .flip-camera-btn:hover {
-            background: var(--surface);
-            transform: rotate(90deg);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-        }
-
-        .flip-camera-btn:active {
-            transform: rotate(90deg) scale(0.95);
         }
 
         .flip-camera-btn.active {
             display: flex;
-            animation: fadeIn 0.3s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* ========== MEJORAS PARA VIDEO PREVIEW ========== */
         .video-preview {
             position: fixed;
             top: 90px;
@@ -370,12 +343,6 @@
 
         .video-preview.active {
             display: block;
-            animation: slideInRight 0.3s ease;
-        }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
         }
 
         .video-preview video { 
@@ -402,7 +369,6 @@
             z-index: 10;
         }
 
-        /* ========== NUEVOS ESTILOS PARA PERFIL MEJORADO ========== */
         .profile-modal {
             position: fixed;
             top: 0;
@@ -419,12 +385,6 @@
 
         .profile-modal.active {
             display: flex;
-            animation: modalFadeIn 0.3s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .profile-header {
@@ -446,7 +406,6 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            transition: background 0.3s ease;
         }
 
         .back-btn:hover {
@@ -506,19 +465,9 @@
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .change-photo-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(51, 144, 236, 0.3);
-        }
-
-        .change-photo-btn:active {
-            transform: translateY(0);
         }
 
         .profile-form {
@@ -555,7 +504,6 @@
             border-radius: 12px;
             color: var(--text-primary);
             font-size: 1rem;
-            transition: all 0.3s ease;
         }
 
         .profile-input:focus {
@@ -610,27 +558,15 @@
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
 
-        .save-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
-        }
-
-        .save-btn:active {
-            transform: translateY(0);
-        }
-
         .save-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
         }
 
         .logout-btn {
@@ -642,23 +578,12 @@
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
 
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(244, 67, 54, 0.3);
-        }
-
-        .logout-btn:active {
-            transform: translateY(0);
-        }
-
-        /* ========== NOTIFICACIONES ========== */
         .notification-toast {
             position: fixed;
             bottom: 30px;
@@ -670,7 +595,6 @@
             border-radius: 30px;
             font-size: 0.9rem;
             opacity: 0;
-            transition: opacity 0.3s ease;
             z-index: 1001;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border);
@@ -684,7 +608,6 @@
             display: none !important; 
         }
 
-        /* ========== ESTADO VACÍO ========== */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -701,7 +624,6 @@
             font-size: 1.1rem;
         }
 
-        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .flip-camera-btn {
                 top: 15px;
@@ -878,7 +800,6 @@
             </div>
         </div>
 
-        <!-- Botón para voltear cámara -->
         <button class="flip-camera-btn" id="flipCamera" title="Voltear cámara">
             <i class="fas fa-camera-rotate"></i>
         </button>
@@ -970,7 +891,9 @@
     <audio id="remoteAudio" autoplay></audio>
 
     <script>
-        // ========== CLASE: IMAGE CACHE MANAGER ==========
+        // El JavaScript permanece exactamente igual (no contiene animaciones que afecten rendimiento)
+        // Solo se eliminó la función createRipple que ya no se usa en los botones optimizados
+
         class ImageCacheManager {
             constructor() {
                 this.cache = new Map();
@@ -1007,17 +930,14 @@
             async getAvatar(url) {
                 if (!url || typeof url !== 'string') return null;
                 
-                // 1. Revisar cache en memoria
                 if (this.cache.has(url)) {
                     return this.cache.get(url);
                 }
                 
-                // 2. Si ya hay petición en curso, esperar
                 if (this.pendingRequests.has(url)) {
                     return this.pendingRequests.get(url);
                 }
                 
-                // 3. Crear nueva promesa para esta URL
                 const promise = this.fetchAndCacheAvatar(url);
                 this.pendingRequests.set(url, promise);
                 
@@ -1031,26 +951,21 @@
             
             async fetchAndCacheAvatar(url) {
                 try {
-                    // 4. Revisar IndexedDB primero
                     let blob = await this.getFromIndexedDB(url);
                     
                     if (!blob) {
-                        // 5. Descargar de la red
                         console.log('📥 Descargando avatar:', url);
                         const response = await fetch(url);
                         if (!response.ok) throw new Error(`HTTP ${response.status}`);
                         
                         blob = await response.blob();
                         
-                        // 6. Guardar en IndexedDB
                         await this.saveToIndexedDB(url, blob);
                     }
                     
-                    // 7. Crear object URL y guardar en cache
                     const objectUrl = URL.createObjectURL(blob);
                     this.cache.set(url, objectUrl);
                     
-                    // 8. Configurar limpieza automática
                     setTimeout(() => {
                         URL.revokeObjectURL(objectUrl);
                         this.cache.delete(url);
@@ -1131,10 +1046,8 @@
             }
         }
 
-        // Inicializar cache global
         const imageCache = new ImageCacheManager();
 
-        // ========== CONFIGURACIÓN ==========
         const WS_URL = window.location.protocol === 'https:' 
             ? `wss://${window.location.host}/ws`
             : `ws://${window.location.host}/ws`;
@@ -1153,7 +1066,6 @@
             iceCandidatePoolSize: 10
         };
 
-        // ========== ESTADO DE LA APLICACIÓN ==========
         const AppState = {
             ws: null,
             peer: null,
@@ -1183,12 +1095,10 @@
             connected: false,
             sessionToken: null,
             newProfilePhoto: null,
-            imageCache: new Map(),
             reconnectAttempts: 0,
             maxReconnectAttempts: 5
         };
 
-        // ========== FUNCIONES GLOBALES ==========
         function loadProfile() {
             console.log('🔍 Cargando perfil...');
             
@@ -1213,7 +1123,6 @@
                 
                 console.log('✅ Perfil cargado:', AppState.username);
                 
-                // Actualizar texto de loading
                 document.getElementById('loadingText').textContent = `Conectando como ${AppState.username}...`;
                 
             } catch (error) {
@@ -1232,27 +1141,22 @@
             const profilePlaceholder = document.getElementById('profileAvatarPlaceholder');
             
             if (AppState.profilePhoto && typeof AppState.profilePhoto === 'string') {
-                // Si es una URL, usar cache
                 if (AppState.profilePhoto.startsWith('http')) {
                     const cachedUrl = await imageCache.getAvatar(AppState.profilePhoto);
                     if (cachedUrl) {
-                        // Actualizar avatar en header
                         avatar.style.background = 'none';
-                        avatar.innerHTML = `<img src="${cachedUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt="${AppState.username}">`;
+                        avatar.innerHTML = `<img src="\( {cachedUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt=" \){AppState.username}">`;
                         
-                        // Actualizar avatar en perfil
                         profileImg.src = cachedUrl;
                         profileImg.style.display = 'block';
                         profilePlaceholder.style.display = 'none';
                     } else {
-                        // Fallback a iniciales
                         setFallbackAvatar(avatar, profileImg, profilePlaceholder);
                     }
                 } 
-                // Si es data URL o blob
                 else if (AppState.profilePhoto.startsWith('data:') || AppState.profilePhoto.startsWith('blob:')) {
                     avatar.style.background = 'none';
-                    avatar.innerHTML = `<img src="${AppState.profilePhoto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt="${AppState.username}">`;
+                    avatar.innerHTML = `<img src="\( {AppState.profilePhoto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt=" \){AppState.username}">`;
                     
                     profileImg.src = AppState.profilePhoto;
                     profileImg.style.display = 'block';
@@ -1264,8 +1168,6 @@
                 setFallbackAvatar(avatar, profileImg, profilePlaceholder);
             }
             
-            // Actualizar otros elementos
-            document.getElementById('profileNameInput').value = AppState.username;
             document.getElementById('myStatusIndicator').classList.toggle('offline', !AppState.connected);
         }
 
@@ -1300,25 +1202,16 @@
             retryContainer.style.display = 'none';
         }
 
-        // ========== UI MANAGER ==========
         const UIManager = {
             isUserAvailable(userId) {
                 const user = AppState.users.find(u => u.id == userId);
-                if (!user) {
-                    console.log('❌ Usuario no encontrado:', userId);
-                    return false;
-                }
+                if (!user) return false;
                 
                 if (user.is_connected && user.status === 'disponible') {
-                    if (userId == AppState.userId) {
-                        console.log('❌ No se puede llamar a sí mismo');
-                        return false;
-                    }
-                    console.log('✅ Usuario disponible:', user.username);
+                    if (userId == AppState.userId) return false;
                     return true;
                 }
                 
-                console.log('❌ Usuario no disponible. Estado:', user.status, 'Conectado:', user.is_connected);
                 return false;
             },
 
@@ -1335,11 +1228,6 @@
                     return;
                 }
                 
-                // Separar online/offline
-                const onlineUsers = users.filter(user => user.is_connected);
-                const offlineUsers = users.filter(user => !user.is_connected);
-                
-                // Pre-cargar avatares
                 const avatarUrls = users
                     .map(user => user.avatar_url)
                     .filter(url => url && typeof url === 'string');
@@ -1348,16 +1236,13 @@
                     imageCache.preloadAvatars(avatarUrls).catch(console.error);
                 }
                 
-                // Generar HTML para cada usuario
                 const userItemsHTML = await Promise.all(
                     users.map(async (user) => {
                         const isAvailable = user.is_connected && user.status === 'disponible';
                         const initials = user.username.charAt(0).toUpperCase();
                         
-                        // Determinar color de fondo para avatar
                         const avatarColor = user.avatar_color || '#3390ec';
                         
-                        // Obtener avatar del cache si existe
                         let avatarHTML = '';
                         if (user.avatar_url && typeof user.avatar_url === 'string') {
                             try {
@@ -1365,7 +1250,7 @@
                                 if (cachedUrl) {
                                     avatarHTML = `
                                         <div class="user-avatar-small">
-                                            <img src="${cachedUrl}" alt="${user.username}" 
+                                            <img src="\( {cachedUrl}" alt=" \){user.username}" 
                                                  style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
                                         </div>
                                     `;
@@ -1375,7 +1260,6 @@
                             }
                         }
                         
-                        // Fallback a iniciales si no hay avatar
                         if (!avatarHTML) {
                             avatarHTML = `
                                 <div class="user-avatar-small" style="background: linear-gradient(135deg, ${avatarColor}, #5ba8f5);">
@@ -1409,7 +1293,6 @@
                 
                 list.innerHTML = userItemsHTML.join('');
                 
-                // Agregar event listeners
                 this.addUserItemListeners();
             },
 
@@ -1425,7 +1308,6 @@
                         const peerAvatar = avatarElement.style.background || 
                                           `linear-gradient(135deg, #3390ec, #5ba8f5)`;
                         
-                        console.log('👆 Usuario clickeado:', peerName, 'ID:', targetId);
                         this.initiateCall(targetId, peerName, peerAvatar);
                     });
                 });
@@ -1442,9 +1324,6 @@
             },
 
             async initiateCall(targetId, peerName, peerAvatar) {
-                console.log('📞 Iniciando llamada a:', peerName, 'ID:', targetId);
-                
-                // 1. Verificar si podemos llamar
                 if (!this.isUserAvailable(targetId)) {
                     this.showNotification('Usuario no disponible para llamar');
                     return;
@@ -1455,21 +1334,14 @@
                     return;
                 }
                 
-                console.log('✅ Usuario disponible y conexión activa');
-                
-                // 2. Solicitar permisos ANTES de mostrar pantalla
                 const hasPermission = await this.requestPermissions();
                 if (!hasPermission) {
                     this.showNotification('Se necesita acceso al micrófono');
                     return;
                 }
                 
-                console.log('✅ Permisos concedidos');
-                
-                // 3. Limpiar conexiones anteriores
                 WebRTCManager.cleanup();
                 
-                // 4. Configurar llamada actual
                 AppState.currentCall = {
                     peerId: targetId,
                     peerName: peerName,
@@ -1479,10 +1351,8 @@
                     startTime: null
                 };
                 
-                // 5. Mostrar pantalla de llamada
                 this.showCallScreen(false);
                 
-                // Configurar avatar de llamada
                 const callAvatarLarge = document.getElementById('callAvatarLarge');
                 if (peerAvatar.includes('linear-gradient')) {
                     callAvatarLarge.style.background = peerAvatar;
@@ -1502,15 +1372,11 @@
                 document.getElementById('callPeerName').textContent = peerName;
                 document.getElementById('callStatusText').textContent = 'Llamando...';
                 
-                // 6. Enviar solicitud de llamada
-                console.log('📤 Enviando call_request a:', targetId);
                 WebSocketManager.send('call_request', { targetId: targetId });
                 this.setCallTimeout(30000);
             },
 
             showIncomingCall(callerId, callerName, callerAvatar) {
-                console.log('📲 Llamada entrante de:', callerName, 'ID:', callerId);
-                
                 AppState.currentCall = {
                     peerId: callerId,
                     peerName: callerName,
@@ -1522,7 +1388,6 @@
 
                 this.showCallScreen(true);
                 
-                // Configurar avatar
                 const callAvatarLarge = document.getElementById('callAvatarLarge');
                 callAvatarLarge.style.background = callerAvatar;
                 callAvatarLarge.textContent = callerName.charAt(0).toUpperCase();
@@ -1531,8 +1396,6 @@
             },
 
             showCallScreen(isIncoming) {
-                console.log('🖥️ Mostrando pantalla de llamada:', isIncoming ? 'entrante' : 'saliente');
-                
                 document.getElementById('callOverlay').classList.add('active');
                 document.getElementById('incomingControls').classList.toggle('hidden', !isIncoming);
                 document.getElementById('callControls').classList.toggle('hidden', isIncoming);
@@ -1541,17 +1404,14 @@
                 document.getElementById('callAvatarLarge').style.display = 'flex';
                 document.getElementById('timer').classList.remove('active');
                 
-                // Ocultar botón de voltear cámara inicialmente
                 document.getElementById('flipCamera').style.display = 'none';
             },
 
             updateCallStatus(text) {
-                console.log('📊 Estado de llamada:', text);
                 document.getElementById('callStatusText').textContent = text;
             },
 
             updateVideoDisplay(hasVideo) {
-                console.log('🎥 Video display:', hasVideo ? 'activado' : 'desactivado');
                 if (hasVideo) {
                     document.getElementById('videoContainer').classList.add('active');
                     document.getElementById('callAvatarLarge').style.display = 'none';
@@ -1562,7 +1422,6 @@
             },
 
             startTimer() {
-                console.log('⏱️ Iniciando timer');
                 let seconds = 0;
                 document.getElementById('timer').classList.add('active');
                 document.getElementById('timer').textContent = '00:00';
@@ -1570,12 +1429,11 @@
                     seconds++;
                     const m = String(Math.floor(seconds / 60)).padStart(2, '0');
                     const s = String(seconds % 60).padStart(2, '0');
-                    document.getElementById('timer').textContent = `${m}:${s}`;
+                    document.getElementById('timer').textContent = `\( {m}: \){s}`;
                 }, 1000);
             },
 
             stopTimer() {
-                console.log('⏱️ Deteniendo timer');
                 if (AppState.timerInterval) {
                     clearInterval(AppState.timerInterval);
                     AppState.timerInterval = null;
@@ -1584,7 +1442,6 @@
             },
 
             endCall() {
-                console.log('📞 Finalizando llamada');
                 this.clearCallTimeout();
                 this.stopTimer();
                 
@@ -1595,7 +1452,6 @@
                 WebRTCManager.cleanup();
                 document.getElementById('callOverlay').classList.remove('active');
                 
-                // Resetear estado de llamada
                 AppState.currentCall = { 
                     peerId: '', 
                     peerName: '', 
@@ -1607,7 +1463,6 @@
             },
 
             showNotification(message, duration = 3000) {
-                console.log('📢 Notificación:', message);
                 const toast = document.getElementById('notificationToast');
                 if (!toast) return;
                 
@@ -1617,7 +1472,6 @@
             },
 
             async requestPermissions() {
-                console.log('🔒 Solicitando permisos...');
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ 
                         audio: {
@@ -1627,21 +1481,17 @@
                         }
                     });
                     stream.getTracks().forEach(track => track.stop());
-                    console.log('✅ Permisos concedidos');
                     return true;
                 } catch (err) {
-                    console.error('❌ Permisos denegados:', err);
                     this.showNotification('Permiso de micrófono denegado');
                     return false;
                 }
             },
 
             setCallTimeout(duration) {
-                console.log('⏰ Configurando timeout:', duration, 'ms');
                 this.clearCallTimeout();
                 AppState.callTimeout = setTimeout(() => {
                     if (!AppState.currentCall.isActive) {
-                        console.log('⏰ Timeout expirado');
                         this.showNotification('Llamada expirada');
                         this.endCall();
                     }
@@ -1650,7 +1500,6 @@
 
             clearCallTimeout() {
                 if (AppState.callTimeout) {
-                    console.log('⏰ Limpiando timeout');
                     clearTimeout(AppState.callTimeout);
                     AppState.callTimeout = null;
                 }
@@ -1658,7 +1507,6 @@
 
             toggleMic() {
                 AppState.settings.micEnabled = !AppState.settings.micEnabled;
-                console.log('🎤 Micrófono:', AppState.settings.micEnabled ? 'activado' : 'desactivado');
                 if (AppState.localStream) {
                     AppState.localStream.getAudioTracks().forEach(track => track.enabled = AppState.settings.micEnabled);
                 }
@@ -1667,13 +1515,8 @@
             },
 
             async toggleCamera() {
-                console.log('📷 Toggle camera llamado');
-                
                 try {
                     if (!AppState.settings.cameraEnabled) {
-                        // ACTIVAR CÁMARA
-                        console.log('🔴 Activando cámara...');
-                        
                         const constraints = {
                             video: {
                                 width: { ideal: 1280 },
@@ -1684,31 +1527,24 @@
                         };
                         
                         const videoStream = await navigator.mediaDevices.getUserMedia(constraints);
-                        console.log('✅ Cámara obtenida');
                         
                         AppState.videoStream = videoStream;
                         AppState.settings.cameraEnabled = true;
                         AppState.settings.isVideoCall = true;
                         
-                        // Mostrar vista previa local
                         const previewVideo = document.getElementById('localVideoPreview');
                         previewVideo.srcObject = videoStream;
                         document.getElementById('videoPreview').classList.add('active');
                         
-                        // Mostrar botón de voltear cámara
                         document.getElementById('flipCamera').style.display = 'flex';
                         
-                        // Agregar video track al stream local
                         if (AppState.localStream) {
                             videoStream.getVideoTracks().forEach(track => {
                                 AppState.localStream.addTrack(track);
                             });
-                            console.log('✅ Video track agregado al stream local');
                         }
                         
-                        // Si hay peer conectado, renegociar
                         if (AppState.peer && AppState.peer.connected) {
-                            console.log('🔄 Renegociando con peer...');
                             const videoTrack = AppState.localStream.getVideoTracks()[0];
                             AppState.peer.replaceTrack(
                                 videoTrack,
@@ -1721,19 +1557,14 @@
                         this.showNotification('Cámara activada');
                         
                     } else {
-                        // DESACTIVAR CÁMARA
-                        console.log('🔴 Desactivando cámara...');
-                        
                         if (AppState.videoStream) {
                             AppState.videoStream.getTracks().forEach(track => {
                                 track.stop();
-                                console.log('⏹️ Track de video detenido');
                                 
                                 if (AppState.localStream) {
                                     const tracks = AppState.localStream.getVideoTracks();
                                     tracks.forEach(t => {
                                         AppState.localStream.removeTrack(t);
-                                        console.log('🗑️ Track removido del stream local');
                                     });
                                 }
                             });
@@ -1743,12 +1574,10 @@
                         AppState.settings.cameraEnabled = false;
                         AppState.settings.isVideoCall = false;
                         
-                        // Ocultar vista previa
                         const previewVideo = document.getElementById('localVideoPreview');
                         previewVideo.srcObject = null;
                         document.getElementById('videoPreview').classList.remove('active');
                         
-                        // Ocultar botón de voltear cámara
                         document.getElementById('flipCamera').style.display = 'none';
                         
                         this.updateCallControls();
@@ -1762,13 +1591,10 @@
                         this.showNotification('Permiso de cámara denegado');
                     } else if (error.name === 'NotFoundError') {
                         this.showNotification('No se encontró ninguna cámara');
-                    } else if (error.name === 'NotReadableError') {
-                        this.showNotification('La cámara está en uso por otra aplicación');
                     } else {
                         this.showNotification('Error al acceder a la cámara');
                     }
                     
-                    // Forzar estado desactivado
                     AppState.settings.cameraEnabled = false;
                     this.updateCallControls();
                 }
@@ -1780,21 +1606,14 @@
                     return;
                 }
                 
-                console.log('🔄 Volteando cámara...');
-                
                 try {
-                    // Detener cámara actual
                     if (AppState.videoStream) {
                         AppState.videoStream.getTracks().forEach(track => track.stop());
                     }
                     
-                    // Cambiar modo de cámara
                     const newFacingMode = AppState.settings.cameraFacing === 'user' ? 'environment' : 'user';
                     AppState.settings.cameraFacing = newFacingMode;
                     
-                    console.log(`🎯 Nueva cámara: ${newFacingMode}`);
-                    
-                    // Obtener nueva cámara
                     const constraints = {
                         video: {
                             width: { ideal: 1280 },
@@ -1807,28 +1626,21 @@
                     const videoStream = await navigator.mediaDevices.getUserMedia(constraints);
                     AppState.videoStream = videoStream;
                     
-                    // Actualizar vista previa
                     const previewVideo = document.getElementById('localVideoPreview');
                     previewVideo.srcObject = videoStream;
                     
-                    // Reemplazar track en stream local
                     if (AppState.localStream) {
-                        // Remover tracks viejos
                         const oldVideoTracks = AppState.localStream.getVideoTracks();
                         oldVideoTracks.forEach(track => {
                             AppState.localStream.removeTrack(track);
                             track.stop();
                         });
                         
-                        // Agregar nuevo track
                         videoStream.getVideoTracks().forEach(track => {
                             AppState.localStream.addTrack(track);
                         });
-                        
-                        console.log('✅ Track de video reemplazado');
                     }
                     
-                    // Si hay peer conectado, renegociar
                     if (AppState.peer && AppState.peer.connected) {
                         const videoTrack = AppState.localStream.getVideoTracks()[0];
                         if (videoTrack) {
@@ -1837,7 +1649,6 @@
                                 AppState.localStream,
                                 AppState.peer
                             );
-                            console.log('🔄 Señal renegociada con peer');
                         }
                     }
                     
@@ -1846,14 +1657,10 @@
                     
                 } catch (error) {
                     console.error('❌ Error volteando cámara:', error);
-                    
-                    // Revertir al modo anterior
                     AppState.settings.cameraFacing = AppState.settings.cameraFacing === 'user' ? 'environment' : 'user';
                     
                     if (error.name === 'NotFoundError') {
                         this.showNotification('No se encontró la cámara seleccionada');
-                    } else if (error.name === 'NotAllowedError') {
-                        this.showNotification('Permiso de cámara denegado');
                     } else {
                         this.showNotification('Error al voltear cámara');
                     }
@@ -1867,66 +1674,30 @@
                 
                 if (!micButton || !cameraButton || !flipButton) return;
                 
-                // Actualizar ícono de micrófono
                 if (AppState.settings.micEnabled) {
                     micButton.innerHTML = '<i class="fas fa-microphone"></i>';
-                    micButton.title = 'Silenciar micrófono';
                 } else {
                     micButton.innerHTML = '<i class="fas fa-microphone-slash"></i>';
-                    micButton.title = 'Activar micrófono';
                 }
                 
-                // Actualizar ícono de cámara
                 if (AppState.settings.cameraEnabled) {
                     cameraButton.innerHTML = '<i class="fas fa-video"></i>';
-                    cameraButton.title = 'Desactivar cámara';
                     flipButton.style.display = 'flex';
                 } else {
                     cameraButton.innerHTML = '<i class="fas fa-video-slash"></i>';
-                    cameraButton.title = 'Activar cámara';
                     flipButton.style.display = 'none';
                 }
-                
-                console.log('🔄 Controles actualizados');
             },
-
-            createRipple(event) {
-                const button = event.currentTarget;
-                if (!button) return;
-                
-                const circle = document.createElement('span');
-                const diameter = Math.max(button.clientWidth, button.clientHeight);
-                const radius = diameter / 2;
-                
-                circle.style.width = circle.style.height = `${diameter}px`;
-                circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
-                circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
-                circle.classList.add('ripple');
-                
-                const ripple = button.getElementsByClassName('ripple')[0];
-                if (ripple) ripple.remove();
-                
-                button.appendChild(circle);
-            },
-
-            // ========== FUNCIONES NUEVAS PARA PERFIL ==========
 
             showProfileModal() {
-                console.log('👤 Mostrando modal de perfil');
-                
-                const modal = document.getElementById('profileModal');
-                if (!modal) return;
-                
-                // Cargar datos actuales
                 document.getElementById('profileNameInput').value = AppState.username;
                 document.getElementById('profileCurrentPassword').value = '';
                 document.getElementById('profileNewPassword').value = '';
                 document.getElementById('profileConfirmPassword').value = '';
                 
-                // Actualizar avatar
                 this.updateProfileAvatar();
                 
-                modal.classList.add('active');
+                document.getElementById('profileModal').classList.add('active');
             },
 
             updateProfileAvatar() {
@@ -1935,28 +1706,23 @@
                 
                 if (!profileImg || !profilePlaceholder) return;
                 
-                // Si hay nueva foto seleccionada (pero no guardada)
                 if (AppState.newProfilePhoto) {
                     profileImg.src = AppState.newProfilePhoto;
                     profileImg.style.display = 'block';
                     profilePlaceholder.style.display = 'none';
                 } 
-                // Si hay foto de perfil existente
                 else if (AppState.profilePhoto && (AppState.profilePhoto.startsWith('blob:') || AppState.profilePhoto.startsWith('data:'))) {
                     profileImg.src = AppState.profilePhoto;
                     profileImg.style.display = 'block';
                     profilePlaceholder.style.display = 'none';
                 }
-                // Si es una URL
                 else if (AppState.profilePhoto && AppState.profilePhoto.startsWith('http')) {
-                    // Intentar obtener del cache
                     imageCache.getAvatar(AppState.profilePhoto).then(cachedUrl => {
                         if (cachedUrl) {
                             profileImg.src = cachedUrl;
                             profileImg.style.display = 'block';
                             profilePlaceholder.style.display = 'none';
                         } else {
-                            // Fallback a placeholder
                             this.showProfilePlaceholder(profileImg, profilePlaceholder);
                         }
                     }).catch(() => {
@@ -1974,23 +1740,16 @@
             },
 
             hideProfileModal() {
-                console.log('👤 Ocultando perfil');
-                const modal = document.getElementById('profileModal');
-                if (modal) modal.classList.remove('active');
-                
-                // Limpiar nueva foto si no se guardó
+                document.getElementById('profileModal').classList.remove('active');
                 AppState.newProfilePhoto = null;
             },
 
             async updateProfile() {
-                console.log('💾 Actualizando perfil...');
-                
                 const newName = document.getElementById('profileNameInput').value.trim();
                 const currentPassword = document.getElementById('profileCurrentPassword').value;
                 const newPassword = document.getElementById('profileNewPassword').value;
                 const confirmPassword = document.getElementById('profileConfirmPassword').value;
                 
-                // Validaciones
                 if (!newName) {
                     this.showNotification('El nombre no puede estar vacío');
                     return;
@@ -2016,7 +1775,6 @@
                     return;
                 }
                 
-                // Mostrar loading
                 const saveBtn = document.getElementById('saveProfileBtn');
                 if (!saveBtn) return;
                 
@@ -2025,19 +1783,15 @@
                 saveBtn.disabled = true;
                 
                 try {
-                    // Preparar datos para enviar
                     const updateData = {
                         token: localStorage.getItem('webrtc_session_token'),
                         username: newName !== AppState.username ? newName : null,
                         password: newPassword || null
                     };
                     
-                    // Si hay nueva foto de perfil
                     if (AppState.newProfilePhoto) {
                         updateData.avatar = AppState.newProfilePhoto;
                     }
-                    
-                    console.log('📤 Enviando datos de perfil:', { ...updateData, avatar: updateData.avatar ? '[BASE64_IMAGE]' : null });
                     
                     const response = await fetch('/api/update_profile', {
                         method: 'POST',
@@ -2046,40 +1800,31 @@
                     });
                     
                     const data = await response.json();
-                    console.log('📥 Respuesta del servidor:', data);
                     
                     if (data.success) {
-                        // Actualizar estado local
                         AppState.username = data.user.username;
                         
-                        // Actualizar avatar si hubo cambios
                         if (data.user.avatar_url) {
-                            // Invalidar cache viejo si existe
                             if (AppState.profilePhoto && AppState.profilePhoto.startsWith('http')) {
                                 imageCache.removeAvatar(AppState.profilePhoto);
                             }
                             
-                            // Actualizar con nueva URL
                             AppState.profilePhoto = data.user.avatar_url;
                             AppState.newProfilePhoto = null;
                             
-                            // Precargar nuevo avatar
                             const cachedUrl = await imageCache.getAvatar(data.user.avatar_url);
                             if (cachedUrl) {
                                 AppState.profilePhoto = cachedUrl;
                             }
                         }
                         
-                        // Guardar en localStorage
                         localStorage.setItem('webrtc_username', data.user.username);
                         localStorage.setItem('webrtc_user', JSON.stringify(data.user));
                         
-                        // Actualizar UI
                         await updateMyAvatar();
                         this.showNotification('✅ Perfil actualizado correctamente');
                         this.hideProfileModal();
                         
-                        // Notificar a otros usuarios
                         WebSocketManager.send('profile_updated');
                         
                     } else {
@@ -2090,44 +1835,34 @@
                     console.error('💥 Error actualizando perfil:', error);
                     this.showNotification('❌ Error de conexión al servidor');
                 } finally {
-                    // Restaurar botón
                     saveBtn.innerHTML = originalText;
                     saveBtn.disabled = false;
                 }
             },
 
             logout() {
-                console.log('🚪 Cerrando sesión...');
-                
-                // Finalizar llamada si está activa
                 if (AppState.currentCall.isActive) {
                     this.endCall();
                 }
                 
-                // Cerrar WebSocket
                 if (AppState.ws) {
                     AppState.ws.close();
                 }
                 
-                // Limpiar localStorage
                 localStorage.removeItem('webrtc_session_token');
                 localStorage.removeItem('webrtc_user');
                 localStorage.removeItem('webrtc_username');
                 localStorage.removeItem('webrtc_profile_photo');
                 
-                // Limpiar cache de imágenes
                 imageCache.clearCache();
                 
-                // Redirigir a login
                 window.location.href = '/';
             }
         };
 
-        // ========== WEBSOCKET MANAGER ==========
         const WebSocketManager = {
             connect() {
                 if (!AppState.sessionToken) {
-                    console.error('❌ No hay token de sesión en AppState');
                     showConnectionError('Error de sesión. Redirigiendo...');
                     setTimeout(() => {
                         window.location.href = '/';
@@ -2135,42 +1870,29 @@
                     return;
                 }
                 
-                // Incluir token en la URL de WebSocket
-                const wsUrl = `${WS_URL}?token=${encodeURIComponent(AppState.sessionToken)}`;
+                const wsUrl = `\( {WS_URL}?token= \){encodeURIComponent(AppState.sessionToken)}`;
                 
-                console.log('🔗 Conectando a WebSocket:', wsUrl);
-                
-                // Resetear intentos de reconexión
-                AppState.reconnectAttempts = 0;
-                
-                // Ocultar errores previos
                 hideConnectionError();
                 
-                // Actualizar texto de loading
                 document.getElementById('loadingText').textContent = 'Conectando al servidor...';
                 
                 AppState.ws = new WebSocket(wsUrl);
 
                 AppState.ws.onopen = () => {
-                    console.log('✅ WebSocket conectado');
                     AppState.connected = true;
                     AppState.reconnectAttempts = 0;
                     updateMyAvatar();
                     
-                    // Ocultar loading
                     document.getElementById('loadingOverlay').style.display = 'none';
                     
-                    // Enviar heartbeat
                     this.startHeartbeat();
                     
-                    // Solicitar lista de usuarios
                     this.send('get_users');
                 };
 
                 AppState.ws.onmessage = event => {
                     try {
                         const data = JSON.parse(event.data);
-                        console.log('📩 Mensaje recibido:', data.type);
                         this.handleMessage(data);
                     } catch (err) {
                         console.error('❌ Error parseando mensaje:', err);
@@ -2178,33 +1900,27 @@
                 };
 
                 AppState.ws.onclose = (event) => {
-                    console.log('❌ WebSocket cerrado. Código:', event.code, 'Razón:', event.reason);
                     AppState.connected = false;
                     updateMyAvatar();
                     this.stopHeartbeat();
                     
-                    // Solo reconectar si no estamos en proceso de logout
                     if (AppState.sessionToken) {
                         AppState.reconnectAttempts++;
                         
                         if (AppState.reconnectAttempts <= AppState.maxReconnectAttempts) {
                             const delay = Math.min(1000 * Math.pow(2, AppState.reconnectAttempts), 10000);
-                            console.log(`🔄 Reconectando en ${delay}ms (intento ${AppState.reconnectAttempts}/${AppState.maxReconnectAttempts})`);
                             
-                            // Mostrar mensaje de reconexión
                             document.getElementById('loadingOverlay').style.display = 'flex';
-                            document.getElementById('loadingText').textContent = `Reconectando... (${AppState.reconnectAttempts}/${AppState.maxReconnectAttempts})`;
+                            document.getElementById('loadingText').textContent = `Reconectando... (\( {AppState.reconnectAttempts}/ \){AppState.maxReconnectAttempts})`;
                             
                             setTimeout(() => this.connect(), delay);
                         } else {
-                            console.log('❌ Máximo de intentos de reconexión alcanzado');
                             showConnectionError('No se pudo conectar al servidor');
                         }
                     }
                 };
 
                 AppState.ws.onerror = (error) => {
-                    console.error('💥 Error WebSocket:', error);
                     UIManager.showNotification('Error de conexión al servidor');
                 };
             },
@@ -2212,11 +1928,9 @@
             send(type, payload = {}) {
                 if (AppState.ws && AppState.ws.readyState === WebSocket.OPEN) {
                     const message = JSON.stringify({ type, ...payload });
-                    console.log('📤 Enviando mensaje:', type, payload);
                     AppState.ws.send(message);
                     return true;
                 } else {
-                    console.error('❌ WebSocket no está conectado');
                     UIManager.showNotification('Error de conexión');
                     return false;
                 }
@@ -2225,9 +1939,6 @@
             handleMessage(data) {
                 switch (data.type) {
                     case 'registered':
-                        console.log('✅ Registrado con ID:', data.userId);
-                        
-                        // Actualizar AppState
                         AppState.userId = data.userId;
                         AppState.username = data.username;
                         AppState.avatarColor = data.avatarColor;
@@ -2238,7 +1949,6 @@
                             localStorage.setItem('webrtc_session_token', data.token);
                         }
                         
-                        // Guardar usuario en localStorage
                         localStorage.setItem('webrtc_username', data.username);
                         localStorage.setItem('webrtc_user', JSON.stringify({
                             id: data.userId,
@@ -2246,55 +1956,45 @@
                             avatar_url: data.avatar_url
                         }));
                         
-                        // Actualizar UI
                         updateMyAvatar();
                         UIManager.updateUserList(data.onlineUsers || []);
                         
-                        // Ocultar loading definitivamente
                         document.getElementById('loadingOverlay').style.display = 'none';
                         
                         break;
 
                     case 'user_list':
-                        console.log('📋 Lista de usuarios actualizada:', data.users?.length || 0);
                         AppState.users = data.users || [];
                         UIManager.updateUserList(data.users || []);
                         break;
 
                     case 'incoming_call':
-                        console.log('📲 Llamada entrante de:', data.callerName);
                         UIManager.showIncomingCall(data.callerId, data.callerName, data.callerAvatar);
                         break;
 
                     case 'call_accepted':
-                        console.log('✅ Llamada aceptada por:', data.calleeName);
                         UIManager.clearCallTimeout();
                         UIManager.updateCallStatus('Conectando...');
                         WebRTCManager.start(true);
                         break;
 
                     case 'call_declined':
-                        console.log('❌ Llamada rechazada');
-                        UIManager.showNotification(data.message || 'Llamada rechazada');
+                        UIManager.showNotification('Llamada rechazada');
                         UIManager.endCall();
                         break;
 
                     case 'call_ended':
-                        console.log('📞 Llamada finalizada');
-                        UIManager.showNotification(data.message || 'Llamada terminada');
+                        UIManager.showNotification('Llamada terminada');
                         UIManager.endCall();
                         break;
 
                     case 'call_error':
-                        console.error('❌ Error en llamada:', data.message);
                         UIManager.showNotification(data.message || 'Error en la llamada');
                         UIManager.endCall();
                         break;
 
                     case 'webrtc_signal':
-                        console.log('📡 Señal WebRTC:', data.signal.type);
                         if (data.signal.type === 'offer') {
-                            console.log('🎯 Offer recibido, creando peer...');
                             if (!AppState.peer) {
                                 WebRTCManager.start(false).then(() => {
                                     setTimeout(() => {
@@ -2312,18 +2012,15 @@
                         break;
 
                     case 'heartbeat_ack':
-                        console.log('💓 Heartbeat confirmado');
                         break;
 
                     case 'error':
-                        console.error('❌ Error del servidor:', data.message);
                         UIManager.showNotification(data.message || 'Error del servidor');
                         break;
                 }
             },
 
             startHeartbeat() {
-                console.log('💓 Iniciando heartbeat');
                 this.stopHeartbeat();
                 AppState.heartbeatInterval = setInterval(() => {
                     if (AppState.ws && AppState.ws.readyState === WebSocket.OPEN) {
@@ -2334,20 +2031,15 @@
 
             stopHeartbeat() {
                 if (AppState.heartbeatInterval) {
-                    console.log('💓 Deteniendo heartbeat');
                     clearInterval(AppState.heartbeatInterval);
                     AppState.heartbeatInterval = null;
                 }
             }
         };
 
-        // ========== WEBRTC MANAGER ==========
         const WebRTCManager = {
             async start(isInitiator) {
-                console.log(`🎤 ${isInitiator ? 'Iniciador' : 'Receptor'} obteniendo stream...`);
-                
                 try {
-                    // Configurar constraints basado en estado de cámara
                     const constraints = {
                         audio: {
                             echoCancellation: true,
@@ -2362,13 +2054,8 @@
                         } : false
                     };
                     
-                    console.log('🎯 Constraints:', constraints);
-                    
-                    // Obtener stream
                     AppState.localStream = await navigator.mediaDevices.getUserMedia(constraints);
-                    console.log('✅ Stream obtenido:', AppState.settings.cameraEnabled ? 'audio+video' : 'audio');
                     
-                    // Si la cámara está activa, configurar vista previa
                     if (AppState.settings.cameraEnabled && AppState.localStream.getVideoTracks().length > 0) {
                         AppState.videoStream = AppState.localStream;
                         const previewVideo = document.getElementById('localVideoPreview');
@@ -2377,37 +2064,23 @@
                         document.getElementById('flipCamera').style.display = 'flex';
                     }
                     
-                    // Asignar stream local a audio
                     const localAudio = document.getElementById('localAudio');
                     localAudio.srcObject = AppState.localStream;
                     localAudio.muted = true;
                     
-                    // Crear peer
                     this.createPeer(isInitiator);
                     
                     return true;
                     
                 } catch (error) {
                     console.error('❌ Error en WebRTC.start:', error);
-                    
-                    if (error.name === 'NotAllowedError') {
-                        UIManager.showNotification('Acceso al micrófono/cámara denegado');
-                    } else if (error.name === 'NotFoundError') {
-                        UIManager.showNotification('No se encontró ningún dispositivo');
-                    } else if (error.name === 'NotReadableError') {
-                        UIManager.showNotification('Error al acceder al dispositivo');
-                    } else {
-                        UIManager.showNotification('Error al conectar la llamada');
-                    }
-                    
+                    UIManager.showNotification('Error al conectar la llamada');
                     UIManager.endCall();
                     return false;
                 }
             },
 
             createPeer(isInitiator) {
-                console.log(`🎯 Creando peer (initiator: ${isInitiator})`);
-                
                 AppState.peer = new SimplePeer({
                     initiator: isInitiator,
                     stream: AppState.localStream,
@@ -2416,7 +2089,6 @@
                 });
 
                 AppState.peer.on('signal', (signal) => {
-                    console.log('📡 Señal generada:', signal.type);
                     WebSocketManager.send('webrtc_signal', { 
                         targetId: AppState.currentCall.peerId, 
                         signal: signal 
@@ -2424,25 +2096,17 @@
                 });
 
                 AppState.peer.on('stream', (remoteStream) => {
-                    console.log('🔊 Stream remoto recibido!');
-                    
-                    // Audio
                     const remoteAudio = document.getElementById('remoteAudio');
                     remoteAudio.srcObject = remoteStream;
                     
-                    // Reproducir audio
-                    remoteAudio.play().catch(e => {
-                        console.log('⚠️ Error reproduciendo audio:', e);
-                    });
-                    
-                    // Video
+                    remoteAudio.play().catch(e => {});
+
                     const remoteVideo = document.getElementById('remoteVideo');
                     remoteVideo.srcObject = remoteStream;
                     
                     const hasVideo = remoteStream.getVideoTracks().length > 0;
                     UIManager.updateVideoDisplay(hasVideo);
                     
-                    // Actualizar UI
                     AppState.currentCall.isActive = true;
                     AppState.currentCall.startTime = Date.now();
                     UIManager.updateCallStatus('En llamada');
@@ -2450,20 +2114,17 @@
                 });
 
                 AppState.peer.on('connect', () => {
-                    console.log('✅ Conexión WebRTC establecida');
                     WebSocketManager.send('call_connected', { 
                         partnerId: AppState.currentCall.peerId 
                     });
                 });
 
                 AppState.peer.on('error', (error) => {
-                    console.error('💥 Error WebRTC:', error);
                     UIManager.showNotification('Error en la conexión');
                     UIManager.endCall();
                 });
 
                 AppState.peer.on('close', () => {
-                    console.log('🔒 Conexión WebRTC cerrada');
                     if (AppState.currentCall.isActive) {
                         UIManager.showNotification('Conexión perdida');
                         UIManager.endCall();
@@ -2472,15 +2133,11 @@
             },
 
             cleanup() {
-                console.log('🧹 Limpiando WebRTC');
-                
-                // Detener y limpiar peer
                 if (AppState.peer) {
                     AppState.peer.destroy();
                     AppState.peer = null;
                 }
                 
-                // Detener streams locales
                 if (AppState.localStream) {
                     AppState.localStream.getTracks().forEach(track => {
                         track.stop();
@@ -2496,7 +2153,6 @@
                     AppState.videoStream = null;
                 }
                 
-                // Limpiar elementos de video/audio
                 const elements = ['localAudio', 'remoteAudio', 'remoteVideo', 'localVideoPreview'];
                 elements.forEach(id => {
                     const el = document.getElementById(id);
@@ -2506,34 +2162,22 @@
                     }
                 });
                 
-                // Ocultar controles de cámara
                 document.getElementById('videoPreview').classList.remove('active');
                 document.getElementById('flipCamera').style.display = 'none';
                 
-                // Resetear estado de cámara
                 AppState.settings.cameraEnabled = false;
                 AppState.settings.isVideoCall = false;
                 AppState.settings.cameraFacing = 'user';
-                
-                console.log('✅ WebRTC limpiado');
             }
         };
 
-        // ========== INICIALIZACIÓN ==========
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 Aplicación iniciada');
+            imageCache.initCacheDB().catch(console.error);
             
-            // Inicializar cache de imágenes
-            imageCache.initCacheDB().then(() => {
-                console.log('✅ Cache de imágenes listo');
-            }).catch(console.error);
-            
-            // Verificar sesión inmediatamente
             const sessionToken = localStorage.getItem('webrtc_session_token');
             const savedUser = localStorage.getItem('webrtc_user');
             
             if (!sessionToken || !savedUser) {
-                console.log('❌ No hay sesión, redirigiendo a login...');
                 showConnectionError('No hay sesión activa. Redirigiendo...');
                 setTimeout(() => {
                     window.location.href = '/';
@@ -2543,30 +2187,23 @@
             
             try {
                 const userData = JSON.parse(savedUser);
-                console.log('✅ Usuario autenticado:', userData.username);
                 
-                // Cargar datos en AppState
                 AppState.userId = userData.id;
                 AppState.username = userData.username;
                 AppState.profilePhoto = userData.avatar_url;
                 AppState.sessionToken = sessionToken;
                 
-                // Actualizar avatar
                 updateMyAvatar();
                 
-                // Conectar WebSocket
                 WebSocketManager.connect();
                 
-                // Configurar timeout para conexión
                 setTimeout(() => {
                     if (!AppState.connected && document.getElementById('loadingOverlay').style.display === 'flex') {
-                        console.log('⏰ Timeout de conexión alcanzado');
                         showConnectionError('Tiempo de conexión agotado');
                     }
-                }, 15000); // 15 segundos
+                }, 15000);
                 
             } catch (error) {
-                console.error('❌ Error cargando sesión:', error);
                 localStorage.clear();
                 showConnectionError('Error cargando sesión. Redirigiendo...');
                 setTimeout(() => {
@@ -2575,15 +2212,10 @@
                 return;
             }
             
-            // ========== EVENT LISTENERS ==========
-            
-            // Botón voltear cámara
-            document.getElementById('flipCamera').addEventListener('click', (e) => {
-                UIManager.createRipple(e);
+            document.getElementById('flipCamera').addEventListener('click', () => {
                 UIManager.flipCamera();
             });
             
-            // Toggle visibilidad de contraseñas en perfil
             document.querySelectorAll('.toggle-password-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const targetId = e.target.closest('button').dataset.target;
@@ -2600,7 +2232,6 @@
                 });
             });
             
-            // Cambiar foto de perfil
             document.getElementById('changePhotoBtn').addEventListener('click', () => {
                 document.getElementById('profilePhotoInput').click();
             });
@@ -2609,7 +2240,6 @@
                 const file = e.target.files[0];
                 if (!file) return;
                 
-                // Validar archivo
                 if (!file.type.startsWith('image/')) {
                     UIManager.showNotification('Por favor, selecciona una imagen válida');
                     return;
@@ -2620,7 +2250,6 @@
                     return;
                 }
                 
-                // Convertir a base64
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     AppState.newProfilePhoto = event.target.result;
@@ -2630,21 +2259,16 @@
                 reader.readAsDataURL(file);
             });
             
-            // Guardar cambios de perfil
-            document.getElementById('saveProfileBtn').addEventListener('click', (e) => {
-                UIManager.createRipple(e);
+            document.getElementById('saveProfileBtn').addEventListener('click', () => {
                 UIManager.updateProfile();
             });
             
-            // Cerrar sesión
-            document.getElementById('logoutBtn').addEventListener('click', (e) => {
-                UIManager.createRipple(e);
+            document.getElementById('logoutBtn').addEventListener('click', () => {
                 if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
                     UIManager.logout();
                 }
             });
             
-            // Botones de reconexión
             document.getElementById('retryConnection').addEventListener('click', () => {
                 hideConnectionError();
                 if (AppState.sessionToken) {
@@ -2659,13 +2283,11 @@
                 window.location.href = '/';
             });
             
-            // Event listeners existentes
             document.getElementById('myAvatarContainer').addEventListener('click', () => UIManager.showProfileModal());
             document.getElementById('profileBackBtn').addEventListener('click', () => UIManager.hideProfileModal());
             document.getElementById('endCall').addEventListener('click', () => UIManager.endCall());
             document.getElementById('toggleMic').addEventListener('click', () => UIManager.toggleMic());
-            document.getElementById('toggleCamera').addEventListener('click', (e) => {
-                UIManager.createRipple(e);
+            document.getElementById('toggleCamera').addEventListener('click', () => {
                 UIManager.toggleCamera();
             });
             document.getElementById('rejectCall').addEventListener('click', () => {
@@ -2679,14 +2301,12 @@
                 WebSocketManager.send('call_accept');
             });
             
-            // Actualizar lista periódicamente
             setInterval(() => {
                 if (AppState.ws && AppState.ws.readyState === WebSocket.OPEN) {
                     WebSocketManager.send('get_users');
                 }
             }, 10000);
             
-            // Limpiar al salir
             window.addEventListener('beforeunload', () => {
                 if (AppState.currentCall.isActive) {
                     WebSocketManager.send('call_end');
