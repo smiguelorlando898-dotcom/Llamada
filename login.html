@@ -21,14 +21,14 @@
             --warning: #f59e0b;
             --border: rgba(255, 255, 255, 0.1);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-        
+
         body {
             font-family: 'Poppins', sans-serif;
             background: var(--background);
@@ -40,7 +40,7 @@
             padding: 20px;
             background-image: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%);
         }
-        
+
         .login-container {
             width: 100%;
             max-width: 480px;
@@ -50,11 +50,10 @@
             padding: 40px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             border: 1px solid var(--border);
-            animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
-        
+
         .login-container::before {
             content: '';
             position: absolute;
@@ -63,30 +62,13 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--primary), #8b5cf6, var(--primary));
-            animation: gradientFlow 3s linear infinite;
         }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes gradientFlow {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        
+
         .logo-section {
             text-align: center;
             margin-bottom: 40px;
         }
-        
+
         .logo-icon {
             width: 80px;
             height: 80px;
@@ -101,7 +83,7 @@
             box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
             border: 3px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .logo-section h1 {
             font-size: 2.2rem;
             font-weight: 700;
@@ -111,12 +93,12 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .logo-section p {
             color: var(--text-secondary);
             font-size: 1rem;
         }
-        
+
         .tabs-container {
             display: flex;
             background: rgba(0, 0, 0, 0.2);
@@ -125,7 +107,7 @@
             margin-bottom: 30px;
             position: relative;
         }
-        
+
         .tab-slider {
             position: absolute;
             top: 4px;
@@ -133,18 +115,18 @@
             width: calc(50% - 8px);
             background: linear-gradient(135deg, var(--primary), #8b5cf6);
             border-radius: 10px;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s ease; /* Mínima para que se vea el cambio de pestaña */
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
-        
+
         .tab-slider.login {
             transform: translateX(4px);
         }
-        
+
         .tab-slider.register {
             transform: translateX(calc(100% + 4px));
         }
-        
+
         .tab-button {
             flex: 1;
             padding: 16px;
@@ -156,33 +138,25 @@
             font-weight: 600;
             cursor: pointer;
             z-index: 1;
-            transition: color 0.3s ease;
-            position: relative;
             border-radius: 10px;
         }
-        
+
         .tab-button.active {
             color: white;
         }
-        
+
         .tab-content {
             display: none;
-            animation: fadeIn 0.5s ease;
         }
-        
+
         .tab-content.active {
             display: block;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
+
         .form-group {
             margin-bottom: 24px;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
@@ -193,12 +167,12 @@
             align-items: center;
             gap: 8px;
         }
-        
+
         .form-group label i {
             color: var(--primary);
             font-size: 1rem;
         }
-        
+
         .form-input {
             width: 100%;
             padding: 16px;
@@ -208,25 +182,24 @@
             color: var(--text-primary);
             font-size: 1rem;
             font-family: 'Poppins', sans-serif;
-            transition: all 0.3s ease;
             backdrop-filter: blur(10px);
         }
-        
+
         .form-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
             background: rgba(255, 255, 255, 0.08);
         }
-        
+
         .form-input::placeholder {
             color: var(--text-secondary);
         }
-        
+
         .password-container {
             position: relative;
         }
-        
+
         .toggle-password {
             position: absolute;
             right: 16px;
@@ -239,16 +212,16 @@
             padding: 4px;
             font-size: 1.1rem;
         }
-        
+
         .toggle-password:hover {
             color: var(--text-primary);
         }
-        
+
         .avatar-upload {
             text-align: center;
             margin-bottom: 24px;
         }
-        
+
         .avatar-preview {
             width: 120px;
             height: 120px;
@@ -259,20 +232,14 @@
             border: 3px solid var(--border);
             position: relative;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
-        
-        .avatar-preview:hover {
-            border-color: var(--primary);
-            transform: scale(1.05);
-        }
-        
+
         .avatar-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
+
         .avatar-placeholder {
             width: 100%;
             height: 100%;
@@ -282,16 +249,16 @@
             justify-content: center;
             color: var(--text-secondary);
         }
-        
+
         .avatar-placeholder i {
             font-size: 2.5rem;
             margin-bottom: 8px;
         }
-        
+
         .avatar-upload input[type="file"] {
             display: none;
         }
-        
+
         .avatar-upload label {
             display: inline-block;
             background: linear-gradient(135deg, var(--primary), #8b5cf6);
@@ -300,20 +267,10 @@
             border-radius: 25px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
             border: none;
             font-size: 0.95rem;
         }
-        
-        .avatar-upload label:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
-        }
-        
-        .avatar-upload label:active {
-            transform: translateY(0);
-        }
-        
+
         .permissions-info {
             background: rgba(37, 99, 235, 0.1);
             border: 1px solid rgba(37, 99, 235, 0.3);
@@ -323,26 +280,20 @@
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            animation: pulseInfo 2s infinite;
         }
-        
-        @keyframes pulseInfo {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
-            50% { box-shadow: 0 0 0 8px rgba(37, 99, 235, 0); }
-        }
-        
+
         .permissions-info i {
             color: var(--primary);
             font-size: 1.2rem;
             margin-top: 2px;
         }
-        
+
         .permissions-info p {
             color: var(--text-secondary);
             font-size: 0.9rem;
             line-height: 1.5;
         }
-        
+
         .submit-button {
             width: 100%;
             padding: 18px;
@@ -353,7 +304,6 @@
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -362,38 +312,12 @@
             overflow: hidden;
             margin-top: 10px;
         }
-        
-        .submit-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-        
-        .submit-button:hover::before {
-            left: 100%;
-        }
-        
-        .submit-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(37, 99, 235, 0.4);
-        }
-        
-        .submit-button:active {
-            transform: translateY(-1px);
-        }
-        
+
         .submit-button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
         }
-        
+
         .loading-spinner {
             width: 20px;
             height: 20px;
@@ -402,11 +326,11 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
+
         .error-message {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
@@ -418,19 +342,12 @@
             display: none;
             align-items: center;
             gap: 12px;
-            animation: shake 0.5s ease;
         }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        
+
         .error-message.show {
             display: flex;
         }
-        
+
         .success-message {
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid rgba(16, 185, 129, 0.3);
@@ -443,18 +360,18 @@
             align-items: center;
             gap: 12px;
         }
-        
+
         .success-message.show {
             display: flex;
         }
-        
+
         .switch-link {
             text-align: center;
             margin-top: 24px;
             color: var(--text-secondary);
             font-size: 0.95rem;
         }
-        
+
         .switch-link a {
             color: var(--primary);
             text-decoration: none;
@@ -462,11 +379,11 @@
             margin-left: 6px;
             cursor: pointer;
         }
-        
+
         .switch-link a:hover {
             text-decoration: underline;
         }
-        
+
         .footer-note {
             text-align: center;
             margin-top: 30px;
@@ -479,41 +396,26 @@
             justify-content: center;
             gap: 8px;
         }
-        
+
         @media (max-width: 480px) {
             .login-container {
                 padding: 30px 20px;
                 max-width: 100%;
             }
-            
+
             .logo-icon {
                 width: 70px;
                 height: 70px;
                 font-size: 2rem;
             }
-            
+
             .logo-section h1 {
                 font-size: 1.8rem;
             }
-            
+
             .avatar-preview {
                 width: 100px;
                 height: 100px;
-            }
-        }
-        
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-        }
-        
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
             }
         }
     </style>
@@ -527,28 +429,28 @@
             <h1>WebRTC Calls</h1>
             <p>Llamadas de voz y video en tiempo real</p>
         </div>
-        
+
         <div class="permissions-info">
             <i class="fas fa-info-circle"></i>
             <p>Para usar la aplicación, necesitarás permitir el acceso al micrófono y cámara cuando tu navegador lo solicite.</p>
         </div>
-        
+
         <div class="tabs-container">
             <div class="tab-slider login"></div>
             <button class="tab-button active" id="loginTab">Iniciar Sesión</button>
             <button class="tab-button" id="registerTab">Registrarse</button>
         </div>
-        
+
         <div class="error-message" id="errorMessage">
             <i class="fas fa-exclamation-triangle"></i>
             <span id="errorText"></span>
         </div>
-        
+
         <div class="success-message" id="successMessage">
             <i class="fas fa-check-circle"></i>
             <span id="successText"></span>
         </div>
-        
+
         <!-- Formulario de Login -->
         <form class="tab-content active" id="loginForm">
             <div class="form-group">
@@ -562,7 +464,7 @@
                     required
                 >
             </div>
-            
+
             <div class="form-group">
                 <label for="loginPassword"><i class="fas fa-lock"></i> Contraseña</label>
                 <div class="password-container">
@@ -579,17 +481,17 @@
                     </button>
                 </div>
             </div>
-            
+
             <button type="submit" class="submit-button" id="loginButton">
                 <span>Iniciar Sesión</span>
                 <div class="loading-spinner" id="loginSpinner"></div>
             </button>
-            
+
             <div class="switch-link">
                 ¿No tienes cuenta? <a id="switchToRegister">Regístrate aquí</a>
             </div>
         </form>
-        
+
         <!-- Formulario de Registro -->
         <form class="tab-content" id="registerForm">
             <div class="avatar-upload">
@@ -604,7 +506,7 @@
                 </label>
                 <input type="file" id="avatarInput" accept="image/*">
             </div>
-            
+
             <div class="form-group">
                 <label for="registerUsername"><i class="fas fa-user"></i> Nombre de usuario</label>
                 <input 
@@ -618,7 +520,7 @@
                     maxlength="20"
                 >
             </div>
-            
+
             <div class="form-group">
                 <label for="registerPassword"><i class="fas fa-lock"></i> Contraseña</label>
                 <div class="password-container">
@@ -636,7 +538,7 @@
                     </button>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label for="registerConfirmPassword"><i class="fas fa-lock"></i> Confirmar contraseña</label>
                 <div class="password-container">
@@ -653,17 +555,17 @@
                     </button>
                 </div>
             </div>
-            
+
             <button type="submit" class="submit-button" id="registerButton">
                 <span>Crear Cuenta</span>
                 <div class="loading-spinner" id="registerSpinner"></div>
             </button>
-            
+
             <div class="switch-link">
                 ¿Ya tienes cuenta? <a id="switchToLogin">Inicia sesión aquí</a>
             </div>
         </form>
-        
+
         <div class="footer-note">
             <i class="fas fa-shield-alt"></i>
             <span>Tus datos están seguros y encriptados</span>
@@ -676,7 +578,7 @@
                 this.cacheName = 'webrtc-avatars-cache-v1';
                 this.initCache();
             }
-            
+
             async initCache() {
                 if ('caches' in window) {
                     try {
@@ -687,10 +589,10 @@
                     }
                 }
             }
-            
+
             async getAvatar(url) {
                 if (!this.cache) return null;
-                
+
                 try {
                     const response = await this.cache.match(url);
                     if (response) {
@@ -703,10 +605,10 @@
                     return null;
                 }
             }
-            
+
             async cacheAvatar(url, blob) {
                 if (!this.cache) return;
-                
+
                 try {
                     const response = new Response(blob);
                     await this.cache.put(url, response);
@@ -714,7 +616,7 @@
                     console.error('Error guardando en cache:', error);
                 }
             }
-            
+
             async clearCache() {
                 if ('caches' in window) {
                     try {
@@ -726,7 +628,7 @@
                 }
             }
         }
-        
+
         class LoginManager {
             constructor() {
                 this.currentTab = 'login';
@@ -734,25 +636,25 @@
                 this.avatarInput = document.getElementById('avatarInput');
                 this.avatarFile = null;
                 this.imageCache = new ImageCache();
-                
+
                 this.initEventListeners();
                 this.checkExistingSession();
             }
-            
+
             initEventListeners() {
                 // Tabs
                 document.getElementById('loginTab').addEventListener('click', () => this.switchTab('login'));
                 document.getElementById('registerTab').addEventListener('click', () => this.switchTab('register'));
                 document.getElementById('switchToRegister').addEventListener('click', () => this.switchTab('register'));
                 document.getElementById('switchToLogin').addEventListener('click', () => this.switchTab('login'));
-                
+
                 // Toggle password visibility
                 document.querySelectorAll('.toggle-password').forEach(button => {
                     button.addEventListener('click', (e) => {
                         const targetId = e.target.closest('button').dataset.target;
                         const input = document.getElementById(targetId);
                         const icon = e.target.closest('button').querySelector('i');
-                        
+
                         if (input.type === 'password') {
                             input.type = 'text';
                             icon.className = 'fas fa-eye-slash';
@@ -762,118 +664,95 @@
                         }
                     });
                 });
-                
+
                 // Avatar upload
                 this.avatarPreview.addEventListener('click', () => this.avatarInput.click());
                 this.avatarInput.addEventListener('change', (e) => this.handleAvatarUpload(e));
-                
+
                 // Forms
                 document.getElementById('loginForm').addEventListener('submit', (e) => this.handleLogin(e));
                 document.getElementById('registerForm').addEventListener('submit', (e) => this.handleRegister(e));
             }
-            
+
             switchTab(tab) {
                 if (this.currentTab === tab) return;
-                
+
                 this.currentTab = tab;
                 const slider = document.querySelector('.tab-slider');
-                
+
                 // Update tabs
                 document.getElementById('loginTab').classList.toggle('active', tab === 'login');
                 document.getElementById('registerTab').classList.toggle('active', tab === 'register');
-                
+
                 // Update forms
                 document.getElementById('loginForm').classList.toggle('active', tab === 'login');
                 document.getElementById('registerForm').classList.toggle('active', tab === 'register');
-                
+
                 // Update slider position
                 slider.classList.remove('login', 'register');
                 slider.classList.add(tab);
-                
+
                 // Clear messages
                 this.hideMessages();
             }
-            
-            createRipple(event) {
-                const button = event.currentTarget;
-                const circle = document.createElement('span');
-                const diameter = Math.max(button.clientWidth, button.clientHeight);
-                const radius = diameter / 2;
-                
-                circle.style.width = circle.style.height = `${diameter}px`;
-                circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
-                circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
-                circle.classList.add('ripple');
-                
-                const ripple = button.getElementsByClassName('ripple')[0];
-                if (ripple) ripple.remove();
-                
-                button.appendChild(circle);
-            }
-            
+
             async handleAvatarUpload(event) {
                 const file = event.target.files[0];
                 if (!file) return;
-                
-                // Validate file type
+
                 if (!file.type.startsWith('image/')) {
                     this.showError('Por favor, selecciona una imagen válida');
                     return;
                 }
-                
-                // Validate file size (max 5MB)
+
                 if (file.size > 5 * 1024 * 1024) {
                     this.showError('La imagen es demasiado grande (máximo 5MB)');
                     return;
                 }
-                
+
                 this.avatarFile = file;
-                
-                // Preview image
+
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const img = document.createElement('img');
                     img.src = e.target.result;
-                    
+
                     this.avatarPreview.innerHTML = '';
                     this.avatarPreview.appendChild(img);
                 };
                 reader.readAsDataURL(file);
             }
-            
+
             async handleLogin(event) {
                 event.preventDefault();
-                this.createRipple(event);
-                
+
                 const username = document.getElementById('loginUsername').value.trim();
                 const password = document.getElementById('loginPassword').value;
-                
+
                 if (!username || !password) {
                     this.showError('Por favor, completa todos los campos');
                     return;
                 }
-                
+
                 this.setLoading('login', true);
-                
+
                 try {
                     const response = await fetch('/api/login', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ username, password })
                     });
-                    
+
                     const data = await response.json();
-                    
+
                     if (data.success) {
-                        // Guardar token de sesión
                         localStorage.setItem('webrtc_session_token', data.token);
                         localStorage.setItem('webrtc_user', JSON.stringify(data.user));
-                        
+
                         this.showSuccess('¡Inicio de sesión exitoso! Redirigiendo...');
-                        
-                        // Test de permisos antes de redirigir
+
                         const hasPermissions = await this.testMicrophonePermissions();
-                        
+
                         if (hasPermissions) {
                             setTimeout(() => {
                                 window.location.href = '/index';
@@ -892,45 +771,42 @@
                     this.setLoading('login', false);
                 }
             }
-            
+
             async handleRegister(event) {
                 event.preventDefault();
-                this.createRipple(event);
-                
+
                 const username = document.getElementById('registerUsername').value.trim();
                 const password = document.getElementById('registerPassword').value;
                 const confirmPassword = document.getElementById('registerConfirmPassword').value;
-                
-                // Validaciones
+
                 if (!username || !password || !confirmPassword) {
                     this.showError('Por favor, completa todos los campos');
                     return;
                 }
-                
+
                 if (username.length < 3) {
                     this.showError('El nombre de usuario debe tener al menos 3 caracteres');
                     return;
                 }
-                
+
                 if (password.length < 6) {
                     this.showError('La contraseña debe tener al menos 6 caracteres');
                     return;
                 }
-                
+
                 if (password !== confirmPassword) {
                     this.showError('Las contraseñas no coinciden');
                     return;
                 }
-                
+
                 this.setLoading('register', true);
-                
+
                 try {
-                    // Convertir avatar a base64 si existe
                     let avatarData = null;
                     if (this.avatarFile) {
                         avatarData = await this.fileToBase64(this.avatarFile);
                     }
-                    
+
                     const response = await fetch('/api/register', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -940,19 +816,17 @@
                             avatar: avatarData 
                         })
                     });
-                    
+
                     const data = await response.json();
-                    
+
                     if (data.success) {
-                        // Guardar token de sesión
                         localStorage.setItem('webrtc_session_token', data.token);
                         localStorage.setItem('webrtc_user', JSON.stringify(data.user));
-                        
+
                         this.showSuccess('¡Cuenta creada exitosamente! Redirigiendo...');
-                        
-                        // Test de permisos
+
                         const hasPermissions = await this.testMicrophonePermissions();
-                        
+
                         if (hasPermissions) {
                             setTimeout(() => {
                                 window.location.href = '/index';
@@ -971,7 +845,7 @@
                     this.setLoading('register', false);
                 }
             }
-            
+
             fileToBase64(file) {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
@@ -980,13 +854,13 @@
                     reader.onerror = error => reject(error);
                 });
             }
-            
+
             async testMicrophonePermissions() {
                 try {
                     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                         return false;
                     }
-                    
+
                     const stream = await navigator.mediaDevices.getUserMedia({ 
                         audio: {
                             echoCancellation: true,
@@ -994,7 +868,7 @@
                             autoGainControl: true
                         }
                     });
-                    
+
                     stream.getTracks().forEach(track => track.stop());
                     return true;
                 } catch (error) {
@@ -1002,12 +876,12 @@
                     return false;
                 }
             }
-            
+
             setLoading(form, isLoading) {
                 const button = document.getElementById(`${form}Button`);
                 const spinner = document.getElementById(`${form}Spinner`);
                 const buttonText = button.querySelector('span');
-                
+
                 if (isLoading) {
                     button.disabled = true;
                     spinner.style.display = 'block';
@@ -1018,40 +892,39 @@
                     buttonText.textContent = form === 'login' ? 'Iniciar Sesión' : 'Crear Cuenta';
                 }
             }
-            
+
             showError(message) {
                 const errorElement = document.getElementById('errorMessage');
                 const errorText = document.getElementById('errorText');
-                
+
                 errorText.textContent = message;
                 errorElement.classList.add('show');
-                
+
                 setTimeout(() => {
                     errorElement.classList.remove('show');
                 }, 5000);
             }
-            
+
             showSuccess(message) {
                 const successElement = document.getElementById('successMessage');
                 const successText = document.getElementById('successText');
-                
+
                 successText.textContent = message;
                 successElement.classList.add('show');
-                
+
                 setTimeout(() => {
                     successElement.classList.remove('show');
                 }, 3000);
             }
-            
+
             hideMessages() {
                 document.getElementById('errorMessage').classList.remove('show');
                 document.getElementById('successMessage').classList.remove('show');
             }
-            
+
             checkExistingSession() {
                 const token = localStorage.getItem('webrtc_session_token');
                 if (token) {
-                    // Verificar si el token aún es válido
                     fetch('/index').then(response => {
                         if (response.ok) {
                             window.location.href = '/index';
@@ -1060,8 +933,7 @@
                 }
             }
         }
-        
-        // Inicializar cuando el DOM esté listo
+
         document.addEventListener('DOMContentLoaded', () => {
             window.loginManager = new LoginManager();
         });
