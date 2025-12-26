@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebRTC Calls - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -18,23 +20,8 @@
             --border: #2f3a42;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: var(--bg);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
 
         .login-container {
             width: 100%;
@@ -58,11 +45,7 @@
             background: var(--accent);
         }
 
-        .logo-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
+        .logo-section { text-align: center; margin-bottom: 40px; }
         .logo-icon {
             width: 80px;
             height: 80px;
@@ -77,27 +60,10 @@
             box-shadow: 0 10px 30px rgba(51, 144, 236, 0.4);
         }
 
-        .logo-section h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--text-primary);
-        }
+        .logo-section h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 10px; }
+        .logo-section p { color: var(--text-secondary); font-size: 1rem; }
 
-        .logo-section p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-
-        .tabs-container {
-            display: flex;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 4px;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
+        .tabs-container { display: flex; background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 4px; margin-bottom: 30px; position: relative; }
         .tab-slider {
             position: absolute;
             top: 4px;
@@ -108,14 +74,8 @@
             transition: transform 0.2s ease;
             box-shadow: 0 4px 15px rgba(51, 144, 236, 0.3);
         }
-
-        .tab-slider.login {
-            transform: translateX(4px);
-        }
-
-        .tab-slider.register {
-            transform: translateX(calc(100% + 4px));
-        }
+        .tab-slider.login { transform: translateX(4px); }
+        .tab-slider.register { transform: translateX(calc(100% + 4px)); }
 
         .tab-button {
             flex: 1;
@@ -123,45 +83,20 @@
             background: none;
             border: none;
             color: var(--text-secondary);
-            font-family: 'Roboto', sans-serif;
             font-size: 1.1rem;
             font-weight: 500;
             cursor: pointer;
             z-index: 1;
             border-radius: 10px;
         }
+        .tab-button.active { color: white; }
 
-        .tab-button.active {
-            color: white;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-            font-weight: 500;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .form-group label i {
-            color: var(--accent);
-            font-size: 1rem;
-        }
+        .form-group { margin-bottom: 24px; }
+        .form-group label { display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-weight: 500; font-size: 0.95rem; margin-bottom: 8px; }
+        .form-group label i { color: var(--accent); }
 
         .form-input {
             width: 100%;
@@ -171,24 +106,10 @@
             border-radius: 12px;
             color: var(--text-primary);
             font-size: 1rem;
-            font-family: 'Roboto', sans-serif;
         }
+        .form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(51, 144, 236, 0.2); background: rgba(255, 255, 255, 0.08); }
 
-        .form-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(51, 144, 236, 0.2);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .form-input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .password-container {
-            position: relative;
-        }
-
+        .password-container { position: relative; }
         .toggle-password {
             position: absolute;
             right: 16px;
@@ -198,19 +119,11 @@
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            padding: 4px;
             font-size: 1.1rem;
         }
+        .toggle-password:hover { color: var(--text-primary); }
 
-        .toggle-password:hover {
-            color: var(--text-primary);
-        }
-
-        .avatar-upload {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
+        .avatar-upload { text-align: center; margin-bottom: 24px; }
         .avatar-preview {
             width: 120px;
             height: 120px;
@@ -219,16 +132,10 @@
             margin: 0 auto 16px;
             overflow: hidden;
             border: 3px solid var(--border);
-            position: relative;
             cursor: pointer;
+            position: relative;
         }
-
-        .avatar-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
+        .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
         .avatar-placeholder {
             width: 100%;
             height: 100%;
@@ -238,16 +145,8 @@
             justify-content: center;
             color: var(--text-secondary);
         }
-
-        .avatar-placeholder i {
-            font-size: 2.5rem;
-            margin-bottom: 8px;
-        }
-
-        .avatar-upload input[type="file"] {
-            display: none;
-        }
-
+        .avatar-placeholder i { font-size: 2.5rem; margin-bottom: 8px; }
+        .avatar-upload input[type="file"] { display: none; }
         .avatar-upload label {
             display: inline-block;
             background: linear-gradient(135deg, var(--accent), #5ba8f5);
@@ -270,18 +169,8 @@
             align-items: flex-start;
             gap: 12px;
         }
-
-        .permissions-info i {
-            color: var(--accent);
-            font-size: 1.2rem;
-            margin-top: 2px;
-        }
-
-        .permissions-info p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
+        .permissions-info i { color: var(--accent); font-size: 1.2rem; margin-top: 2px; }
+        .permissions-info p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
 
         .submit-button {
             width: 100%;
@@ -301,11 +190,7 @@
             overflow: hidden;
             margin-top: 10px;
         }
-
-        .submit-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        .submit-button:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .loading-spinner {
             width: 20px;
@@ -315,14 +200,11 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .error-message {
-            background: rgba(244, 67, 54, 0.1);
-            border: 1px solid rgba(244, 67, 54, 0.3);
+        .error-message, .success-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 24px;
@@ -332,46 +214,12 @@
             align-items: center;
             gap: 12px;
         }
+        .success-message { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #10b981; }
+        .show { display: flex; }
 
-        .error-message.show {
-            display: flex;
-        }
-
-        .success-message {
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid rgba(76, 175, 80, 0.3);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
-            color: #4caf50;
-            font-size: 0.95rem;
-            display: none;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .success-message.show {
-            display: flex;
-        }
-
-        .switch-link {
-            text-align: center;
-            margin-top: 24px;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        .switch-link a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 500;
-            margin-left: 6px;
-            cursor: pointer;
-        }
-
-        .switch-link a:hover {
-            text-decoration: underline;
-        }
+        .switch-link { text-align: center; margin-top: 24px; color: var(--text-secondary); font-size: 0.95rem; }
+        .switch-link a { color: var(--accent); text-decoration: none; font-weight: 500; margin-left: 6px; cursor: pointer; }
+        .switch-link a:hover { text-decoration: underline; }
 
         .footer-note {
             text-align: center;
@@ -387,25 +235,10 @@
         }
 
         @media (max-width: 480px) {
-            .login-container {
-                padding: 30px 20px;
-                max-width: 100%;
-            }
-
-            .logo-icon {
-                width: 70px;
-                height: 70px;
-                font-size: 2rem;
-            }
-
-            .logo-section h1 {
-                font-size: 1.8rem;
-            }
-
-            .avatar-preview {
-                width: 100px;
-                height: 100px;
-            }
+            .login-container { padding: 30px 20px; }
+            .logo-icon { width: 70px; height: 70px; font-size: 2rem; }
+            .logo-section h1 { font-size: 1.8rem; }
+            .avatar-preview { width: 100px; height: 100px; }
         }
     </style>
 </head>
@@ -440,31 +273,16 @@
             <span id="successText"></span>
         </div>
 
-        <!-- Formulario de Login -->
         <form class="tab-content active" id="loginForm">
             <div class="form-group">
                 <label for="loginUsername"><i class="fas fa-user"></i> Nombre de usuario</label>
-                <input 
-                    type="text" 
-                    id="loginUsername" 
-                    class="form-input" 
-                    placeholder="Tu nombre de usuario" 
-                    autocomplete="username"
-                    required
-                >
+                <input type="text" id="loginUsername" class="form-input" placeholder="Tu nombre de usuario" autocomplete="username" required>
             </div>
 
             <div class="form-group">
                 <label for="loginPassword"><i class="fas fa-lock"></i> Contraseña</label>
                 <div class="password-container">
-                    <input 
-                        type="password" 
-                        id="loginPassword" 
-                        class="form-input" 
-                        placeholder="Tu contraseña" 
-                        autocomplete="current-password"
-                        required
-                    >
+                    <input type="password" id="loginPassword" class="form-input" placeholder="Tu contraseña" autocomplete="current-password" required>
                     <button type="button" class="toggle-password" data-target="loginPassword">
                         <i class="fas fa-eye"></i>
                     </button>
@@ -481,7 +299,6 @@
             </div>
         </form>
 
-        <!-- Formulario de Registro -->
         <form class="tab-content" id="registerForm">
             <div class="avatar-upload">
                 <div class="avatar-preview" id="avatarPreview">
@@ -498,30 +315,13 @@
 
             <div class="form-group">
                 <label for="registerUsername"><i class="fas fa-user"></i> Nombre de usuario</label>
-                <input 
-                    type="text" 
-                    id="registerUsername" 
-                    class="form-input" 
-                    placeholder="Elige un nombre de usuario" 
-                    autocomplete="username"
-                    required
-                    minlength="3"
-                    maxlength="20"
-                >
+                <input type="text" id="registerUsername" class="form-input" placeholder="Elige un nombre de usuario" autocomplete="username" required minlength="3" maxlength="20">
             </div>
 
             <div class="form-group">
                 <label for="registerPassword"><i class="fas fa-lock"></i> Contraseña</label>
                 <div class="password-container">
-                    <input 
-                        type="password" 
-                        id="registerPassword" 
-                        class="form-input" 
-                        placeholder="Crea una contraseña segura" 
-                        autocomplete="new-password"
-                        required
-                        minlength="6"
-                    >
+                    <input type="password" id="registerPassword" class="form-input" placeholder="Crea una contraseña segura" autocomplete="new-password" required minlength="6">
                     <button type="button" class="toggle-password" data-target="registerPassword">
                         <i class="fas fa-eye"></i>
                     </button>
@@ -531,14 +331,7 @@
             <div class="form-group">
                 <label for="registerConfirmPassword"><i class="fas fa-lock"></i> Confirmar contraseña</label>
                 <div class="password-container">
-                    <input 
-                        type="password" 
-                        id="registerConfirmPassword" 
-                        class="form-input" 
-                        placeholder="Repite tu contraseña" 
-                        autocomplete="new-password"
-                        required
-                    >
+                    <input type="password" id="registerConfirmPassword" class="form-input" placeholder="Repite tu contraseña" autocomplete="new-password" required>
                     <button type="button" class="toggle-password" data-target="registerConfirmPassword">
                         <i class="fas fa-eye"></i>
                     </button>
@@ -562,73 +355,10 @@
     </div>
 
     <script>
-        // El JavaScript es exactamente el mismo que en la versión optimizada anterior
-        // (sin createRipple, ya que se eliminó)
-
-        class ImageCache {
-            constructor() {
-                this.cacheName = 'webrtc-avatars-cache-v1';
-                this.initCache();
-            }
-
-            async initCache() {
-                if ('caches' in window) {
-                    try {
-                        this.cache = await caches.open(this.cacheName);
-                    } catch (error) {
-                        console.error('Error inicializando cache:', error);
-                        this.cache = null;
-                    }
-                }
-            }
-
-            async getAvatar(url) {
-                if (!this.cache) return null;
-
-                try {
-                    const response = await this.cache.match(url);
-                    if (response) {
-                        const blob = await response.blob();
-                        return URL.createObjectURL(blob);
-                    }
-                    return null;
-                } catch (error) {
-                    console.error('Error obteniendo de cache:', error);
-                    return null;
-                }
-            }
-
-            async cacheAvatar(url, blob) {
-                if (!this.cache) return;
-
-                try {
-                    const response = new Response(blob);
-                    await this.cache.put(url, response);
-                } catch (error) {
-                    console.error('Error guardando en cache:', error);
-                }
-            }
-
-            async clearCache() {
-                if ('caches' in window) {
-                    try {
-                        await caches.delete(this.cacheName);
-                        this.initCache();
-                    } catch (error) {
-                        console.error('Error limpiando cache:', error);
-                    }
-                }
-            }
-        }
-
         class LoginManager {
             constructor() {
                 this.currentTab = 'login';
-                this.avatarPreview = document.getElementById('avatarPreview');
-                this.avatarInput = document.getElementById('avatarInput');
                 this.avatarFile = null;
-                this.imageCache = new ImageCache();
-
                 this.initEventListeners();
                 this.checkExistingSession();
             }
@@ -644,7 +374,6 @@
                         const targetId = e.target.closest('button').dataset.target;
                         const input = document.getElementById(targetId);
                         const icon = e.target.closest('button').querySelector('i');
-
                         if (input.type === 'password') {
                             input.type = 'text';
                             icon.className = 'fas fa-eye-slash';
@@ -655,8 +384,9 @@
                     });
                 });
 
-                this.avatarPreview.addEventListener('click', () => this.avatarInput.click());
-                this.avatarInput.addEventListener('change', (e) => this.handleAvatarUpload(e));
+                this.avatarPreview = document.getElementById('avatarPreview');
+                this.avatarPreview.addEventListener('click', () => document.getElementById('avatarInput').click());
+                document.getElementById('avatarInput').addEventListener('change', (e) => this.handleAvatarUpload(e));
 
                 document.getElementById('loginForm').addEventListener('submit', (e) => this.handleLogin(e));
                 document.getElementById('registerForm').addEventListener('submit', (e) => this.handleRegister(e));
@@ -664,43 +394,35 @@
 
             switchTab(tab) {
                 if (this.currentTab === tab) return;
-
                 this.currentTab = tab;
                 const slider = document.querySelector('.tab-slider');
+                slider.classList.remove('login', 'register');
+                slider.classList.add(tab);
 
                 document.getElementById('loginTab').classList.toggle('active', tab === 'login');
                 document.getElementById('registerTab').classList.toggle('active', tab === 'register');
-
                 document.getElementById('loginForm').classList.toggle('active', tab === 'login');
                 document.getElementById('registerForm').classList.toggle('active', tab === 'register');
-
-                slider.classList.remove('login', 'register');
-                slider.classList.add(tab);
 
                 this.hideMessages();
             }
 
-            async handleAvatarUpload(event) {
+            handleAvatarUpload(event) {
                 const file = event.target.files[0];
                 if (!file) return;
-
                 if (!file.type.startsWith('image/')) {
                     this.showError('Por favor, selecciona una imagen válida');
                     return;
                 }
-
                 if (file.size > 5 * 1024 * 1024) {
                     this.showError('La imagen es demasiado grande (máximo 5MB)');
                     return;
                 }
-
                 this.avatarFile = file;
-
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const img = document.createElement('img');
                     img.src = e.target.result;
-
                     this.avatarPreview.innerHTML = '';
                     this.avatarPreview.appendChild(img);
                 };
@@ -709,125 +431,79 @@
 
             async handleLogin(event) {
                 event.preventDefault();
-
                 const username = document.getElementById('loginUsername').value.trim();
                 const password = document.getElementById('loginPassword').value;
-
                 if (!username || !password) {
                     this.showError('Por favor, completa todos los campos');
                     return;
                 }
-
                 this.setLoading('login', true);
-
                 try {
                     const response = await fetch('/api/login', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ username, password })
                     });
-
                     const data = await response.json();
-
                     if (data.success) {
                         localStorage.setItem('webrtc_session_token', data.token);
                         localStorage.setItem('webrtc_user', JSON.stringify(data.user));
-
                         this.showSuccess('¡Inicio de sesión exitoso! Redirigiendo...');
-
-                        const hasPermissions = await this.testMicrophonePermissions();
-
-                        if (hasPermissions) {
-                            setTimeout(() => {
-                                window.location.href = '/index';
-                            }, 1500);
-                        } else {
-                            this.showError('Se necesita acceso al micrófono para usar la aplicación');
-                            this.setLoading('login', false);
-                        }
+                        setTimeout(() => window.location.href = '/index', 1500);
                     } else {
                         this.showError(data.error || 'Credenciales incorrectas');
-                        this.setLoading('login', false);
                     }
                 } catch (error) {
-                    console.error('Error en login:', error);
                     this.showError('Error de conexión. Por favor, intenta de nuevo.');
-                    this.setLoading('login', false);
                 }
+                this.setLoading('login', false);
             }
 
             async handleRegister(event) {
                 event.preventDefault();
-
                 const username = document.getElementById('registerUsername').value.trim();
                 const password = document.getElementById('registerPassword').value;
                 const confirmPassword = document.getElementById('registerConfirmPassword').value;
-
                 if (!username || !password || !confirmPassword) {
                     this.showError('Por favor, completa todos los campos');
                     return;
                 }
-
                 if (username.length < 3) {
                     this.showError('El nombre de usuario debe tener al menos 3 caracteres');
                     return;
                 }
-
                 if (password.length < 6) {
                     this.showError('La contraseña debe tener al menos 6 caracteres');
                     return;
                 }
-
                 if (password !== confirmPassword) {
                     this.showError('Las contraseñas no coinciden');
                     return;
                 }
-
                 this.setLoading('register', true);
-
+                let avatarData = null;
+                if (this.avatarFile) {
+                    avatarData = await this.fileToBase64(this.avatarFile);
+                }
                 try {
-                    let avatarData = null;
-                    if (this.avatarFile) {
-                        avatarData = await this.fileToBase64(this.avatarFile);
-                    }
-
                     const response = await fetch('/api/register', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            username, 
-                            password, 
-                            avatar: avatarData 
-                        })
+                        body: JSON.stringify({ username, password, avatar: avatarData })
                     });
-
                     const data = await response.json();
-
                     if (data.success) {
                         localStorage.setItem('webrtc_session_token', data.token);
                         localStorage.setItem('webrtc_user', JSON.stringify(data.user));
-
                         this.showSuccess('¡Cuenta creada exitosamente! Redirigiendo...');
-
-                        const hasPermissions = await this.testMicrophonePermissions();
-
-                        if (hasPermissions) {
-                            setTimeout(() => {
-                                window.location.href = '/index';
-                            }, 1500);
-                        } else {
-                            this.showError('Se necesita acceso al micrófono para usar la aplicación');
-                            this.setLoading('register', false);
-                        }
+                        setTimeout(() => window.location.href = '/index', 1500);
                     } else {
                         this.showError(data.error || 'Error creando la cuenta');
-                        this.setLoading('register', false);
                     }
                 } catch (error) {
-                    console.error('Error en registro:', error);
                     this.showError('Error de conexión. Por favor, intenta de nuevo.');
-                    this.setLoading('register', false);
                 }
+                this.setLoading('register', false);
             }
 
             fileToBase64(file) {
@@ -839,33 +515,10 @@
                 });
             }
 
-            async testMicrophonePermissions() {
-                try {
-                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                        return false;
-                    }
-
-                    const stream = await navigator.mediaDevices.getUserMedia({ 
-                        audio: {
-                            echoCancellation: true,
-                            noiseSuppression: true,
-                            autoGainControl: true
-                        }
-                    });
-
-                    stream.getTracks().forEach(track => track.stop());
-                    return true;
-                } catch (error) {
-                    console.error('Error de permisos:', error);
-                    return false;
-                }
-            }
-
             setLoading(form, isLoading) {
                 const button = document.getElementById(`${form}Button`);
                 const spinner = document.getElementById(`${form}Spinner`);
                 const buttonText = button.querySelector('span');
-
                 if (isLoading) {
                     button.disabled = true;
                     spinner.style.display = 'block';
@@ -880,25 +533,17 @@
             showError(message) {
                 const errorElement = document.getElementById('errorMessage');
                 const errorText = document.getElementById('errorText');
-
                 errorText.textContent = message;
                 errorElement.classList.add('show');
-
-                setTimeout(() => {
-                    errorElement.classList.remove('show');
-                }, 5000);
+                setTimeout(() => errorElement.classList.remove('show'), 5000);
             }
 
             showSuccess(message) {
                 const successElement = document.getElementById('successMessage');
                 const successText = document.getElementById('successText');
-
                 successText.textContent = message;
                 successElement.classList.add('show');
-
-                setTimeout(() => {
-                    successElement.classList.remove('show');
-                }, 3000);
+                setTimeout(() => successElement.classList.remove('show'), 3000);
             }
 
             hideMessages() {
@@ -909,17 +554,13 @@
             checkExistingSession() {
                 const token = localStorage.getItem('webrtc_session_token');
                 if (token) {
-                    fetch('/index').then(response => {
-                        if (response.ok) {
-                            window.location.href = '/index';
-                        }
-                    });
+                    window.location.href = '/index';
                 }
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            window.loginManager = new LoginManager();
+            new LoginManager();
         });
     </script>
 </body>
