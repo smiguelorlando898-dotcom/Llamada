@@ -4,22 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebRTC Calls - Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-light: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --background: #0f172a;
-            --surface: #1e293b;
-            --surface-light: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --border: rgba(255, 255, 255, 0.1);
+            --bg: #0f1419;
+            --surface: #1c252b;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b8c0;
+            --accent: #3390ec;
+            --success: #4caf50;
+            --danger: #f44336;
+            --border: #2f3a42;
         }
 
         * {
@@ -30,25 +26,23 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--background);
+            font-family: 'Roboto', sans-serif;
+            background: var(--bg);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background-image: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%);
         }
 
         .login-container {
             width: 100%;
             max-width: 480px;
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.95));
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
+            background: var(--surface);
+            border-radius: 16px;
             padding: 40px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             border: 1px solid var(--border);
             position: relative;
             overflow: hidden;
@@ -61,7 +55,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary), #8b5cf6, var(--primary));
+            background: var(--accent);
         }
 
         .logo-section {
@@ -73,25 +67,21 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            background: linear-gradient(135deg, var(--accent), #5ba8f5);
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
             font-size: 2.5rem;
             color: white;
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
-            border: 3px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(51, 144, 236, 0.4);
         }
 
         .logo-section h1 {
             font-size: 2.2rem;
             font-weight: 700;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #ffffff, #e2e8f0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-primary);
         }
 
         .logo-section p {
@@ -101,7 +91,7 @@
 
         .tabs-container {
             display: flex;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 12px;
             padding: 4px;
             margin-bottom: 30px;
@@ -113,10 +103,10 @@
             top: 4px;
             height: calc(100% - 8px);
             width: calc(50% - 8px);
-            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            background: var(--accent);
             border-radius: 10px;
-            transition: transform 0.2s ease; /* Mínima para que se vea el cambio de pestaña */
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(51, 144, 236, 0.3);
         }
 
         .tab-slider.login {
@@ -133,9 +123,9 @@
             background: none;
             border: none;
             color: var(--text-secondary);
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             z-index: 1;
             border-radius: 10px;
@@ -169,7 +159,7 @@
         }
 
         .form-group label i {
-            color: var(--primary);
+            color: var(--accent);
             font-size: 1rem;
         }
 
@@ -181,14 +171,13 @@
             border-radius: 12px;
             color: var(--text-primary);
             font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
-            backdrop-filter: blur(10px);
+            font-family: 'Roboto', sans-serif;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(51, 144, 236, 0.2);
             background: rgba(255, 255, 255, 0.08);
         }
 
@@ -261,7 +250,7 @@
 
         .avatar-upload label {
             display: inline-block;
-            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            background: linear-gradient(135deg, var(--accent), #5ba8f5);
             color: white;
             padding: 12px 24px;
             border-radius: 25px;
@@ -272,8 +261,8 @@
         }
 
         .permissions-info {
-            background: rgba(37, 99, 235, 0.1);
-            border: 1px solid rgba(37, 99, 235, 0.3);
+            background: rgba(51, 144, 236, 0.1);
+            border: 1px solid rgba(51, 144, 236, 0.3);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 30px;
@@ -283,7 +272,7 @@
         }
 
         .permissions-info i {
-            color: var(--primary);
+            color: var(--accent);
             font-size: 1.2rem;
             margin-top: 2px;
         }
@@ -297,7 +286,7 @@
         .submit-button {
             width: 100%;
             padding: 18px;
-            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            background: linear-gradient(135deg, var(--accent), #5ba8f5);
             color: white;
             border: none;
             border-radius: 12px;
@@ -332,8 +321,8 @@
         }
 
         .error-message {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 24px;
@@ -349,12 +338,12 @@
         }
 
         .success-message {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 24px;
-            color: #10b981;
+            color: #4caf50;
             font-size: 0.95rem;
             display: none;
             align-items: center;
@@ -373,7 +362,7 @@
         }
 
         .switch-link a {
-            color: var(--primary);
+            color: var(--accent);
             text-decoration: none;
             font-weight: 500;
             margin-left: 6px;
@@ -573,6 +562,9 @@
     </div>
 
     <script>
+        // El JavaScript es exactamente el mismo que en la versión optimizada anterior
+        // (sin createRipple, ya que se eliminó)
+
         class ImageCache {
             constructor() {
                 this.cacheName = 'webrtc-avatars-cache-v1';
@@ -642,13 +634,11 @@
             }
 
             initEventListeners() {
-                // Tabs
                 document.getElementById('loginTab').addEventListener('click', () => this.switchTab('login'));
                 document.getElementById('registerTab').addEventListener('click', () => this.switchTab('register'));
                 document.getElementById('switchToRegister').addEventListener('click', () => this.switchTab('register'));
                 document.getElementById('switchToLogin').addEventListener('click', () => this.switchTab('login'));
 
-                // Toggle password visibility
                 document.querySelectorAll('.toggle-password').forEach(button => {
                     button.addEventListener('click', (e) => {
                         const targetId = e.target.closest('button').dataset.target;
@@ -665,11 +655,9 @@
                     });
                 });
 
-                // Avatar upload
                 this.avatarPreview.addEventListener('click', () => this.avatarInput.click());
                 this.avatarInput.addEventListener('change', (e) => this.handleAvatarUpload(e));
 
-                // Forms
                 document.getElementById('loginForm').addEventListener('submit', (e) => this.handleLogin(e));
                 document.getElementById('registerForm').addEventListener('submit', (e) => this.handleRegister(e));
             }
@@ -680,19 +668,15 @@
                 this.currentTab = tab;
                 const slider = document.querySelector('.tab-slider');
 
-                // Update tabs
                 document.getElementById('loginTab').classList.toggle('active', tab === 'login');
                 document.getElementById('registerTab').classList.toggle('active', tab === 'register');
 
-                // Update forms
                 document.getElementById('loginForm').classList.toggle('active', tab === 'login');
                 document.getElementById('registerForm').classList.toggle('active', tab === 'register');
 
-                // Update slider position
                 slider.classList.remove('login', 'register');
                 slider.classList.add(tab);
 
-                // Clear messages
                 this.hideMessages();
             }
 
